@@ -21,7 +21,8 @@
         <activity
             android:name=".DeliveryFeedbackActivity"
             android:label="@string/title_activity_delivery_feedback"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".OrdersActivity"></activity>
     </application>
 
 </manifest>
