@@ -3,4 +3,8 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="logo_size">100dp</dimen>
+    <dimen name="activity_login_companyname_height">20dp</dimen>
+    <dimen name="login_input_box">400dp</dimen>
+    <dimen name="activity_login_marginTop">450dp</dimen>
 </resources>

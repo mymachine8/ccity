@@ -4,10 +4,21 @@
     android:layout_height="match_parent"
     tools:context="com.cargoexchange.cargocity.cargocity.fragments.CameraFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <FrameLayout
+        android:id="@+id/camera_preview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1">
+    </FrameLayout>
+
+    <include layout="@layout/cameracontrols"
+        android:id="@+id/camera_action"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_alignParentBottom="true"
+        ></include>
+
 
 </FrameLayout>

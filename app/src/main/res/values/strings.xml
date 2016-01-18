@@ -1,8 +1,14 @@
 <resources>
     <string name="app_name">cargocity</string>
     <string name="action_settings">Settings</string>
+    <string name="companyurl">www.cargoexchange.in</string>
     <string name="title_activity_delivery_feedback">DeliveryFeedbackActivity</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="orderno">Order No:-</string>
+    <string name="name">Name:-</string>
+    <string name="address">Address:-</string>
+    <string name="city">City:-</string>
+    <string name="items">Items:-</string>
+    <string name="enter_route_id">Enter Route Id:</string>
 </resources>
