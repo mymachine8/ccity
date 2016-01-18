@@ -116,7 +116,6 @@ public class ResultFragment extends Fragment {
             scannedImageView.setImageBitmap(original);
         }
     }
-
     private class GrayButtonClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
@@ -124,5 +123,4 @@ public class ResultFragment extends Fragment {
             scannedImageView.setImageBitmap(transformed);
         }
     }
-
 }

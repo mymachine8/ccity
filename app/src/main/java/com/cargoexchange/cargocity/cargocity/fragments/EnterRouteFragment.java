@@ -88,10 +88,15 @@ public class EnterRouteFragment extends Fragment {
         protected void onPostExecute(Boolean success) {
             mProgressDialog.dismiss();
             if (success) {
+<<<<<<< HEAD
                 Intent testintent=new Intent(thisActivity, MapActivity.class);
                 startActivity(testintent);
                 /*Fragment ordersListFragment = new OrdersListFragment() ;
                 thisActivity.getSupportFragmentManager().beginTransaction().add(R.id.orders_container, ordersListFragment).commit();*/
+=======
+                Fragment ordersListFragment = new OrdersListFragment() ;
+                thisActivity.getSupportFragmentManager().beginTransaction().add(R.id.orders_container, ordersListFragment).commit();
+>>>>>>> 3de45bb684f7ce41813595d6236d3f48cf72eac4
             }
 
         }

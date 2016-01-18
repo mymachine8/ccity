@@ -3,7 +3,11 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+<<<<<<< HEAD
       <module fileurl="file://$PROJECT_DIR$/ccity.iml" filepath="$PROJECT_DIR$/ccity.iml" />
+=======
+      <module fileurl="file://$PROJECT_DIR$/cargocity.iml" filepath="$PROJECT_DIR$/cargocity.iml" />
+>>>>>>> 3de45bb684f7ce41813595d6236d3f48cf72eac4
       <module fileurl="file://$PROJECT_DIR$/libs/scanlibrary/scanlibrary.iml" filepath="$PROJECT_DIR$/libs/scanlibrary/scanlibrary.iml" />
     </modules>
   </component>

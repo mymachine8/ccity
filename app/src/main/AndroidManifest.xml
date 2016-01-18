@@ -19,6 +19,10 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature android:name="android.hardware.camera.flash" android:required="false" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <application
         android:name=".CargoCity"
         android:allowBackup="true"
@@ -34,9 +38,9 @@
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <activity
             android:name=".DeliveryFeedbackActivity"
@@ -46,7 +50,13 @@
         </activity>
          <activity android:name=".OrdersActivity"></activity>
         <activity android:name=".MapActivity"></activity>
+
         <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyAa_HArC674Ruuyw91n2jNvntSoaIPyZ64"/>
+
+
+        <activity android:name=".OrdersActivity">
+
+        </activity>
     </application>
 
 </manifest>
