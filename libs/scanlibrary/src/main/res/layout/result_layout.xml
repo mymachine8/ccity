@@ -31,21 +31,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Magic color" />
-
-            <Button
-                android:id="@+id/grayMode"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Gray Mode" />
+                android:text="Bright Color" />
 
             <Button
                 android:id="@+id/BWMode"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="B and W" />
+                android:text="Black and White" />
         </LinearLayout>
 
     </HorizontalScrollView>

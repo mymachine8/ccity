@@ -25,7 +25,6 @@ public class ResultFragment extends Fragment {
     private Bitmap original;
     private Button originalButton;
     private Button MagicColorButton;
-    private Button grayModeButton;
     private Button bwButton;
     private Bitmap transformed;
 
@@ -45,8 +44,6 @@ public class ResultFragment extends Fragment {
         originalButton.setOnClickListener(new OriginalButtonClickListener());
         MagicColorButton = (Button) view.findViewById(R.id.magicColor);
         MagicColorButton.setOnClickListener(new MagicColorButtonClickListener());
-        grayModeButton = (Button) view.findViewById(R.id.grayMode);
-        grayModeButton.setOnClickListener(new GrayButtonClickListener());
         bwButton = (Button) view.findViewById(R.id.BWMode);
         bwButton.setOnClickListener(new BWButtonClickListener());
         Bitmap bitmap = getBitmap();
@@ -114,14 +111,6 @@ public class ResultFragment extends Fragment {
         public void onClick(View v) {
             transformed = original;
             scannedImageView.setImageBitmap(original);
-        }
-    }
-
-    private class GrayButtonClickListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            transformed = ((ScanActivity) getActivity()).getGrayBitmap(original);
-            scannedImageView.setImageBitmap(transformed);
         }
     }
 
