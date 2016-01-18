@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.cargoexchange.cargocity.cargocity.AuthenticationActivity"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_start_trip"
+        android:orderInCategory="200"
+        android:title="@string/start_trip"
+        app:showAsAction="always"
+        />
+
+    <item
+        android:id="@+id/action_navigation_instruction"
+        android:orderInCategory="200"
+        app:showAsAction="always"
+        android:visible="false"
+        android:title="@string/show_directions"
+        android:icon="@drawable/ic_listwhite"
+        />
+
+    <item
+        android:id="@+id/action_end_trip"
+        android:orderInCategory="100"
+        android:visible="false"
+        android:title="@string/end_trip"
+        app:showAsAction="always"
+        />
+
+</menu>

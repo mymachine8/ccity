@@ -1,17 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.cargoexchange.cargocity.cargocity">
 
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.flash"
+        android:required="false" />
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
+        android:name=".CargoCity"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:replace="android:icon,android:theme">
         <activity
             android:name=".AuthenticationActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,8 +41,12 @@
         <activity
             android:name=".DeliveryFeedbackActivity"
             android:label="@string/title_activity_delivery_feedback"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".OrdersActivity"></activity>
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
+         <activity android:name=".OrdersActivity"></activity>
+        <activity android:name=".MapActivity"></activity>
+        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyAa_HArC674Ruuyw91n2jNvntSoaIPyZ64"/>
     </application>
 
 </manifest>

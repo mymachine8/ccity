@@ -11,4 +11,8 @@
     <string name="city">City:-</string>
     <string name="items">Items:-</string>
     <string name="enter_route_id">Enter Route Id:</string>
+
+    <string name="start_trip">Start Trip</string>
+    <string name="show_directions">Directions</string>
+    <string name="end_trip">End Trip</string>
 </resources>

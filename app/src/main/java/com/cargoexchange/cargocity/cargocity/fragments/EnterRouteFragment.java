@@ -1,109 +1,99 @@
 package com.cargoexchange.cargocity.cargocity.fragments;
 
+
+import android.support.v4.app.FragmentActivity;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
+import com.cargoexchange.cargocity.cargocity.MapActivity;
 import com.cargoexchange.cargocity.cargocity.R;
+import com.cargoexchange.cargocity.cargocity.constants.Constants;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link EnterRouteFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link EnterRouteFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class EnterRouteFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    private OnFragmentInteractionListener mListener;
+    private EditText mRouteIdText;
+    private Button mRouteSubmitBtn;
+    private FragmentActivity thisActivity;
+    private ProgressDialog mProgressDialog;
 
     public EnterRouteFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment EnterRouteFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static EnterRouteFragment newInstance(String param1, String param2) {
-        EnterRouteFragment fragment = new EnterRouteFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_enter_route, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_enter_route, container, false);
+        thisActivity = getActivity();
+        initializeProgressDialog();
+        mRouteIdText = (EditText) view.findViewById(R.id.input_route_id);
+        mRouteSubmitBtn = (Button) view.findViewById(R.id.btn_route);
+        mRouteSubmitBtn .setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                routeSubmit();
+            }
+        });
+        return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+    public void routeSubmit() {
+        String routeId = mRouteIdText.getText().toString();
+        if (routeId.isEmpty()) {
+            mRouteIdText.setError("Please enter Route Id");
+            return;
+        }else{
+            mRouteIdText.setError("");
         }
+        mRouteSubmitBtn.setEnabled(false);
+        mProgressDialog.show();
+        new FetchOrdersTask().execute(routeId);
+
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+    public void initializeProgressDialog() {
+        mProgressDialog = new ProgressDialog(thisActivity,
+                R.style.AppTheme);
+        mProgressDialog.setIndeterminate(true);
+        mProgressDialog.setMessage("Fetching Orders...");
+    }
+
+    private class FetchOrdersTask extends AsyncTask<String, Void, Boolean> {
+        @Override
+        protected Boolean doInBackground(String... params) {
+            String routeId = params[0];
+            String ordersUri = Constants.CARGO_API_BASE_URL + "/route";
+            //TODO: Write login to get data from server
+            return true;
         }
-    }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
+        @Override
+        protected void onPostExecute(Boolean success) {
+            mProgressDialog.dismiss();
+            if (success) {
+                Intent testintent=new Intent(thisActivity, MapActivity.class);
+                startActivity(testintent);
+                /*Fragment ordersListFragment = new OrdersListFragment() ;
+                thisActivity.getSupportFragmentManager().beginTransaction().add(R.id.orders_container, ordersListFragment).commit();*/
+            }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        }
     }
 }
