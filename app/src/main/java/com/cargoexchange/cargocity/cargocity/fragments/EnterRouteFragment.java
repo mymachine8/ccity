@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.cargoexchange.cargocity.cargocity.MapActivity;
 import com.cargoexchange.cargocity.cargocity.R;
 import com.cargoexchange.cargocity.cargocity.constants.Constants;
+import com.cargoexchange.cargocity.cargocity.services.LocationService;
 
 public class EnterRouteFragment extends Fragment {
 
@@ -88,11 +89,11 @@ public class EnterRouteFragment extends Fragment {
         protected void onPostExecute(Boolean success)
         {
             mProgressDialog.dismiss();
-            if (success) {
-                /*Intent testintent=new Intent(thisActivity, MapActivity.class);
-                startActivity(testintent);*/
-                /*Fragment ordersListFragment = new OrdersListFragment() ;
-                thisActivity.getSupportFragmentManager().beginTransaction().add(R.id.orders_container, ordersListFragment).commit();*/
+            if (success)
+            {
+                Intent serviceintent=new Intent(thisActivity,LocationService.class);
+                thisActivity.startService(serviceintent);
+                //TODO:Stop this service on the logout event
                 Fragment ordersListFragment = new OrdersListFragment() ;
                 thisActivity.getSupportFragmentManager().beginTransaction().replace(R.id.orders_container, ordersListFragment).commit();
 
