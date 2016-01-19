@@ -16,12 +16,18 @@ import android.os.IBinder;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
+import com.pubnub.api.*;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Created by root on 19/1/16.
  */
 public class LocationService extends IntentService
 {
     private LocationManager mLocationManager;
+    private Pubnub mPubnub;
 
     public LocationService(String name)
     {
@@ -30,6 +36,7 @@ public class LocationService extends IntentService
     public LocationService()
     {
         super("com.cargoexchange.cargocity.cargocity.LocationService");
+        mPubnub = new Pubnub("publish_key", "subscribe_key");
     }
 
     @Override
@@ -59,11 +66,18 @@ public class LocationService extends IntentService
             @Override
             public void onLocationChanged(Location location)
             {
-                Log.d("Error",location.getLatitude()+"--");
-                //TODO:Send the cordinates to server using Pubnub
-                //location.getLatitude();
-                //location.getLongitude();
-                //location.getSpeed();
+
+                JSONObject data = new JSONObject();
+
+                try {
+                    data.put("latitude", location.getLatitude());
+                    data.put("longitude", location.getLongitude());
+                    data.put("speed", location.getSpeed());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                mPubnub.publish("location_details", data, new Callback() {
+                });
 
             }
 
