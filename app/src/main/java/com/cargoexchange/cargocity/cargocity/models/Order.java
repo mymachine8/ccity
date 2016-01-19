@@ -8,6 +8,14 @@ public class Order {
     private Address address;
     private List<OrderItem> orderItemsList;
 
+    public Order(String orderId, Customer customer, Address address, List<OrderItem> orderItemsList)
+    {
+        this.orderId = orderId;
+        this.customer = customer;
+        this.address = address;
+        this.orderItemsList = orderItemsList;
+    }
+
     public String getOrderId() {
         return orderId;
     }

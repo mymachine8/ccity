@@ -4,6 +4,12 @@ public class OrderItem {
     private String itemId;
     private String itemName;
 
+    public OrderItem(String itemId, String itemName)
+    {
+        this.itemId = itemId;
+        this.itemName = itemName;
+    }
+
     public String getItemId() {
         return itemId;
     }

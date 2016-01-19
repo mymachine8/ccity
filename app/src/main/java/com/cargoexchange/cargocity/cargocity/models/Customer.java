@@ -11,6 +11,15 @@ public class Customer {
     private String primaryPhone;
     private String secondaryPhone;
 
+    public Customer(String firstName, String middleName, String lastName, String email, String primaryPhone, String secondaryPhone) {
+        this.firstName = firstName;
+        this.middleName = middleName;
+        this.lastName = lastName;
+        this.email = email;
+        this.primaryPhone = primaryPhone;
+        this.secondaryPhone = secondaryPhone;
+    }
+
     public String getFirstName() {
         return firstName;
     }

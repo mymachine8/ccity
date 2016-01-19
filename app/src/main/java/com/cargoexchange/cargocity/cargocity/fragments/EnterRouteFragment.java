@@ -80,23 +80,22 @@ public class EnterRouteFragment extends Fragment {
         protected Boolean doInBackground(String... params) {
             String routeId = params[0];
             String ordersUri = Constants.CARGO_API_BASE_URL + "/route";
-            //TODO: Write login to get data from server
+            //TODO: Write  to get data from server
             return true;
         }
 
         @Override
-        protected void onPostExecute(Boolean success) {
+        protected void onPostExecute(Boolean success)
+        {
             mProgressDialog.dismiss();
             if (success) {
-<<<<<<< HEAD
-                Intent testintent=new Intent(thisActivity, MapActivity.class);
-                startActivity(testintent);
+                /*Intent testintent=new Intent(thisActivity, MapActivity.class);
+                startActivity(testintent);*/
                 /*Fragment ordersListFragment = new OrdersListFragment() ;
                 thisActivity.getSupportFragmentManager().beginTransaction().add(R.id.orders_container, ordersListFragment).commit();*/
-=======
                 Fragment ordersListFragment = new OrdersListFragment() ;
-                thisActivity.getSupportFragmentManager().beginTransaction().add(R.id.orders_container, ordersListFragment).commit();
->>>>>>> 3de45bb684f7ce41813595d6236d3f48cf72eac4
+                thisActivity.getSupportFragmentManager().beginTransaction().replace(R.id.orders_container, ordersListFragment).commit();
+
             }
 
         }
