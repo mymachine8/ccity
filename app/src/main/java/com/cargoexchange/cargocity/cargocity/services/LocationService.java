@@ -22,6 +22,7 @@ import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.cargoexchange.cargocity.cargocity.constants.RouteSession;
 import com.pubnub.api.*;
 
 import org.json.JSONException;
@@ -48,7 +49,7 @@ public class LocationService extends IntentService
     public LocationService()
     {
         super("com.cargoexchange.cargocity.cargocity.LocationService");
-        mPubnub = new Pubnub("publish_key", "subscribe_key");
+        mPubnub = new Pubnub("pub-c-1a772f6d-629d-415b-bedc-1f5addf4fcbc", "sub-c-e07d3d66-be1c-11e5-bcee-0619f8945a4f");
         count=0;
         initfile();
     }
@@ -80,12 +81,13 @@ public class LocationService extends IntentService
             public void onLocationChanged(Location location) {
                 count++;
                 JSONObject data = new JSONObject();
-
+                String routeId = RouteSession.getInstance().getRouteId();
                 try {
                     data.put("latitude", location.getLatitude());
                     data.put("longitude", location.getLongitude());
                     data.put("speed", location.getSpeed());
-                    updateToDeliveryTextFile("delivery_tracking.txt", data.toString());
+                    data.put("routeId",routeId);
+                            updateToDeliveryTextFile("delivery_tracking.txt", data.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

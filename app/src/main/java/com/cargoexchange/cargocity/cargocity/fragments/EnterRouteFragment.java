@@ -1,12 +1,9 @@
 package com.cargoexchange.cargocity.cargocity.fragments;
 
 
-import android.content.IntentFilter;
 import android.support.v4.app.FragmentActivity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,11 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
-import com.cargoexchange.cargocity.cargocity.MapActivity;
 import com.cargoexchange.cargocity.cargocity.R;
-import com.cargoexchange.cargocity.cargocity.constants.ApplicationSession;
+import com.cargoexchange.cargocity.cargocity.constants.RouteSession;
 import com.cargoexchange.cargocity.cargocity.constants.Constants;
 import com.cargoexchange.cargocity.cargocity.services.LocationService;
 
@@ -29,7 +24,7 @@ public class EnterRouteFragment extends Fragment {
     private Button mRouteSubmitBtn;
     private FragmentActivity thisActivity;
     private ProgressDialog mProgressDialog;
-    private ApplicationSession mApplicationSession;
+    private RouteSession mApplicationSession;
     private String routeId;
 
     public EnterRouteFragment() {
@@ -98,7 +93,7 @@ public class EnterRouteFragment extends Fragment {
                 Intent serviceintent=new Intent(thisActivity,LocationService.class);
                 thisActivity.startService(serviceintent);
                 //TODO:Stop this service on the logout event
-                mApplicationSession=ApplicationSession.getInstance();
+                mApplicationSession= RouteSession.getInstance();
                 mApplicationSession.setRouteId(routeId);
                 Fragment ordersListFragment = new OrdersListFragment() ;
                 thisActivity.getSupportFragmentManager().beginTransaction().replace(R.id.orders_container, ordersListFragment).commit();

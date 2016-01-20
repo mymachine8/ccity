@@ -50,6 +50,10 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         return orderDetails.size();
     }
 
+    public Order getItem(int position) {
+        return orderDetails.get(position);
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder
     {
         TextView mOrderno;
