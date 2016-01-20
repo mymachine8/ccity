@@ -2,6 +2,8 @@ package com.cargoexchange.cargocity.cargocity.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,6 +20,7 @@ import com.cargoexchange.cargocity.cargocity.adapters.OrderDetailsAdapter;
 import com.cargoexchange.cargocity.cargocity.models.Address;
 import com.cargoexchange.cargocity.cargocity.models.Customer;
 import com.cargoexchange.cargocity.cargocity.models.Order;
+import com.cargoexchange.cargocity.cargocity.utils.GenerateUrl;
 import com.cargoexchange.cargocity.cargocity.utils.RecyclerItemClickListener;
 import com.cargoexchange.cargocity.cargocity.models.OrderItem;
 
@@ -28,6 +31,8 @@ import java.util.List;
 public class OrdersListFragment extends Fragment {
     private RecyclerView mOrdersListFragmentRecycler;
     private RecyclerView.LayoutManager mOrdersListLayoutManager;
+    private LocationManager mLocationManager;
+    private Location mLocation;
 
     private FragmentActivity thisActivity;
 
@@ -48,6 +53,7 @@ public class OrdersListFragment extends Fragment {
 
         View view=inflater.inflate(R.layout.fragment_orders_list, container, false);
         thisActivity=getActivity();
+        mLocationManager=(LocationManager)thisActivity.getSystemService(Context.LOCATION_SERVICE);
         mOrdersListFragmentRecycler=(RecyclerView)view.findViewById(R.id.recylerview);
         mOrdersListLayoutManager=new LinearLayoutManager(thisActivity,LinearLayoutManager.VERTICAL,false);
         mOrdersListFragmentRecycler.setLayoutManager(mOrdersListLayoutManager);
@@ -61,10 +67,14 @@ public class OrdersListFragment extends Fragment {
             public void onItemClick(View view, int position)
             {
                 //TODO:use a singleton class to keep track of the orders completed and according disable intents to next activity
+                mLocation=mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                new GenerateUrl(mLocation);
                 Intent mapIntent=new Intent(thisActivity, MapActivity.class);
                 startActivity(mapIntent);
             }
         }));
+
+        //TODO:Download the matrix Data and parse it;
         return view;
     }
 }

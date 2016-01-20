@@ -35,6 +35,7 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
     @Override
     public void onBindViewHolder(ViewHolder holder, int position)
     {
+
         holder.mOrderno.setText(orderDetails.get(position).getOrderId());
         holder.mName.setText(orderDetails.get(position).getCustomer().getFirstName());
         holder.mAddressLine1.setText(orderDetails.get(position).getAddress().getHouseNumber());
