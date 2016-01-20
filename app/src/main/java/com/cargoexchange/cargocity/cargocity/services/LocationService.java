@@ -42,7 +42,7 @@ public class LocationService extends IntentService
     public LocationService()
     {
         super("com.cargoexchange.cargocity.cargocity.LocationService");
-        mPubnub = new Pubnub("publish_key", "subscribe_key");
+        mPubnub = new Pubnub("pub-c-1a772f6d-629d-415b-bedc-1f5addf4fcbc", "sub-c-e07d3d66-be1c-11e5-bcee-0619f8945a4f");
     }
 
     @Override
@@ -77,11 +77,12 @@ public class LocationService extends IntentService
                     data.put("latitude", location.getLatitude());
                     data.put("longitude", location.getLongitude());
                     data.put("speed", location.getSpeed());
+                    //data.put("routeId", )
                     updateToDeliveryTextFile("delivery_tracking.txt", data.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-//                mPubnub.publish("location_details", data, new Callback() {
+//                mPubnub.publish("delivery_tracking", data, new Callback() {
 //                });
 
             }
