@@ -6,11 +6,15 @@ package com.cargoexchange.cargocity.cargocity.services;
 
 import android.Manifest;
 import android.app.IntentService;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.BatteryManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
@@ -34,6 +38,8 @@ public class LocationService extends IntentService
 {
     private LocationManager mLocationManager;
     private Pubnub mPubnub;
+    private FileWriter writer;
+    public int count;
 
     public LocationService(String name)
     {
@@ -42,7 +48,9 @@ public class LocationService extends IntentService
     public LocationService()
     {
         super("com.cargoexchange.cargocity.cargocity.LocationService");
-        mPubnub = new Pubnub("pub-c-1a772f6d-629d-415b-bedc-1f5addf4fcbc", "sub-c-e07d3d66-be1c-11e5-bcee-0619f8945a4f");
+        mPubnub = new Pubnub("publish_key", "subscribe_key");
+        count=0;
+        initfile();
     }
 
     @Override
@@ -70,19 +78,18 @@ public class LocationService extends IntentService
         mLocationManager.requestLocationUpdates(mLocationManager.GPS_PROVIDER, 10, 0, new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-
+                count++;
                 JSONObject data = new JSONObject();
 
                 try {
                     data.put("latitude", location.getLatitude());
                     data.put("longitude", location.getLongitude());
                     data.put("speed", location.getSpeed());
-                    //data.put("routeId", )
                     updateToDeliveryTextFile("delivery_tracking.txt", data.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-//                mPubnub.publish("delivery_tracking", data, new Callback() {
+//                mPubnub.publish("location_details", data, new Callback() {
 //                });
 
             }
@@ -108,22 +115,31 @@ public class LocationService extends IntentService
             }
         });
     }
-
-    public void updateToDeliveryTextFile(String sFileName, String sBody){
-        try
-        {
+    public void initfile()
+    {
+        try {
             File root = new File(Environment.getExternalStorageDirectory(), "Notes");
             if (!root.exists()) {
                 root.mkdirs();
             }
-            File gpxfile = new File(root, sFileName);
-            FileWriter writer = new FileWriter(gpxfile);
-            writer.append(sBody + " ");
-            writer.flush();
-            writer.close();
+            File gpxfile = new File(root,"TestData.txt");
+            writer = new FileWriter(gpxfile);
         }
-        catch(IOException e)
-        {
+        catch (IOException e)
+        {e.printStackTrace();}
+    }
+
+    public void updateToDeliveryTextFile(String sFileName, String sBody){
+
+
+        try {
+            if(count>=10){
+                writer.close();
+            }
+             else {
+                writer.append(sBody + " ");
+            }
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
