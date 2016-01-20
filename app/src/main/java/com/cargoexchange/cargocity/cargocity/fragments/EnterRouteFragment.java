@@ -1,6 +1,7 @@
 package com.cargoexchange.cargocity.cargocity.fragments;
 
 
+import android.content.IntentFilter;
 import android.support.v4.app.FragmentActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
