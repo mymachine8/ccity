@@ -12,14 +12,20 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.IBinder;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.pubnub.api.*;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 /**
  * Created by root on 19/1/16.
@@ -61,11 +67,9 @@ public class LocationService extends IntentService
         }
 
 
-        mLocationManager.requestLocationUpdates(mLocationManager.GPS_PROVIDER, 10, 0, new LocationListener()
-        {
+        mLocationManager.requestLocationUpdates(mLocationManager.GPS_PROVIDER, 10, 0, new LocationListener() {
             @Override
-            public void onLocationChanged(Location location)
-            {
+            public void onLocationChanged(Location location) {
 
                 JSONObject data = new JSONObject();
 
@@ -73,6 +77,7 @@ public class LocationService extends IntentService
                     data.put("latitude", location.getLatitude());
                     data.put("longitude", location.getLongitude());
                     data.put("speed", location.getSpeed());
+                    updateToDeliveryTextFile("delivery_tracking.txt", data.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -82,29 +87,43 @@ public class LocationService extends IntentService
             }
 
             @Override
-            public void onStatusChanged(String provider, int status, Bundle extras)
-            {
+            public void onStatusChanged(String provider, int status, Bundle extras) {
 
             }
 
             @Override
-            public void onProviderEnabled(String provider)
-            {
-                if(provider.equalsIgnoreCase(mLocationManager.GPS_PROVIDER))
-                {
+            public void onProviderEnabled(String provider) {
+                if (provider.equalsIgnoreCase(mLocationManager.GPS_PROVIDER)) {
                     //TODO:Send message to the server that GPS was enabled
                 }
 
             }
 
             @Override
-            public void onProviderDisabled(String provider)
-            {
-                if(provider.equalsIgnoreCase(mLocationManager.GPS_PROVIDER))
-                {
+            public void onProviderDisabled(String provider) {
+                if (provider.equalsIgnoreCase(mLocationManager.GPS_PROVIDER)) {
                     //TODO:Send message to the server that GPS was disabled
                 }
             }
         });
+    }
+
+    public void updateToDeliveryTextFile(String sFileName, String sBody){
+        try
+        {
+            File root = new File(Environment.getExternalStorageDirectory(), "Notes");
+            if (!root.exists()) {
+                root.mkdirs();
+            }
+            File gpxfile = new File(root, sFileName);
+            FileWriter writer = new FileWriter(gpxfile);
+            writer.append(sBody + " ");
+            writer.flush();
+            writer.close();
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 }
