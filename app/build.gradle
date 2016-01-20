@@ -29,6 +29,7 @@ dependencies {
 
     compile 'com.google.android.gms:play-services:8.4.0'
     compile 'com.mcxiaoke.volley:library:1.0.+'
+    compile 'com.pubnub:pubnub-android:3.7.5'
 
     compile project(':scanlibrary')
 }

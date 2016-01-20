@@ -4,13 +4,16 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.io.IOException;
 
@@ -72,7 +75,8 @@ public class ResultFragment extends Fragment {
         return uri;
     }
 
-    public void setScannedImage(Bitmap scannedImage) {
+    public void setScannedImage(Bitmap scannedImage)
+    {
         scannedImageView.setImageBitmap(scannedImage);
     }
 

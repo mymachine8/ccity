@@ -71,6 +71,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private float distance = 0.0f;
     private MenuItem action_endMenuItem;
     private MenuItem action_navigationMenuItem;
+    private int locationCount=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -238,11 +239,19 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             @Override
             public void onLocationChanged(Location location)
             {
-                distance=distance+location.distanceTo(mPrevLocation);
-                mPrevLocation=location;
-                mCurrent=location;
-                mapFragment.getMapAsync(MapActivity.this);
-                TYPE=1;
+                if(locationCount!=0)
+                {
+                    distance=distance+location.distanceTo(mPrevLocation);
+                    mPrevLocation=location;
+                    mCurrent=location;
+                    mapFragment.getMapAsync(MapActivity.this);
+                    TYPE=1;
+                }
+                else
+                {
+                    mPrevLocation=location;
+                    locationCount+=1;
+                }
 
             }
             @Override

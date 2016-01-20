@@ -22,7 +22,9 @@ import java.io.IOException;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class FeedbackFragment extends Fragment {
+public class FeedbackFragment extends Fragment
+{
+    //TODO:Implement the image window logic here
     private static final int SCAN_REQUEST_CODE = 99;
     private ImageView mCameraImage;
     private Activity mActivityContext;

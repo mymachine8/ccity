@@ -25,7 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Created by jhansi on 04/04/15.
+ * Created by mymachine on 18/01/16.
  */
 public class PickImageFragment extends Fragment {
 
@@ -35,6 +35,7 @@ public class PickImageFragment extends Fragment {
     private ImageButton galleryButton;
     private Uri fileUri;
     private IScanner scanner;
+    private ScanActivity thisActivity;
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -47,6 +48,7 @@ public class PickImageFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.pick_image_fragment, null);
+        thisActivity=(ScanActivity)getActivity();
         init();
         return view;
     }
@@ -117,12 +119,14 @@ public class PickImageFragment extends Fragment {
     }
 
     public void openCamera() {
-        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        //Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        Intent cameraIntent = new Intent(thisActivity,CameraCustom.class);
         File file = createImageFile();
         file.getParentFile().mkdirs();
         fileUri = Uri.fromFile(file);
         if (file != null) {
-            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+            //TODO:Create a call to the custom camera interface
+            //cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
             startActivityForResult(cameraIntent, ScanConstants.START_CAMERA_REQUEST_CODE);
         }
     }
@@ -130,14 +134,13 @@ public class PickImageFragment extends Fragment {
     private File createImageFile() {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new
                 Date());
-        File file = new File(ScanConstants.IMAGE_PATH, "IMG_" + timeStamp +
-                ".jpg");
+        File file = new File(ScanConstants.IMAGE_PATH, "IMG_" + timeStamp + ".jpg");
         return file;
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode,String permissions[], int[] grantResults)
+    {
         switch (requestCode) {
             case REQUEST_CODE_ASK_PERMISSION_CAMERA: {
                 if (grantResults.length > 0
@@ -156,12 +159,14 @@ public class PickImageFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d("", "onActivityResult" + resultCode);
-        Bitmap bitmap = null;
+        Bitmap bitmap = null,temp=null;
         if (resultCode == Activity.RESULT_OK) {
             try {
                 switch (requestCode) {
                     case ScanConstants.START_CAMERA_REQUEST_CODE:
-                        bitmap = getBitmap(fileUri);
+                        //bitmap = getBitmap(fileUri);
+                        temp=BitmapFactory.decodeFile(data.getData().toString());
+                        bitmap=Bitmap.createScaledBitmap(temp,800,640,false);
                         break;
 
                     case ScanConstants.PICKFILE_REQUEST_CODE:
