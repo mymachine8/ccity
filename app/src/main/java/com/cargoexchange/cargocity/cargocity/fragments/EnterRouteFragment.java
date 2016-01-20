@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.cargoexchange.cargocity.cargocity.MapActivity;
 import com.cargoexchange.cargocity.cargocity.R;
+import com.cargoexchange.cargocity.cargocity.constants.ApplicationSession;
 import com.cargoexchange.cargocity.cargocity.constants.Constants;
 import com.cargoexchange.cargocity.cargocity.services.LocationService;
 
@@ -28,6 +29,8 @@ public class EnterRouteFragment extends Fragment {
     private Button mRouteSubmitBtn;
     private FragmentActivity thisActivity;
     private ProgressDialog mProgressDialog;
+    private ApplicationSession mApplicationSession;
+    private String routeId;
 
     public EnterRouteFragment() {
     }
@@ -57,7 +60,7 @@ public class EnterRouteFragment extends Fragment {
     }
 
     public void routeSubmit() {
-        String routeId = mRouteIdText.getText().toString();
+        routeId = mRouteIdText.getText().toString();
         if (routeId.isEmpty()) {
             mRouteIdText.setError("Please enter Route Id");
             return;
@@ -95,6 +98,8 @@ public class EnterRouteFragment extends Fragment {
                 Intent serviceintent=new Intent(thisActivity,LocationService.class);
                 thisActivity.startService(serviceintent);
                 //TODO:Stop this service on the logout event
+                mApplicationSession=ApplicationSession.getInstance();
+                mApplicationSession.setRouteId(routeId);
                 Fragment ordersListFragment = new OrdersListFragment() ;
                 thisActivity.getSupportFragmentManager().beginTransaction().replace(R.id.orders_container, ordersListFragment).commit();
 
