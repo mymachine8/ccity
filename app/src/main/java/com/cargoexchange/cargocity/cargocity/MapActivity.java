@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -50,6 +51,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private static final String MAP_TRANSTMODE = "bus";
     private static final String MAP_REPLYJSON = "json";
     private static final String MAP_REPLYXML = "xml";
+    private static final String FRAGMENT_DIRECTIONS = "fragment_directions";
     private SupportMapFragment mapFragment;
     private boolean menuStatus = false;
     private FloatingActionButton mNavigationFloatingActionButton;
@@ -72,12 +74,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private MenuItem action_endMenuItem;
     private MenuItem action_navigationMenuItem;
     private int locationCount=0;
+    private boolean isDirectionListOpen;
+    private Fragment mNavigationFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapfragment); //R.id.mapfragment
+
         mapDataProgress = new ProgressDialog(this);
         mapDataProgress.setMessage("Loading...");
         mapDataProgress.setTitle("Map");
@@ -199,9 +204,30 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 break;
 
             case R.id.action_navigation_instruction:
-                Fragment navigationFragment = new NavigationInstructionFragment();
-                navigationFragment.setArguments(sendToNavigationFragmentBundle);
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, navigationFragment).addToBackStack("list").commit();
+                if(isDirectionListOpen) {
+                    isDirectionListOpen = false;
+                    NavigationInstructionFragment navFragment = (NavigationInstructionFragment) getSupportFragmentManager().findFragmentByTag(FRAGMENT_DIRECTIONS);
+                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                    ft.detach(navFragment);
+                    ft.attach(mapFragment);
+                    ft.commit();
+                }
+                else {
+                    isDirectionListOpen = true;
+                    if(mNavigationFragment == null){
+                        mNavigationFragment = new NavigationInstructionFragment();
+                        mNavigationFragment.setArguments(sendToNavigationFragmentBundle);
+                        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, mNavigationFragment, FRAGMENT_DIRECTIONS).commit();
+                    }
+                    else {
+                        NavigationInstructionFragment navFragment = (NavigationInstructionFragment) getSupportFragmentManager().findFragmentByTag(FRAGMENT_DIRECTIONS);
+                        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                        ft.detach(mapFragment);
+                        ft.attach(navFragment);
+                        ft.commit();
+                    }
+                }
+
                 break;
         }
         return false;

@@ -69,7 +69,8 @@ public class OrdersListFragment extends Fragment {
             orderStatusList.put(order.getOrderId(), OrderStatus.PENDING_DELIVERY);
         }
         mRouteSession.setmOrderStatusList(orderStatusList);
-        mOrdersListFragmentRecycler.setAdapter(new OrderDetailsAdapter(mOrdersList));
+        mOrderDetailsAdapter = new OrderDetailsAdapter(mOrdersList);
+        mOrdersListFragmentRecycler.setAdapter(mOrderDetailsAdapter);
         mOrdersListFragmentRecycler.addOnItemTouchListener(new RecyclerItemClickListener(thisActivity, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
