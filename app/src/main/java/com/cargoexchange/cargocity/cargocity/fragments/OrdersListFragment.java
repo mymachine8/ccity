@@ -84,8 +84,8 @@ public class OrdersListFragment extends Fragment {
                     Intent mapIntent = new Intent(thisActivity, MapActivity.class);
                     startActivity(mapIntent);
                 //TODO:use a singleton class to keep track of the orders completed and according disable intents to next activity
-                mLocation=mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                new GenerateUrl(mLocation);
+                /*mLocation=mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                new GenerateUrl(mLocation);*/
                 }
             }
         }));
