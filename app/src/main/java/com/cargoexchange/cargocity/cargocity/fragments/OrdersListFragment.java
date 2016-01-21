@@ -75,7 +75,8 @@ public class OrdersListFragment extends Fragment {
             orderStatusList.put(order.getOrderId(), OrderStatus.PENDING_DELIVERY);
         }
         mRouteSession.setmOrderStatusList(orderStatusList);
-        mOrdersListFragmentRecycler.setAdapter(new OrderDetailsAdapter(mOrdersList));
+        mOrderDetailsAdapter = new OrderDetailsAdapter(mOrdersList);
+        mOrdersListFragmentRecycler.setAdapter(mOrderDetailsAdapter);
         mOrdersListFragmentRecycler.addOnItemTouchListener(new RecyclerItemClickListener(thisActivity, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
              public void onItemClick(View view, int position) {
@@ -83,8 +84,8 @@ public class OrdersListFragment extends Fragment {
                     Intent mapIntent = new Intent(thisActivity, MapActivity.class);
                     startActivity(mapIntent);
                 //TODO:use a singleton class to keep track of the orders completed and according disable intents to next activity
-                mLocation=mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                new GenerateUrl(mLocation);
+                /*mLocation=mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                new GenerateUrl(mLocation);*/
                 }
             }
         }));
