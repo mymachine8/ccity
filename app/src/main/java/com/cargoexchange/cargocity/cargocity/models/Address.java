@@ -11,9 +11,9 @@ public class Address {
     private String pincode;
     private String state;
 
-    public Address(String addressLine1, String houseNumber, String addressLine2, String city, String pincode, String state) {
-        this.addressLine1 = addressLine1;
+    public Address(String houseNumber,String addressLine1, String addressLine2, String city, String pincode, String state) {
         this.houseNumber = houseNumber;
+        this.addressLine1 = addressLine1;
         this.addressLine2 = addressLine2;
         this.city = city;
         this.pincode = pincode;

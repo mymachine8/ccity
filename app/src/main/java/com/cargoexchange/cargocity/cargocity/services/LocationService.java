@@ -111,7 +111,8 @@ public class LocationService extends IntentService
 
             @Override
             public void onProviderDisabled(String provider) {
-                if (provider.equalsIgnoreCase(mLocationManager.GPS_PROVIDER)) {
+                if (provider.equalsIgnoreCase(mLocationManager.GPS_PROVIDER))
+                {
                     //TODO:Send message to the server that GPS was disabled
                 }
             }
@@ -135,7 +136,8 @@ public class LocationService extends IntentService
 
 
         try {
-            if(count>=10){
+            if(count>=120)
+            {
                 writer.close();
             }
              else {

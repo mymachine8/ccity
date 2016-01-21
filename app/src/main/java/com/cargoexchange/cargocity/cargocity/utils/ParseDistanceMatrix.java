@@ -45,7 +45,7 @@ public class ParseDistanceMatrix
                     for(int j=0;j<jValues.length();j++)
                     {
                         jDistance=((JSONObject)jValues.get(j)).getJSONObject("distance");
-                        jDuration=((JSONObject)jValues.get(j)).getJSONObject("duration_in_traffic");
+                        jDuration=((JSONObject)jValues.get(j)).getJSONObject("duration");
                         mDistance=jDistance.getString("text");
                         mDuration=jDuration.getString("text");
                         Log.d("Distance",mDistance);

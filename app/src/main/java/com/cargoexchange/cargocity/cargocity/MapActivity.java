@@ -91,7 +91,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             @Override
             public void onResponse(JSONObject response) {
                 Log.d("test", response.toString());
+                //Use the routes to draw polyline on map
                 routes = new ParseDirections(response).getRoutes();
+
+                //pass this bundle to extract the navigation instructions
                 sendToNavigationFragmentBundle = new Bundle();
                 sendToNavigationFragmentBundle.putString("mapData", response.toString());
                 mapFragment.getMapAsync(MapActivity.this);

@@ -5,24 +5,19 @@ package com.cargoexchange.cargocity.cargocity.utils;
  */
 public class ParseAddress
 {
-    private String maddress;
     private String processed;
-    ParseAddress(String maddress)
-    {
-        this.maddress=maddress;
-        parseAddress();
-    }
 
-    public String getProcessedaddress()
+    public String getProcessedaddress(String maddress)
     {
+        parseAddress(maddress);
         return processed;
     }
 
-    private void parseAddress()
+    private void parseAddress(String maddress)
     {
         String [] mListOfWords;
+        processed=new String();
         maddress=maddress.trim();
-        String processed=new String();
         if(maddress.contains(" "))
         {
             mListOfWords=maddress.split(" ");

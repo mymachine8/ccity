@@ -8,6 +8,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cargoexchange.cargocity.cargocity.R;
+import com.cargoexchange.cargocity.cargocity.constants.OrderStatus;
+import com.cargoexchange.cargocity.cargocity.constants.RouteSession;
 import com.cargoexchange.cargocity.cargocity.models.Order;
 
 import java.util.List;
@@ -18,6 +20,7 @@ import java.util.List;
 public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapter.ViewHolder>
 {
     private List<Order> orderDetails;
+    private RouteSession mRouteSession;
     public OrderDetailsAdapter(List<Order> orderDetails)
     {
         this.orderDetails=orderDetails;
@@ -35,13 +38,18 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
     @Override
     public void onBindViewHolder(ViewHolder holder, int position)
     {
-
+        mRouteSession=RouteSession.getInstance();
         holder.mOrderno.setText(orderDetails.get(position).getOrderId());
         holder.mName.setText(orderDetails.get(position).getCustomer().getFirstName());
         holder.mAddressLine1.setText(orderDetails.get(position).getAddress().getHouseNumber());
         holder.mAddressLocality.setText(orderDetails.get(position).getAddress().getAddressLine1());
         holder.mAddressLandmark.setText(orderDetails.get(position).getAddress().getAddressLine2());
         holder.mCity.setText(orderDetails.get(position).getAddress().getCity());
+        if(mRouteSession.getmOrderList().get(position).getMstatus()== OrderStatus.PENDING_DELIVERY && mRouteSession.getmMatrixDownloadStatus()==1)
+        {
+            holder.mDistance.setText(mRouteSession.getmDistanceList().get(position));
+            holder.mTime.setText(mRouteSession.getmDurationList().get(position));
+        }
     }
 
     @Override

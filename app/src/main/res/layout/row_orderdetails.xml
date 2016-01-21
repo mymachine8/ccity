@@ -101,6 +101,7 @@
                     android:text="Distance:-"/>
 
                 <TextView
+                    android:id="@+id/distancetextview"
                     android:textSize="15dp"
                     android:textColor="@android:color/holo_red_dark"
                     android:layout_width="60dp"
@@ -114,7 +115,6 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/distancetextview"
                     android:textSize="15dp"
                     android:textColor="@android:color/holo_red_dark"
                     android:gravity="right"
