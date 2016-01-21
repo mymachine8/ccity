@@ -60,7 +60,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private FloatingActionButton mNavigationFloatingActionButton;
     private Intent navigationIntent;
     private String mDestination=new String();
-    String url;// = "https://maps.googleapis.com/maps/api/directions/" + MAP_REPLYJSON + "?key=" + MAP_KEY + "&departure_time=" + MAP_DEPARTURETIME + "&traffic_model=" + MAP_TRAFFICMODEL_PESSIMISTIC + "&transit_mode=" + MAP_TRANSTMODE + "&origin=madhapur,hyderabad&destination=uppal,hyderabad";
+    String url;
     Bundle sendToNavigationFragmentBundle;
     ProgressDialog mapDataProgress;
     private List<List<HashMap<String, String>>> routes;

@@ -1,11 +1,14 @@
 package com.cargoexchange.cargocity.cargocity.fragments;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -41,7 +44,8 @@ import java.util.List;
 import java.util.Map;
 
 
-public class OrdersListFragment extends Fragment {
+public class OrdersListFragment extends Fragment
+{
     private RecyclerView mOrdersListFragmentRecycler;
     private RecyclerView.LayoutManager mOrdersListLayoutManager;
     private LocationManager mLocationManager;
@@ -59,20 +63,21 @@ public class OrdersListFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
-        mOrdersList=new ArrayList<>();
-        mOrdersList.add(new Order("ABC", new Customer("Somesh", "NA", "Mohan", "abc@xyz.com", "NA", "NA"), new Address("Plot No 105a", "Sri Nagar Colony", "", "Hyderabad", "NA", "Telangana"), null,OrderStatus.PENDING_DELIVERY));
-        mOrdersList.add(new Order("ABC", new Customer("Krishna", "NA", "Chaitanya", "def@xyz.com", "NA", "NA"), new Address("Amulya Grand", "Ayappa Society", "Madhapur", "Hyderabad", "NA", "Telangana"),null,OrderStatus.PENDING_DELIVERY));
-        mOrdersList.add(new Order("ABC", new Customer("Kinkar", "NA", "Banerji", "xyz@xyz.com", "NA", "NA"), new Address("Arth Design Build", "ROAD NO 21", "Banjara Hills", "Hyderabad", "NA", "Telangana"),null,OrderStatus.PENDING_DELIVERY));
-
+    public void onCreate(Bundle savedInstanceState) {
         mRouteSession = RouteSession.getInstance();
-        Map<String, Integer> orderStatusList = new HashMap<String, Integer>();
-        for(Order order : mOrdersList) {
-            orderStatusList.put(order.getOrderId(), OrderStatus.PENDING_DELIVERY);
+        mOrdersList = mRouteSession.getmOrderList();
+        if (mOrdersList == null || mOrdersList.size() == 0) {
+            mOrdersList = new ArrayList<>();
+            mOrdersList.add(new Order("ABC", new Customer("Somesh", "NA", "Mohan", "abc@xyz.com", "NA", "NA"), new Address("Plot No 105a", "Sri Nagar Colony", "", "Hyderabad", "NA", "Telangana"), null, OrderStatus.PENDING_DELIVERY));
+            mOrdersList.add(new Order("ABC", new Customer("Krishna", "NA", "Chaitanya", "def@xyz.com", "NA", "NA"), new Address("Amulya Grand", "Ayappa Society", "Madhapur", "Hyderabad", "NA", "Telangana"), null, OrderStatus.PENDING_DELIVERY));
+            mOrdersList.add(new Order("ABC", new Customer("Kinkar", "NA", "Banerji", "xyz@xyz.com", "NA", "NA"), new Address("Arth Design Build", "ROAD NO 21", "Banjara Hills", "Hyderabad", "NA", "Telangana"), null, OrderStatus.PENDING_DELIVERY));
+            Map<String, Integer> orderStatusList = new HashMap<String, Integer>();
+            for (Order order : mOrdersList) {
+                orderStatusList.put(order.getOrderId(), OrderStatus.PENDING_DELIVERY);
+            }
+            mRouteSession.setmOrderStatusList(orderStatusList);
+            mRouteSession.setmOrderList(mOrdersList);
         }
-        mRouteSession.setmOrderStatusList(orderStatusList);
-        mRouteSession.setmOrderList(mOrdersList);
         super.onCreate(savedInstanceState);
     }
 
@@ -81,14 +86,24 @@ public class OrdersListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        View view=inflater.inflate(R.layout.fragment_orders_list, container, false);
-        thisActivity=getActivity();
-        mLocationManager=(LocationManager)thisActivity.getSystemService(Context.LOCATION_SERVICE);
-        mOrdersListFragmentRecycler=(RecyclerView)view.findViewById(R.id.recylerview);
-        mOrdersListLayoutManager=new LinearLayoutManager(thisActivity,LinearLayoutManager.VERTICAL,false);
+        View view = inflater.inflate(R.layout.fragment_orders_list, container, false);
+        thisActivity = getActivity();
+        mLocationManager = (LocationManager) thisActivity.getSystemService(Context.LOCATION_SERVICE);
+        mOrdersListFragmentRecycler = (RecyclerView) view.findViewById(R.id.recylerview);
+        mOrdersListLayoutManager = new LinearLayoutManager(thisActivity, LinearLayoutManager.VERTICAL, false);
         mOrdersListFragmentRecycler.setLayoutManager(mOrdersListLayoutManager);
 
-        mLocation=mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        if (ActivityCompat.checkSelfPermission(thisActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(thisActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            //return TODO;
+        }
+        mLocation = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         String url=new GenerateUrl(mLocation).getMurl();
         JsonObjectRequest request= CargoCity.getmInstance().getProduct(new Response.Listener<JSONObject>() {
             @Override
@@ -106,11 +121,17 @@ public class OrdersListFragment extends Fragment {
                 mOrdersListFragmentRecycler.addOnItemTouchListener(new RecyclerItemClickListener(thisActivity, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        if (mRouteSession.getOrderStatus(mOrderDetailsAdapter.getItem(position).getOrderId()) == OrderStatus.PENDING_DELIVERY) {
+                        //if (mRouteSession.getOrderStatus(mOrderDetailsAdapter.getItem(position).getOrderId()) == OrderStatus.PENDING_DELIVERY)
+                        if(mRouteSession.getmOrderList().get(position).getMstatus()==OrderStatus.PENDING_DELIVERY)
+                        {
                             Intent mapIntent = new Intent(thisActivity, MapActivity.class);
                             mRouteSession.setPosition(position);
                             startActivity(mapIntent);
                             //TODO:use a singleton class to keep track of the orders completed and according disable intents to next activity
+                        }
+                        else
+                        {
+                            Toast.makeText(thisActivity,"Delivery Completed",Toast.LENGTH_SHORT).show();
                         }
                     }
                 }));
@@ -136,11 +157,6 @@ public class OrdersListFragment extends Fragment {
             }
         }, url);
         CargoCity.getmInstance().getRequestQueue().add(request);
-
-
-
-
-        //TODO:Download the matrix Data and parse it;
 
         return view;
     }
