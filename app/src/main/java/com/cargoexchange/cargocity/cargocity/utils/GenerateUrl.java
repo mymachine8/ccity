@@ -65,7 +65,7 @@ public class GenerateUrl
         }
         mDestination=mDestination+mTemp.get(mTemp.size()-1);
 
-        murl= Constants.GOOGLE_MAP_MATRIX_API_BASE_URL+"key="+Constants.GOOGLE_MAP_SERVER_KEY+"&origins="+mLocation.getLatitude()+","+mLocation.getLongitude()+"&destinations="+mDestination;
+        murl= Constants.GOOGLE_MAP_MATRIX_API_BASE_URL+"key="+Constants.GOOGLE_MAP_SERVER_KEY+"&departure_time="+Constants.MAP_DEPARTURETIME+"&traffic_model="+Constants.MAP_TRAFFICMODEL_PESSIMISTIC+"&mode="+Constants.MAP_TRANSTMODE+"&origins="+mLocation.getLatitude()+","+mLocation.getLongitude()+"&destinations="+mDestination;
         Log.d("URL=",murl);
     }
 }

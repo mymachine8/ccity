@@ -40,4 +40,9 @@ public class CargoCity extends Application
         JsonObjectRequest request = new JsonObjectRequest(url,null,responseListener,errorListener);
         return request;
     }
+    public JsonObjectRequest getProduct(Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener,String url,JSONObject requestData)
+    {
+        JsonObjectRequest request = new JsonObjectRequest(url,requestData,responseListener,errorListener);
+        return request;
+    }
 }

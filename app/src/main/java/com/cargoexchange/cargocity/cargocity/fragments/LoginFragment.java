@@ -14,14 +14,23 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonRequest;
+import com.cargoexchange.cargocity.cargocity.CargoCity;
 import com.cargoexchange.cargocity.cargocity.OrdersActivity;
 import com.cargoexchange.cargocity.cargocity.R;
 import com.cargoexchange.cargocity.cargocity.constants.Constants;
+import com.cargoexchange.cargocity.cargocity.utils.GenerateRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class LoginFragment extends Fragment {
+public class LoginFragment extends Fragment
+{
 
     private TextView mUsernameText;
     private TextView mPasswordText;
@@ -34,7 +43,8 @@ public class LoginFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
         thisActivity = getActivity();
@@ -106,12 +116,50 @@ public class LoginFragment extends Fragment {
 
     private class ValidateUserTask extends AsyncTask<String, Void, Boolean> {
         @Override
-        protected Boolean doInBackground(String... params) {
+        protected Boolean doInBackground(String... params)
+        {
+            String url=new String();
             String email = params[0];
             String password = params[1];
             String uri = Constants.CARGO_API_BASE_URL + "/login";
             //TODO: Send login credentials to server, get response and store them in shared prefs
+            JSONObject credentialRequestData=new GenerateRequest().getRequest(email,password);
+            if(credentialRequestData!=null)
+            {
+                JsonRequest request= CargoCity.getmInstance().getProduct(
+                        new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response)
+                    {
+                        String status;
+                        String token=new String();
+                        String error_message=new String();
+                        try {
+                            for (int i = 0; i < response.length(); i++)
+                            {
+                                status = response.getString("status");
+                                if(status.equalsIgnoreCase("success"))
+                                {
+                                    token=response.getString("accessToken");
+                                }
+                                else
+                                {
+                                    error_message=response.getString("message");
+                                }
+                            }
+                        }
+                        catch(JSONException e){e.printStackTrace();}
 
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error)
+                    {
+
+                    }
+                },url,credentialRequestData);
+                CargoCity.getmInstance().getRequestQueue().add(request);
+            }
             return true;
         }
 
