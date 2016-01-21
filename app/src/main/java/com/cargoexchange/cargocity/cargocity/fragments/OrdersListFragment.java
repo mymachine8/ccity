@@ -108,6 +108,7 @@ public class OrdersListFragment extends Fragment {
                     public void onItemClick(View view, int position) {
                         if (mRouteSession.getOrderStatus(mOrderDetailsAdapter.getItem(position).getOrderId()) == OrderStatus.PENDING_DELIVERY) {
                             Intent mapIntent = new Intent(thisActivity, MapActivity.class);
+                            mRouteSession.setPosition(position);
                             startActivity(mapIntent);
                             //TODO:use a singleton class to keep track of the orders completed and according disable intents to next activity
                         }

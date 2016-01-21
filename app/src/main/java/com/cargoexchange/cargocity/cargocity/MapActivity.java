@@ -24,8 +24,11 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.cargoexchange.cargocity.cargocity.constants.Constants;
+import com.cargoexchange.cargocity.cargocity.constants.RouteSession;
 import com.cargoexchange.cargocity.cargocity.fragments.NavigationInstructionFragment;
 import com.cargoexchange.cargocity.cargocity.services.LocationService;
+import com.cargoexchange.cargocity.cargocity.utils.ParseAddress;
 import com.cargoexchange.cargocity.cargocity.utils.ParseDirections;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -56,8 +59,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private boolean menuStatus = false;
     private FloatingActionButton mNavigationFloatingActionButton;
     private Intent navigationIntent;
-    private String mDestination = "uppal,hyderabad";
-    String url = "https://maps.googleapis.com/maps/api/directions/" + MAP_REPLYJSON + "?key=" + MAP_KEY + "&departure_time=" + MAP_DEPARTURETIME + "&traffic_model=" + MAP_TRAFFICMODEL_PESSIMISTIC + "&transit_mode=" + MAP_TRANSTMODE + "&origin=madhapur,hyderabad&destination=uppal,hyderabad";
+    private String mDestination=new String();
+    String url;// = "https://maps.googleapis.com/maps/api/directions/" + MAP_REPLYJSON + "?key=" + MAP_KEY + "&departure_time=" + MAP_DEPARTURETIME + "&traffic_model=" + MAP_TRAFFICMODEL_PESSIMISTIC + "&transit_mode=" + MAP_TRANSTMODE + "&origin=madhapur,hyderabad&destination=uppal,hyderabad";
     Bundle sendToNavigationFragmentBundle;
     ProgressDialog mapDataProgress;
     private List<List<HashMap<String, String>>> routes;
@@ -73,16 +76,39 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private float distance = 0.0f;
     private MenuItem action_endMenuItem;
     private MenuItem action_navigationMenuItem;
-    private int locationCount=0;
+    private int locationCount = 0;
     private boolean isDirectionListOpen;
     private Fragment mNavigationFragment;
+    private RouteSession mRouteSession;
+    private ParseAddress mParseAddress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapfragment); //R.id.mapfragment
-
+        mRouteSession = RouteSession.getInstance();
+        mParseAddress = new ParseAddress();
+        mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        int position = mRouteSession.getPosition();
+        String addressHouseNo = mParseAddress.getProcessedaddress(mRouteSession.getmOrderList().get(position).getAddress().getHouseNumber());
+        String addressLine1 = mParseAddress.getProcessedaddress(mRouteSession.getmOrderList().get(position).getAddress().getAddressLine1());
+        String addressLine2 = mParseAddress.getProcessedaddress(mRouteSession.getmOrderList().get(position).getAddress().getAddressLine2());
+        String addressCity = mParseAddress.getProcessedaddress(mRouteSession.getmOrderList().get(position).getAddress().getCity());
+        String addressState = mParseAddress.getProcessedaddress(mRouteSession.getmOrderList().get(position).getAddress().getState());
+        mDestination = addressHouseNo + "," + addressLine1 + "," + addressLine2 + "," + addressCity + "," + addressState;
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        Location location = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        url= Constants.GOOGLE_MAP_DIRECTIONS_API_BASE_URL+"key="+Constants.GOOGLE_MAP_SERVER_KEY+"&origin="+location.getLatitude()+","+location.getLongitude()+"&destination="+mDestination+"&departure_time="+Constants.MAP_DEPARTURETIME+"&traffic_model="+Constants.MAP_TRAFFICMODEL_PESSIMISTIC+"&mode="+Constants.MAP_TRANSTMODE;
         mapDataProgress = new ProgressDialog(this);
         mapDataProgress.setMessage("Loading...");
         mapDataProgress.setTitle("Map");
@@ -251,7 +277,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     private void trackVehicle() {
-        mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
