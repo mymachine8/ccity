@@ -79,7 +79,7 @@ public class LocationService extends IntentService
         mLocationManager.requestLocationUpdates(mLocationManager.GPS_PROVIDER, 10, 0, new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                count++;
+
                 JSONObject data = new JSONObject();
                 String routeId = RouteSession.getInstance().getRouteId();
                 try {
@@ -88,6 +88,7 @@ public class LocationService extends IntentService
                     data.put("speed", location.getSpeed());
                     data.put("routeId",routeId);
                             updateToDeliveryTextFile("delivery_tracking.txt", data.toString());
+                    count++;
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -136,7 +137,7 @@ public class LocationService extends IntentService
 
 
         try {
-            if(count>=120)
+            if(count>=20)
             {
                 writer.close();
             }

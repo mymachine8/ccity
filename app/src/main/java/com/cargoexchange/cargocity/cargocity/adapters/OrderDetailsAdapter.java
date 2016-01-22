@@ -50,6 +50,10 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
             holder.mDistance.setText(mRouteSession.getmDistanceList().get(position));
             holder.mTime.setText(mRouteSession.getmDurationList().get(position));
         }
+        else
+        {
+            holder.mStatusImage.setImageResource(R.drawable.ic_tick);
+        }
     }
 
     @Override
