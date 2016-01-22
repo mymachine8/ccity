@@ -10,7 +10,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +40,7 @@ public class LoginFragment extends Fragment
     private Button mLoginButton;
     private ProgressDialog mProgressDialog;
     private Activity thisActivity;
+    private RelativeLayout loginLayout;
     public LoginFragment()
     {
         super();
@@ -48,6 +52,17 @@ public class LoginFragment extends Fragment
     {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
         thisActivity = getActivity();
+        thisActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        loginLayout=(RelativeLayout)view.findViewById(R.id.loginLayout);
+        loginLayout.setOnClickListener(new RelativeLayout.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                InputMethodManager inputMethodManager = (InputMethodManager)thisActivity
+                        .getSystemService(Activity.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(thisActivity.getCurrentFocus().getWindowToken(),0);
+            }
+        });
         bindViewVariables(view);
         mLoginButton .setOnClickListener(new View.OnClickListener() {
 

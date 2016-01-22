@@ -14,4 +14,6 @@ public class Constants
     public static final String MAP_TRAFFICMODEL_BESTGUESS = "best_guess";
     public static final String MAP_DEPARTURETIME = "now";
     public static final String MAP_TRANSTMODE = "bus";
+    public static final int LOCATION_MAX_TIME=50000;
+    public static final int LOCATION_MAX_DISTANCE=500;
 }

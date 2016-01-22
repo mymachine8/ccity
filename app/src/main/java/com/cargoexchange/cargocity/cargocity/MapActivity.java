@@ -28,6 +28,7 @@ import com.cargoexchange.cargocity.cargocity.constants.Constants;
 import com.cargoexchange.cargocity.cargocity.constants.RouteSession;
 import com.cargoexchange.cargocity.cargocity.fragments.NavigationInstructionFragment;
 import com.cargoexchange.cargocity.cargocity.services.LocationService;
+import com.cargoexchange.cargocity.cargocity.utils.IsLocationLatest;
 import com.cargoexchange.cargocity.cargocity.utils.ParseAddress;
 import com.cargoexchange.cargocity.cargocity.utils.ParseDirections;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -86,17 +87,42 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapfragment); //R.id.mapfragment
+        mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.mapfragment); //R.id.mapfragment
         mRouteSession = RouteSession.getInstance();
         mParseAddress = new ParseAddress();
         mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         int position = mRouteSession.getPosition();
-        String addressHouseNo = mParseAddress.getProcessedaddress(mRouteSession.getmOrderList().get(position).getAddress().getHouseNumber());
-        String addressLine1 = mParseAddress.getProcessedaddress(mRouteSession.getmOrderList().get(position).getAddress().getAddressLine1());
-        String addressLine2 = mParseAddress.getProcessedaddress(mRouteSession.getmOrderList().get(position).getAddress().getAddressLine2());
-        String addressCity = mParseAddress.getProcessedaddress(mRouteSession.getmOrderList().get(position).getAddress().getCity());
-        String addressState = mParseAddress.getProcessedaddress(mRouteSession.getmOrderList().get(position).getAddress().getState());
-        mDestination = addressHouseNo + "," + addressLine1 + "," + addressLine2 + "," + addressCity + "," + addressState;
+        String addressHouseNo = mParseAddress.getProcessedaddress(mRouteSession
+                .getmOrderList()
+                .get(position)
+                .getAddress()
+                .getHouseNumber());
+        String addressLine1 = mParseAddress.getProcessedaddress(mRouteSession
+                .getmOrderList()
+                .get(position)
+                .getAddress()
+                .getAddressLine1());
+        String addressLine2 = mParseAddress.getProcessedaddress(mRouteSession
+                .getmOrderList()
+                .get(position)
+                .getAddress()
+                .getAddressLine2());
+        String addressCity = mParseAddress.getProcessedaddress(mRouteSession
+                .getmOrderList()
+                .get(position)
+                .getAddress()
+                .getCity());
+        String addressState = mParseAddress.getProcessedaddress(mRouteSession.
+                getmOrderList()
+                .get(position)
+                .getAddress()
+                .getState());
+        mDestination =  addressHouseNo + ","
+                        + addressLine1 + ","
+                        + addressLine2 + ","
+                        + addressCity + ","
+                        + addressState;
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -107,8 +133,21 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
+        //Location location=mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        //boolean isNew=new IsLocationLatest(location).IsLatest();
+        /*if(!isNew){
+            //get a latest fix
+            location=new IsLocationLatest().getSingleFix(MapActivity.this);
+        }*/
         Location location = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-        url= Constants.GOOGLE_MAP_DIRECTIONS_API_BASE_URL+"key="+Constants.GOOGLE_MAP_SERVER_KEY+"&origin="+location.getLatitude()+","+location.getLongitude()+"&destination="+mDestination+"&departure_time="+Constants.MAP_DEPARTURETIME+"&traffic_model="+Constants.MAP_TRAFFICMODEL_PESSIMISTIC+"&mode="+Constants.MAP_TRANSTMODE;
+
+        url= Constants.GOOGLE_MAP_DIRECTIONS_API_BASE_URL
+                +"key=" +Constants.GOOGLE_MAP_SERVER_KEY
+                +"&origin="+location.getLatitude()+","+location.getLongitude()
+                +"&destination="+mDestination
+                +"&departure_time="+Constants.MAP_DEPARTURETIME
+                +"&traffic_model="+Constants.MAP_TRAFFICMODEL_PESSIMISTIC
+                +"&mode="+Constants.MAP_TRANSTMODE;
         mapDataProgress = new ProgressDialog(this);
         mapDataProgress.setMessage("Loading...");
         mapDataProgress.setTitle("Map");
@@ -136,11 +175,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }, url);
         CargoCity.getmInstance().getRequestQueue().add(request);
 
-        mNavigationFloatingActionButton = (FloatingActionButton) findViewById(R.id.navigationFloatingActionButton);
+        mNavigationFloatingActionButton = (FloatingActionButton)
+                findViewById(R.id.navigationFloatingActionButton);
         mNavigationFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                navigationIntent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse("google.navigation:q=" + mDestination + "&mode=d")).setPackage("com.google.android.apps.maps");
+                navigationIntent = new Intent(android.content.Intent.ACTION_VIEW,
+                        Uri.parse("google.navigation:q=" + mDestination + "&mode=d"))
+                        .setPackage("com.google.android.apps.maps");
+
                 if (navigationIntent.resolveActivity(getPackageManager()) != null) {
                     startActivityForResult(navigationIntent, 1);
                 }
@@ -235,8 +278,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             case R.id.action_navigation_instruction:
                 if(isDirectionListOpen) {
                     isDirectionListOpen = false;
-                    NavigationInstructionFragment navFragment = (NavigationInstructionFragment) getSupportFragmentManager().findFragmentByTag(FRAGMENT_DIRECTIONS);
-                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                    NavigationInstructionFragment navFragment = (NavigationInstructionFragment)
+                                    getSupportFragmentManager()
+                                    .findFragmentByTag(FRAGMENT_DIRECTIONS);
+                    FragmentTransaction ft = getSupportFragmentManager()
+                                    .beginTransaction();
                     ft.detach(navFragment);
                     ft.attach(mapFragment);
                     ft.commit();
@@ -246,10 +292,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     if(mNavigationFragment == null){
                         mNavigationFragment = new NavigationInstructionFragment();
                         mNavigationFragment.setArguments(sendToNavigationFragmentBundle);
-                        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, mNavigationFragment, FRAGMENT_DIRECTIONS).commit();
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .add(R.id.fragment_container, mNavigationFragment, FRAGMENT_DIRECTIONS)
+                                .commit();
                     }
                     else {
-                        NavigationInstructionFragment navFragment = (NavigationInstructionFragment) getSupportFragmentManager().findFragmentByTag(FRAGMENT_DIRECTIONS);
+                        NavigationInstructionFragment navFragment = (NavigationInstructionFragment)
+                                 getSupportFragmentManager()
+                                .findFragmentByTag(FRAGMENT_DIRECTIONS);
                         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                         ft.detach(mapFragment);
                         ft.attach(navFragment);
