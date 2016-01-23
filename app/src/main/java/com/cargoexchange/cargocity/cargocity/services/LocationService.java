@@ -92,8 +92,8 @@ public class LocationService extends IntentService
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-//                mPubnub.publish("location_details", data, new Callback() {
-//                });
+               mPubnub.publish("delivery_tracking", data, new Callback() {
+                });
 
             }
 

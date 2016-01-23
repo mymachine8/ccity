@@ -197,7 +197,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(GoogleMap googleMap)
+    {
         if (TYPE == 0) {
             points = null;
             lineOptions = null;

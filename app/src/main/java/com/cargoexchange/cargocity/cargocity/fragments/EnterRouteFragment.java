@@ -18,7 +18,8 @@ import com.cargoexchange.cargocity.cargocity.constants.RouteSession;
 import com.cargoexchange.cargocity.cargocity.constants.Constants;
 import com.cargoexchange.cargocity.cargocity.services.LocationService;
 
-public class EnterRouteFragment extends Fragment {
+public class EnterRouteFragment extends Fragment
+{
 
     private EditText mRouteIdText;
     private Button mRouteSubmitBtn;

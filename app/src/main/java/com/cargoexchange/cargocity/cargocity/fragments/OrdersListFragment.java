@@ -89,7 +89,7 @@ public class OrdersListFragment extends Fragment
         View view = inflater.inflate(R.layout.fragment_orders_list, container, false);
         thisActivity = getActivity();
         mLocationManager = (LocationManager) thisActivity.getSystemService(Context.LOCATION_SERVICE);
-        mOrdersListFragmentRecycler = (RecyclerView) view.findViewById(R.id.recylerview);
+        /*mOrdersListFragmentRecycler = (RecyclerView) view.findViewById(R.id.recylerview);
         mOrdersListLayoutManager = new LinearLayoutManager(thisActivity, LinearLayoutManager.VERTICAL, false);
         mOrdersListFragmentRecycler.setLayoutManager(mOrdersListLayoutManager);
 
@@ -157,7 +157,7 @@ public class OrdersListFragment extends Fragment
             }
         }, url);
         CargoCity.getmInstance().getRequestQueue().add(request);
-
+*/
         return view;
     }
 }

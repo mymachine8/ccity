@@ -45,7 +45,7 @@ public class ParseDistanceMatrix
                     for(int j=0;j<jValues.length();j++)
                     {
                         jDistance=((JSONObject)jValues.get(j)).getJSONObject("distance");
-                        jDuration=((JSONObject)jValues.get(j)).getJSONObject("duration");
+                        jDuration=((JSONObject)jValues.get(j)).getJSONObject("duration_in_traffic");
                         mDistance=jDistance.getString("text");
                         mDuration=jDuration.getString("text");
                         Log.d("Distance",mDistance);
@@ -65,10 +65,19 @@ public class ParseDistanceMatrix
     }
 
     public List<String> getDistanceList() {
-        return distanceList;
+        String s[];
+        List<String> newList=new ArrayList<>();
+        for(int i=0;i<distanceList.size();i++)
+        {
+            s=distanceList.get(i).split(" ");
+            newList.add(s[0]);
+        }
+        return newList;
     }
 
-    public List<String> getDurationList() {
+    public List<String> getDurationList()
+    {
+        durationList=new ParseTimeFormat(durationList).parseTime();
         return durationList;
     }
 }

@@ -4,12 +4,12 @@ package com.cargoexchange.cargocity.cargocity.models;
  * Created by thespidy on 14/01/16.
  */
 public class Address {
-    private String houseNumber;
-    private String addressLine1;
-    private String addressLine2;
-    private String city;
-    private String pincode;
-    private String state;
+    private String houseNumber=new String();
+    private String addressLine1=new String();
+    private String addressLine2=new String();
+    private String city=new String();
+    private String pincode=new String();
+    private String state=new String();
 
     public Address(String houseNumber,String addressLine1, String addressLine2, String city, String pincode, String state) {
         this.houseNumber = houseNumber;
