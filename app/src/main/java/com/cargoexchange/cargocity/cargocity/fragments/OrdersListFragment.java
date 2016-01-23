@@ -8,6 +8,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -18,6 +19,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -58,6 +60,7 @@ public class OrdersListFragment extends Fragment
     private OrderDetailsAdapter mOrderDetailsAdapter;
     private RouteSession mRouteSession;
     private CardView mOrderDetailsCard;
+    private FloatingActionButton mCallCustomer;
     List<String> mDistanceList;
     List<String> mDurationList;
 
@@ -76,7 +79,7 @@ public class OrdersListFragment extends Fragment
             List<OrderItem> items=new ArrayList<>();
             items.add(new OrderItem("123","Lens"));
             items.add(new OrderItem("123","Bike"));
-            mOrdersList.add(new Order("ABC", new Customer("Somesh", "NA", "Mohan", "abc@xyz.com", "NA", "NA"), new Address("Plot No 105a", "Sri Nagar Colony", " ", "Hyderabad", "NA", "Telangana"),items, OrderStatus.PENDING_DELIVERY));
+            mOrdersList.add(new Order("ABC", new Customer("Somesh", "NA", "Mohan", "abc@xyz.com", "NA", "NA"), new Address("Plot No 105a", "Sri Nagar Colony", "Khairatabad", "Hyderabad", "NA", "Telangana"),items, OrderStatus.PENDING_DELIVERY));
             mOrdersList.add(new Order("ABC", new Customer("Krishna", "NA", "Chaitanya", "def@xyz.com", "NA", "NA"), new Address("Amulya Grand", "Ayappa Society", "Madhapur", "Hyderabad", "NA", "Telangana"),items, OrderStatus.PENDING_DELIVERY));
             mOrdersList.add(new Order("ABC", new Customer("Kinkar", "NA", "Banerji", "xyz@xyz.com", "NA", "NA"), new Address("Arth Design Build", "ROAD NO 21", "Banjara Hills", "Hyderabad", "NA", "Telangana"),items, OrderStatus.PENDING_DELIVERY));
             Map<String, Integer> orderStatusList = new HashMap<String, Integer>();
@@ -101,6 +104,7 @@ public class OrdersListFragment extends Fragment
         mOrdersListLayoutManager = new LinearLayoutManager(thisActivity, LinearLayoutManager.VERTICAL, false);
         mOrdersListFragmentRecycler.setLayoutManager(mOrdersListLayoutManager);
         mOrderDetailsCard=(CardView)view.findViewById(R.id.orderdetailscardview);
+
 
         if (ActivityCompat.checkSelfPermission(thisActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(thisActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling

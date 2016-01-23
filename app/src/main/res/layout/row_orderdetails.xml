@@ -54,14 +54,31 @@
                     android:text="LG 42 FSD 2D SMART LED - 1"
                     />
             </LinearLayout>
-            <ImageView
+            <!--<ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/orderstatusimage"
                 android:elevation="5dp"
                 android:src="@drawable/ic_truck1"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"/>
+                android:layout_alignParentEnd="true"/>-->
+            <android.support.design.widget.FloatingActionButton
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="5dp"
+                android:id="@+id/orderstatusimage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_cargo"
+                app:fabSize="mini"
+                app:backgroundTint="@android:color/holo_red_dark"
+                app:layout_anchor="@id/orderdetailscardview"
+                app:elevation="5dp"
+                android:clickable="false"
+                app:rippleColor="@android:color/holo_blue_dark"
+                android:visibility="visible"
+
+                />
         </RelativeLayout>
 
         <RelativeLayout
@@ -87,7 +104,7 @@
                     android:text="Secunderabad,500020"
                     />
             </LinearLayout>
-            <ImageView
+            <!--<ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/callimage"
@@ -95,7 +112,24 @@
                 android:elevation="5dp"
                 android:src="@drawable/ic_call"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"/>
+                android:layout_alignParentEnd="true"/>-->
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/CallActionFloatingActionButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/ic_call_white"
+                app:fabSize="mini"
+                app:backgroundTint="@android:color/holo_green_light"
+                app:layout_anchor="@id/orderdetailscardview"
+                app:elevation="5dp"
+                app:pressedTranslationZ="12dp"
+                android:clickable="true"
+                app:rippleColor="@android:color/holo_blue_dark"
+                android:visibility="visible"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                />
         </RelativeLayout>
 
         <LinearLayout

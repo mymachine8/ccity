@@ -1,7 +1,10 @@
 package com.cargoexchange.cargocity.cargocity.adapters;
 
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -31,6 +34,13 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
     {
         final LayoutInflater layoutInflator=LayoutInflater.from(parent.getContext());
         final View v=layoutInflator.inflate(R.layout.row_orderdetails, parent, false);
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {Log.d("HelloholderClick", "hi");
+
+            }
+        });
         final ViewHolder vh=new ViewHolder(v);
         return vh;
     }
@@ -41,6 +51,11 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         mRouteSession=RouteSession.getInstance();
         //holder.mOrderno.setText(orderDetails.get(position).getOrderId());
         holder.mName.setText(orderDetails.get(position).getCustomer().getFirstName()+" "+orderDetails.get(position).getCustomer().getLastName());
+        holder.mItems1.setText(orderDetails.get(position).getOrderItemsList().get(0).getItemName());
+        holder.mItems2.setText(orderDetails.get(position).getOrderItemsList().get(1).getItemName());
+        holder.mAddressLine1.setText(orderDetails.get(position).getAddress().getAddressLine1());
+        holder.mAddressLine2.setText(orderDetails.get(position).getAddress().getAddressLine2());
+
         //holder.mAddressLine1.setText(orderDetails.get(position).getAddress().getHouseNumber());
         //holder.mAddressLocality.setText(orderDetails.get(position).getAddress().getAddressLine1());
         //holder.mAddressLandmark.setText(orderDetails.get(position).getAddress().getAddressLine2());
@@ -78,6 +93,7 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         ImageView mStatusImage,mCallImage;
         TextView mDistance;
         TextView mTime;
+        FloatingActionButton mCallCustomer;
         public ViewHolder(View itemView)
         {
             super(itemView);
@@ -89,12 +105,12 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
             mDistance=(TextView)itemView.findViewById(R.id.distancetextview);
             mTime=(TextView)itemView.findViewById(R.id.timetextview);
             mStatusImage=(ImageView)itemView.findViewById(R.id.orderstatusimage);
-            mCallImage=(ImageView)itemView.findViewById(R.id.callimage);
+            mCallCustomer=(FloatingActionButton)itemView.findViewById(R.id.CallActionFloatingActionButton);
+            //mCallImage=(ImageView)itemView.findViewById(R.id.callimage);
             //mOrderno=(TextView)itemView.findViewById(R.id.ordernoedittext);
             //mAddressLocality=(TextView)itemView.findViewById(R.id.Localityaddressedittext);
             //mAddressLandmark=(TextView)itemView.findViewById(R.id.Landmarkaddressedittext);
             //mCity=(TextView)itemView.findViewById(R.id.cityedittext);
-
         }
     }
 }
