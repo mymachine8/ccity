@@ -11,8 +11,11 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +27,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.cargoexchange.cargocity.cargocity.CargoCity;
 import com.cargoexchange.cargocity.cargocity.MapActivity;
+import com.cargoexchange.cargocity.cargocity.OrdersActivity;
 import com.cargoexchange.cargocity.cargocity.R;
 import com.cargoexchange.cargocity.cargocity.adapters.OrderDetailsAdapter;
 import com.cargoexchange.cargocity.cargocity.constants.OrderStatus;
@@ -53,6 +57,7 @@ public class OrdersListFragment extends Fragment
     private List<Order> mOrdersList;
     private OrderDetailsAdapter mOrderDetailsAdapter;
     private RouteSession mRouteSession;
+    private CardView mOrderDetailsCard;
     List<String> mDistanceList;
     List<String> mDurationList;
 
@@ -68,9 +73,12 @@ public class OrdersListFragment extends Fragment
         mOrdersList = mRouteSession.getmOrderList();
         if (mOrdersList == null || mOrdersList.size() == 0) {
             mOrdersList = new ArrayList<>();
-            mOrdersList.add(new Order("ABC", new Customer("Somesh", "NA", "Mohan", "abc@xyz.com", "NA", "NA"), new Address("Plot No 105a", "Sri Nagar Colony", "", "Hyderabad", "NA", "Telangana"), null, OrderStatus.PENDING_DELIVERY));
-            mOrdersList.add(new Order("ABC", new Customer("Krishna", "NA", "Chaitanya", "def@xyz.com", "NA", "NA"), new Address("Amulya Grand", "Ayappa Society", "Madhapur", "Hyderabad", "NA", "Telangana"), null, OrderStatus.PENDING_DELIVERY));
-            mOrdersList.add(new Order("ABC", new Customer("Kinkar", "NA", "Banerji", "xyz@xyz.com", "NA", "NA"), new Address("Arth Design Build", "ROAD NO 21", "Banjara Hills", "Hyderabad", "NA", "Telangana"), null, OrderStatus.PENDING_DELIVERY));
+            List<OrderItem> items=new ArrayList<>();
+            items.add(new OrderItem("123","Lens"));
+            items.add(new OrderItem("123","Bike"));
+            mOrdersList.add(new Order("ABC", new Customer("Somesh", "NA", "Mohan", "abc@xyz.com", "NA", "NA"), new Address("Plot No 105a", "Sri Nagar Colony", " ", "Hyderabad", "NA", "Telangana"),items, OrderStatus.PENDING_DELIVERY));
+            mOrdersList.add(new Order("ABC", new Customer("Krishna", "NA", "Chaitanya", "def@xyz.com", "NA", "NA"), new Address("Amulya Grand", "Ayappa Society", "Madhapur", "Hyderabad", "NA", "Telangana"),items, OrderStatus.PENDING_DELIVERY));
+            mOrdersList.add(new Order("ABC", new Customer("Kinkar", "NA", "Banerji", "xyz@xyz.com", "NA", "NA"), new Address("Arth Design Build", "ROAD NO 21", "Banjara Hills", "Hyderabad", "NA", "Telangana"),items, OrderStatus.PENDING_DELIVERY));
             Map<String, Integer> orderStatusList = new HashMap<String, Integer>();
             for (Order order : mOrdersList) {
                 orderStatusList.put(order.getOrderId(), OrderStatus.PENDING_DELIVERY);
@@ -89,9 +97,10 @@ public class OrdersListFragment extends Fragment
         View view = inflater.inflate(R.layout.fragment_orders_list, container, false);
         thisActivity = getActivity();
         mLocationManager = (LocationManager) thisActivity.getSystemService(Context.LOCATION_SERVICE);
-        /*mOrdersListFragmentRecycler = (RecyclerView) view.findViewById(R.id.recylerview);
+        mOrdersListFragmentRecycler = (RecyclerView) view.findViewById(R.id.recylerview);
         mOrdersListLayoutManager = new LinearLayoutManager(thisActivity, LinearLayoutManager.VERTICAL, false);
         mOrdersListFragmentRecycler.setLayoutManager(mOrdersListLayoutManager);
+        mOrderDetailsCard=(CardView)view.findViewById(R.id.orderdetailscardview);
 
         if (ActivityCompat.checkSelfPermission(thisActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(thisActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -124,9 +133,24 @@ public class OrdersListFragment extends Fragment
                         //if (mRouteSession.getOrderStatus(mOrderDetailsAdapter.getItem(position).getOrderId()) == OrderStatus.PENDING_DELIVERY)
                         if(mRouteSession.getmOrderList().get(position).getMstatus()==OrderStatus.PENDING_DELIVERY)
                         {
-                            Intent mapIntent = new Intent(thisActivity, MapActivity.class);
-                            mRouteSession.setPosition(position);
-                            startActivity(mapIntent);
+                            //Intent mapIntent = new Intent(thisActivity, MapActivity.class);
+                            Fragment mExtraDetailsFragment=new ExtraOrderDetailsFragment();
+                            Bundle mDataForExtraDetailsFragment=new Bundle();
+                            mDataForExtraDetailsFragment.putInt("position",position);
+                            mExtraDetailsFragment.setArguments(mDataForExtraDetailsFragment);
+                            thisActivity
+                                    .getSupportFragmentManager()
+                                    .beginTransaction()
+                                    .setCustomAnimations(
+                                            R.anim.card_flip_right_in,
+                                            R.anim.card_flip_right_out,
+                                            R.anim.card_flip_left_in,
+                                            R.anim.card_flip_left_out)
+                                    .replace(R.id.orders_container,mExtraDetailsFragment)
+                                    .addToBackStack(null)
+                                    .commit();
+                            //mRouteSession.setPosition(position);
+                            //startActivity(mapIntent);
                             //TODO:use a singleton class to keep track of the orders completed and according disable intents to next activity
                         }
                         else
@@ -157,7 +181,6 @@ public class OrdersListFragment extends Fragment
             }
         }, url);
         CargoCity.getmInstance().getRequestQueue().add(request);
-*/
         return view;
     }
 }

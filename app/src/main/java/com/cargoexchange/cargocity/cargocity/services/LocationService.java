@@ -144,7 +144,8 @@ public class LocationService extends IntentService
              else {
                 writer.append(sBody + " ");
             }
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             e.printStackTrace();
         }
     }

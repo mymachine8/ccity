@@ -16,7 +16,155 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/nameedittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Swapna Kundala"
+            android:textSize="23sp"
+            android:textColor="@android:color/holo_purple"
+            />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/itemedittext1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="LG 42 ABV SWIVEL WALL - 1"
+                    />
+
+                <TextView
+                    android:id="@+id/itemedittext2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="LG 42 FSD 2D SMART LED - 1"
+                    />
+            </LinearLayout>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/orderstatusimage"
+                android:elevation="5dp"
+                android:src="@drawable/ic_truck1"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/Line1addressedittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Ashoknagar S.O"
+                    />
+
+                <TextView
+                    android:id="@+id/Line2addressedittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Secunderabad,500020"
+                    />
+            </LinearLayout>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/callimage"
+                android:layout_marginTop="10dp"
+                android:elevation="5dp"
+                android:src="@drawable/ic_call"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"/>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:paddingBottom="2dp"
+            android:paddingTop="5dp"
+            android:orientation="horizontal"
+            android:background="@android:color/holo_red_light">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_place"
+                    />
+                <TextView
+                    android:id="@+id/distancetextview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:text="33"
+                    android:letterSpacing="0.1"
+                    android:textSize="30sp"
+                    android:textColor="@android:color/white"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:text="KMs"
+                    android:textSize="13sp"
+                    android:textColor="@android:color/white"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:paddingRight="5dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_schedule"
+                    />
+                <TextView
+                    android:id="@+id/timetextview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:text="00:00"
+                    android:textSize="30sp"
+                    android:letterSpacing="0.1"
+                    android:textColor="@android:color/white"
+                    />
+
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+   <!-- <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -172,7 +320,7 @@
             </LinearLayout>
 
         </LinearLayout>
-    </LinearLayout>
+    </LinearLayout>-->
 
 </android.support.v7.widget.CardView>
 
