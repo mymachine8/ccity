@@ -9,7 +9,7 @@ public class Order {
     private List<Phone> phones;
     private String mailId;
     private Address address;
-    private List<OrderItem> items;
+    private List<String> items;
     private String deliveryStatus;
 
     public String getOrderId() {
@@ -52,11 +52,11 @@ public class Order {
         this.address = address;
     }
 
-    public List<OrderItem> getItems() {
+    public List<String> getItems() {
         return items;
     }
 
-    public void setItems(List<OrderItem> items) {
+    public void setItems(List<String> items) {
         this.items = items;
     }
 

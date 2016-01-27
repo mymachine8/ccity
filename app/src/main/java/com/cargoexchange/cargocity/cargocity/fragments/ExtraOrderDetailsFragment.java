@@ -190,8 +190,7 @@ public class ExtraOrderDetailsFragment extends Fragment implements OnMapReadyCal
                     .getmOrderList()
                     .get(position)
                     .getItems()
-                    .get(i)
-                    .getItemName());
+                    .get(i));
         }
 
         ArrayAdapter mItemsAdapter=new ArrayAdapter(thisActivity,

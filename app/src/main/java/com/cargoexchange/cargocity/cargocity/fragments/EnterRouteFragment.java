@@ -34,6 +34,7 @@ import com.cargoexchange.cargocity.cargocity.utils.GenerateRequest;
 import com.cargoexchange.cargocity.cargocity.utils.ParseJSON;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
@@ -126,7 +127,11 @@ public class EnterRouteFragment extends Fragment
                                     toast.show();
                                 }
                             } catch (JSONException e) {
-                                e.printStackTrace();
+                                Log.e("PARSE_ERROR", e.getMessage().toString());
+                            }catch(JsonParseException e) {
+                                Log.e("PARSE_ERROR", e.getMessage().toString());
+                            }catch(Exception e) {
+                                Log.e("GENERAL", e.getMessage().toString());
                             }
 
                         }

@@ -37,6 +37,7 @@ import com.cargoexchange.cargocity.cargocity.constants.RouteSession;
 import com.cargoexchange.cargocity.cargocity.models.Address;
 import com.cargoexchange.cargocity.cargocity.models.Customer;
 import com.cargoexchange.cargocity.cargocity.models.Order;
+import com.cargoexchange.cargocity.cargocity.models.Route;
 import com.cargoexchange.cargocity.cargocity.utils.GenerateUrl;
 import com.cargoexchange.cargocity.cargocity.utils.ParseDistanceMatrix;
 import com.cargoexchange.cargocity.cargocity.utils.RecyclerItemClickListener;
@@ -57,6 +58,7 @@ public class OrdersListFragment extends Fragment
     private LocationManager mLocationManager;
     private Location mLocation;
     private List<Order> mOrdersList;
+    private Route mRoute;
     private OrderDetailsAdapter mOrderDetailsAdapter;
     private RouteSession mRouteSession;
     private CardView mOrderDetailsCard;

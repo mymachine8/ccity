@@ -51,8 +51,8 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         mRouteSession=RouteSession.getInstance();
         //holder.mOrderno.setText(orderDetails.get(position).getOrderId());
         holder.mName.setText(orderDetails.get(position).getName());
-        holder.mItems1.setText(orderDetails.get(position).getItems().get(0).getItemName());
-        holder.mItems2.setText(orderDetails.get(position).getItems().get(1).getItemName());
+        holder.mItems1.setText(orderDetails.get(position).getItems().get(0));
+        holder.mItems2.setText(orderDetails.get(position).getItems().get(1));
         holder.mAddressLine1.setText(orderDetails.get(position).getAddress().getLine1());
         holder.mAddressLine2.setText(orderDetails.get(position).getAddress().getLine2());
 
