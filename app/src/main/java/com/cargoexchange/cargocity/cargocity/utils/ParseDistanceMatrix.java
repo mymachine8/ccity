@@ -65,10 +65,19 @@ public class ParseDistanceMatrix
     }
 
     public List<String> getDistanceList() {
-        return distanceList;
+        String s[];
+        List<String> newList=new ArrayList<>();
+        for(int i=0;i<distanceList.size();i++)
+        {
+            s=distanceList.get(i).split(" ");
+            newList.add(s[0]);
+        }
+        return newList;
     }
 
-    public List<String> getDurationList() {
+    public List<String> getDurationList()
+    {
+        durationList=new ParseTimeFormat(durationList).parseTime();
         return durationList;
     }
 }

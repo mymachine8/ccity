@@ -1,0 +1,29 @@
+ <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:context="com.cargoexchange.cargocity.cargocity.fragments.ExtraOrderDetailsFragment"
+        android:id="@+id/fragmentcontainer">
+
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include android:id="@+id/includesmallmap"
+        layout="@layout/row_smallmap"
+        android:layout_width="match_parent" android:layout_height="200dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
+        />
+
+        <include layout="@layout/row_extraorderdetails" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:layout_below="@id/includesmallmap"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        />
+    </LinearLayout>
+    </FrameLayout>

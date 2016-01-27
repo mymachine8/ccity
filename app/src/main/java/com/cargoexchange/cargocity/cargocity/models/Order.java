@@ -7,13 +7,15 @@ public class Order {
     private Customer customer;
     private Address address;
     private List<OrderItem> orderItemsList;
+    private int mstatus;
 
-    public Order(String orderId, Customer customer, Address address, List<OrderItem> orderItemsList)
+    public Order(String orderId, Customer customer, Address address, List<OrderItem> orderItemsList,int mstatus)
     {
         this.orderId = orderId;
         this.customer = customer;
         this.address = address;
         this.orderItemsList = orderItemsList;
+        this.mstatus=mstatus;
     }
 
     public String getOrderId() {
@@ -46,5 +48,13 @@ public class Order {
 
     public void setOrderItemsList(List<OrderItem> orderItemsList) {
         this.orderItemsList = orderItemsList;
+    }
+
+    public int getMstatus() {
+        return mstatus;
+    }
+
+    public void setMstatus(int mstatus) {
+        this.mstatus = mstatus;
     }
 }

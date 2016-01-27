@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    android:id="@+id/mapcard"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    android:background="@android:color/darker_gray"
+    app:cardCornerRadius="6dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginBottom="10dp"
+    android:foregroundGravity="center"
+    android:layout_centerHorizontal="true"
+    app:cardElevation="8dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <fragment
+        android:id="@+id/mapsmallfragment"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:name="com.google.android.gms.maps.SupportMapFragment">
+    </fragment>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/FullScreenMapFloatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="3dp"
+        android:layout_marginTop="3dp"
+        android:src="@drawable/ic_zoom_out"
+        app:fabSize="mini"
+        app:backgroundTint="@color/blue"
+        app:layout_anchor="@id/mapcard"
+        app:layout_anchorGravity="bottom|right|end"
+        app:rippleColor="@android:color/holo_blue_dark"
+        android:visibility="visible"
+        app:elevation="8dp"
+        app:pressedTranslationZ="12dp"
+        android:clickable="true" />
+
+</android.support.v7.widget.CardView>

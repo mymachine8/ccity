@@ -7,6 +7,10 @@ import java.util.Map;
 public class RouteSession
 {
     private Map<String, Integer> mOrderStatusList;
+    private List<Order> mOrderList;
+    private List<String> mDistanceList;
+    private List<String> mDurationList;
+    private int mMatrixDownloadStatus;
     private String routeId;
     private  static RouteSession instance=null;
     private int position = 0;
@@ -29,6 +33,14 @@ public class RouteSession
 
     public void setmOrderStatusList(Map<String, Integer> mOrderStatusList) {
         this.mOrderStatusList = mOrderStatusList;
+    }
+
+    public List<Order> getmOrderList() {
+        return mOrderList;
+    }
+
+    public void setmOrderList(List<Order> mOrderList) {
+        this.mOrderList = mOrderList;
     }
 
     public int getPosition()
@@ -56,5 +68,29 @@ public class RouteSession
 
     public int getOrderStatus(String orderId) {
         return mOrderStatusList.get(orderId);
+    }
+
+    public List<String> getmDistanceList() {
+        return mDistanceList;
+    }
+
+    public void setmDistanceList(List<String> mDistanceList) {
+        this.mDistanceList = mDistanceList;
+    }
+
+    public List<String> getmDurationList() {
+        return mDurationList;
+    }
+
+    public void setmDurationList(List<String> mDurationList) {
+        this.mDurationList = mDurationList;
+    }
+
+    public int getmMatrixDownloadStatus() {
+        return mMatrixDownloadStatus;
+    }
+
+    public void setmMatrixDownloadStatus(int mMatrixDownloadStatus) {
+        this.mMatrixDownloadStatus = mMatrixDownloadStatus;
     }
 }

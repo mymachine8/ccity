@@ -79,7 +79,7 @@ public class LocationService extends IntentService
         mLocationManager.requestLocationUpdates(mLocationManager.GPS_PROVIDER, 10, 0, new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                count++;
+
                 JSONObject data = new JSONObject();
                 String routeId = RouteSession.getInstance().getRouteId();
                 try {
@@ -88,11 +88,12 @@ public class LocationService extends IntentService
                     data.put("speed", location.getSpeed());
                     data.put("routeId",routeId);
                             updateToDeliveryTextFile("delivery_tracking.txt", data.toString());
+                    count++;
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-//                mPubnub.publish("location_details", data, new Callback() {
-//                });
+               mPubnub.publish("delivery_tracking", data, new Callback() {
+                });
 
             }
 
@@ -111,7 +112,8 @@ public class LocationService extends IntentService
 
             @Override
             public void onProviderDisabled(String provider) {
-                if (provider.equalsIgnoreCase(mLocationManager.GPS_PROVIDER)) {
+                if (provider.equalsIgnoreCase(mLocationManager.GPS_PROVIDER))
+                {
                     //TODO:Send message to the server that GPS was disabled
                 }
             }
@@ -135,13 +137,15 @@ public class LocationService extends IntentService
 
 
         try {
-            if(count>=10){
+            if(count>=20)
+            {
                 writer.close();
             }
              else {
                 writer.append(sBody + " ");
             }
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             e.printStackTrace();
         }
     }

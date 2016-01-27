@@ -1,0 +1,17 @@
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Rotate. -->
+    <rotate
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:fromDegrees="0"
+        android:toDegrees="180"
+        android:interpolator="@android:interpolator/accelerate_decelerate"
+        android:duration="600" />
+
+    <!-- Half-way through the rotation (see startOffset), set the alpha to 0. -->
+    <alpha
+        android:fromAlpha="1.0"
+        android:toAlpha="0.0"
+        android:startOffset="350"
+        android:duration="1" />
+</set>

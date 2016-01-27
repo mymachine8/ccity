@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginTop="120dp"
+            android:layout_marginTop="10dp"
             android:id="@+id/imageLayout">
 
             <ImageView
@@ -35,9 +35,9 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:layout_below="@id/imageLayout"
-            android:layout_marginTop="100dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="70dp"
+            android:layout_marginRight="70dp"
             >
 
         <EditText
@@ -47,11 +47,11 @@
             android:drawableLeft="@drawable/ic_username"
             android:textColor="@android:color/white"
             android:hint="User Name"
+            android:drawablePadding="15dp"
             android:textColorHint="@android:color/white"
             android:layout_gravity="center_horizontal"
             android:inputType="text"
             android:maxLines="1"
-            android:drawablePadding="15dp"
             >
         </EditText>
 
@@ -66,7 +66,7 @@
             android:drawablePadding="15dp"
             android:password="true"
             android:textColorHint="@android:color/white"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="15dp"
             android:inputType="text"
             android:maxLines="1"
             >
@@ -81,7 +81,7 @@
             android:textScaleX="2"
             android:textColor="@android:color/white"
             android:theme="@style/Button.Branded"
-            android:layout_marginTop="15dp" />
+            android:layout_marginTop="5dp" />
 
         </LinearLayout>
         <TextView
@@ -93,7 +93,6 @@
             android:layout_gravity="center_horizontal"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dp"
             android:id="@+id/textView" />
     </RelativeLayout>
 </ScrollView>
