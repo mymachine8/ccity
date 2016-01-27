@@ -3,6 +3,7 @@ package com.cargoexchange.cargocity.cargocity.fragments;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -17,14 +18,18 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonRequest;
 import com.cargoexchange.cargocity.cargocity.CargoCity;
 import com.cargoexchange.cargocity.cargocity.OrdersActivity;
 import com.cargoexchange.cargocity.cargocity.R;
+import com.cargoexchange.cargocity.cargocity.constants.CargoSharedPreferences;
 import com.cargoexchange.cargocity.cargocity.constants.Constants;
 import com.cargoexchange.cargocity.cargocity.utils.GenerateRequest;
+import com.cargoexchange.cargocity.cargocity.utils.ParseJSON;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,6 +46,7 @@ public class LoginFragment extends Fragment
     private ProgressDialog mProgressDialog;
     private Activity thisActivity;
     private RelativeLayout loginLayout;
+    String token = new String();
     public LoginFragment()
     {
         super();
@@ -56,11 +62,10 @@ public class LoginFragment extends Fragment
         loginLayout=(RelativeLayout)view.findViewById(R.id.loginLayout);
         loginLayout.setOnClickListener(new RelativeLayout.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                InputMethodManager inputMethodManager = (InputMethodManager)thisActivity
+            public void onClick(View v) {
+                InputMethodManager inputMethodManager = (InputMethodManager) thisActivity
                         .getSystemService(Activity.INPUT_METHOD_SERVICE);
-                inputMethodManager.hideSoftInputFromWindow(thisActivity.getCurrentFocus().getWindowToken(),0);
+                inputMethodManager.hideSoftInputFromWindow(thisActivity.getCurrentFocus().getWindowToken(), 0);
             }
         });
         bindViewVariables(view);
@@ -90,7 +95,7 @@ public class LoginFragment extends Fragment
         String email = mUsernameText.getText().toString();
         String password = mPasswordText.getText().toString();
 
-        new ValidateUserTask().execute(email, password);
+        submitLogin(email, password);
 
     }
 
@@ -129,66 +134,71 @@ public class LoginFragment extends Fragment
         mPasswordText = (TextView) view.findViewById(R.id.input_password);
     }
 
-    private class ValidateUserTask extends AsyncTask<String, Void, Boolean> {
-        @Override
-        protected Boolean doInBackground(String... params)
-        {
-            String url=new String();
-            String email = params[0];
-            String password = params[1];
-            String uri = Constants.CARGO_API_BASE_URL + "/login";
-            //TODO: Send login credentials to server, get response and store them in shared prefs
-            JSONObject credentialRequestData=new GenerateRequest().getRequest(email,password);
-            if(credentialRequestData!=null)
-            {
-                JsonRequest request= CargoCity.getmInstance().getProduct(
-                        new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response)
-                    {
-                        String status;
-                        String token=new String();
-                        String error_message=new String();
-                        try {
-                            for (int i = 0; i < response.length(); i++)
-                            {
+    private void submitLogin(final String username,final String password){
+        String uri = Constants.CARGO_API_BASE_URL + "auth/login";
+        //TODO: Send login credentials to server, get response and store them in shared prefs
+        JSONObject credentialRequestData=new GenerateRequest().getRequest(username,password);
+        if(credentialRequestData!=null) {
+            JsonRequest request = CargoCity.getmInstance().getProduct(
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            String status;
+                            mProgressDialog.hide();
+                            try {
                                 status = response.getString("status");
-                                if(status.equalsIgnoreCase("success"))
-                                {
-                                    token=response.getString("accessToken");
+                                if (status.equalsIgnoreCase("success")) {
+                                    JSONObject tokenObject = response.getJSONObject("token");
+                                    token = tokenObject.getString("accessToken");
+                                    SharedPreferences.Editor editor = thisActivity.getSharedPreferences(CargoSharedPreferences.MY_PREFS, thisActivity.MODE_PRIVATE).edit();
+                                    editor.putString(CargoSharedPreferences.PREFERENCE_USERNAME,username);
+                                    editor.putString(CargoSharedPreferences.PREFERENCE_ACCESSTOKEN,token);
+                                    editor.commit();
+                                    Intent i = new Intent(thisActivity, OrdersActivity.class);
+                                    startActivity(i);
+
+                                } else {
+                                   String error_message = response.getString("message");
+                                    Toast toast = Toast.makeText(thisActivity,
+                                            error_message, Toast.LENGTH_LONG);
+                                    toast.show();
                                 }
-                                else
-                                {
-                                    error_message=response.getString("message");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            mProgressDialog.hide();
+                            String json = null;
+
+                            NetworkResponse response = error.networkResponse;
+                            if(response != null && response.data != null){
+                                switch(response.statusCode){
+                                    case 401:
+                                    case 400:
+                                        json = new String(response.data);
+                                        json = ParseJSON.trimMessage(json, "message");
+                                        if(json != null) displayToastMessage(json);
+                                        break;
                                 }
+                                //Additional cases
                             }
                         }
-                        catch(JSONException e){e.printStackTrace();}
-
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error)
-                    {
-
-                    }
-                },url,credentialRequestData);
-                CargoCity.getmInstance().getRequestQueue().add(request);
-            }
-            return true;
+                    }, uri, credentialRequestData);
+            request.setRetryPolicy(new DefaultRetryPolicy(
+                    30000,
+                    3,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            CargoCity.getmInstance().getRequestQueue().add(request);
         }
+    }
 
-        protected void onPostExecute(Boolean success) {
-            mProgressDialog.dismiss();
-            if (success) {
-                Intent i = new Intent(thisActivity, OrdersActivity.class);
-                startActivity(i);
-            } else {
-                Toast toast = Toast.makeText(thisActivity,
-                        "Incorrect username/password", Toast.LENGTH_LONG);
-                toast.show();
-            }
-        }
+    private void displayToastMessage(String message) {
+        Toast.makeText(thisActivity, message, Toast.LENGTH_LONG).show();
+        Log.e("LOGIN", message);
     }
 
 }
