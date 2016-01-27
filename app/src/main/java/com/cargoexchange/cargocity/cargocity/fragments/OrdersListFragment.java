@@ -79,12 +79,12 @@ public class OrdersListFragment extends Fragment
             List<OrderItem> items=new ArrayList<>();
             items.add(new OrderItem("123","Lens"));
             items.add(new OrderItem("123","Bike"));
-            mOrdersList.add(new Order("ABC", new Customer("Somesh", "NA", "Mohan", "abc@xyz.com", "NA", "NA"), new Address("Plot No 105a", "Sri Nagar Colony", "Khairatabad", "Hyderabad", "NA", "Telangana"),items, OrderStatus.PENDING_DELIVERY));
-            mOrdersList.add(new Order("ABC", new Customer("Krishna", "NA", "Chaitanya", "def@xyz.com", "NA", "NA"), new Address("Amulya Grand", "Ayappa Society", "Madhapur", "Hyderabad", "NA", "Telangana"),items, OrderStatus.PENDING_DELIVERY));
-            mOrdersList.add(new Order("ABC", new Customer("Kinkar", "NA", "Banerji", "xyz@xyz.com", "NA", "NA"), new Address("Arth Design Build", "ROAD NO 21", "Banjara Hills", "Hyderabad", "NA", "Telangana"),items, OrderStatus.PENDING_DELIVERY));
-            Map<String, Integer> orderStatusList = new HashMap<String, Integer>();
+        /*    mOrdersList.add(new Order("ABC", new Customer("Somesh", "NA", "Mohan", "abc@xyz.com", "NA", "NA"), new Address("Sri Nagar Colony", "Khairatabad", "Hyderabad", "NA", "Telangana"),items, OrderStatus.IN_TRANSIT));
+            mOrdersList.add(new Order("ABC", new Customer("Krishna", "NA", "Chaitanya", "def@xyz.com", "NA", "NA"), new Address("Ayappa Society", "Madhapur", "Hyderabad", "NA", "Telangana"),items, OrderStatus.IN_TRANSIT));
+            mOrdersList.add(new Order("ABC", new Customer("Kinkar", "NA", "Banerji", "xyz@xyz.com", "NA", "NA"), new Address("ROAD NO 21", "Banjara Hills", "Hyderabad", "NA", "Telangana"),items, OrderStatus.IN_TRANSIT));*/
+            Map<String, String> orderStatusList = new HashMap<String, String>();
             for (Order order : mOrdersList) {
-                orderStatusList.put(order.getOrderId(), OrderStatus.PENDING_DELIVERY);
+                orderStatusList.put(order.getOrderId(), OrderStatus.IN_TRANSIT);
             }
             mRouteSession.setmOrderStatusList(orderStatusList);
             mRouteSession.setmOrderList(mOrdersList);
@@ -120,8 +120,7 @@ public class OrdersListFragment extends Fragment
         String url=new GenerateUrl(mLocation).getMurl();
         JsonObjectRequest request= CargoCity.getmInstance().getGeneralRequest(new Response.Listener<JSONObject>() {
             @Override
-            public void onResponse(JSONObject response)
-            {
+            public void onResponse(JSONObject response) {
                 Log.d("response", response.toString());
                 mRouteSession.setmMatrixDownloadStatus(1);
                 ParseDistanceMatrix mParseDistanceMatrix = new ParseDistanceMatrix(response);
@@ -135,12 +134,11 @@ public class OrdersListFragment extends Fragment
                     @Override
                     public void onItemClick(View view, int position) {
                         //if (mRouteSession.getOrderStatus(mOrderDetailsAdapter.getItem(position).getOrderId()) == OrderStatus.PENDING_DELIVERY)
-                        if(mRouteSession.getmOrderList().get(position).getMstatus()==OrderStatus.PENDING_DELIVERY)
-                        {
+                        if (mRouteSession.getmOrderList().get(position).getDeliveryStatus() == OrderStatus.IN_TRANSIT) {
                             //Intent mapIntent = new Intent(thisActivity, MapActivity.class);
-                            Fragment mExtraDetailsFragment=new ExtraOrderDetailsFragment();
-                            Bundle mDataForExtraDetailsFragment=new Bundle();
-                            mDataForExtraDetailsFragment.putInt("position",position);
+                            Fragment mExtraDetailsFragment = new ExtraOrderDetailsFragment();
+                            Bundle mDataForExtraDetailsFragment = new Bundle();
+                            mDataForExtraDetailsFragment.putInt("position", position);
                             mExtraDetailsFragment.setArguments(mDataForExtraDetailsFragment);
                             thisActivity
                                     .getSupportFragmentManager()
@@ -150,31 +148,28 @@ public class OrdersListFragment extends Fragment
                                             R.anim.card_flip_right_out,
                                             R.anim.card_flip_left_in,
                                             R.anim.card_flip_left_out)
-                                    .replace(R.id.orders_container,mExtraDetailsFragment)
+                                    .replace(R.id.orders_container, mExtraDetailsFragment)
                                     .addToBackStack(null)
                                     .commit();
                             //mRouteSession.setPosition(position);
                             //startActivity(mapIntent);
                             //TODO:use a singleton class to keep track of the orders completed and according disable intents to next activity
-                        }
-                        else
-                        {
-                            Toast.makeText(thisActivity,"Delivery Completed",Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(thisActivity, "Delivery Completed", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }));
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error)
-            {
+            public void onErrorResponse(VolleyError error) {
                 mRouteSession.setmMatrixDownloadStatus(0);
                 mOrderDetailsAdapter = new OrderDetailsAdapter(mOrdersList);
                 mOrdersListFragmentRecycler.setAdapter(mOrderDetailsAdapter);
                 mOrdersListFragmentRecycler.addOnItemTouchListener(new RecyclerItemClickListener(thisActivity, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        if (mRouteSession.getOrderStatus(mOrderDetailsAdapter.getItem(position).getOrderId()) == OrderStatus.PENDING_DELIVERY) {
+                        if (mRouteSession.getOrderStatus(mOrderDetailsAdapter.getItem(position).getOrderId()) == OrderStatus.IN_TRANSIT) {
                             Intent mapIntent = new Intent(thisActivity, MapActivity.class);
                             startActivity(mapIntent);
                             //TODO:use a singleton class to keep track of the orders completed and according disable intents to next activity

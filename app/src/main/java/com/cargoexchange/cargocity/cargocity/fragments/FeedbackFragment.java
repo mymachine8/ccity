@@ -223,7 +223,7 @@ public class FeedbackFragment extends Fragment
                 RouteSession mRouteSession=RouteSession.getInstance();
                 int pos=mRouteSession.getPosition();
                 mOrderNo=mRouteSession.getmOrderList().get(pos).getOrderId();
-                mRouteSession.getmOrderList().get(pos).setMstatus(OrderStatus.DELIVERED);
+                mRouteSession.getmOrderList().get(pos).setDeliveryStatus(OrderStatus.DELIVERED);
                 if(pos<mRouteSession.getmOrderList().size()-1)
                 {
                     //mRouteSession.setPosition(pos + 1);

@@ -93,21 +93,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mParseAddress = new ParseAddress();
         mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         int position = mRouteSession.getPosition();
-        String addressHouseNo = mParseAddress.getProcessedaddress(mRouteSession
-                .getmOrderList()
-                .get(position)
-                .getAddress()
-                .getHouseNumber());
         String addressLine1 = mParseAddress.getProcessedaddress(mRouteSession
                 .getmOrderList()
                 .get(position)
                 .getAddress()
-                .getAddressLine1());
+                .getLine1());
         String addressLine2 = mParseAddress.getProcessedaddress(mRouteSession
                 .getmOrderList()
                 .get(position)
                 .getAddress()
-                .getAddressLine2());
+                .getLine2());
         String addressCity = mParseAddress.getProcessedaddress(mRouteSession
                 .getmOrderList()
                 .get(position)
@@ -118,8 +113,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 .get(position)
                 .getAddress()
                 .getState());
-        mDestination =  addressHouseNo + ","
-                        + addressLine1 + ","
+        mDestination =    addressLine1 + ","
                         + addressLine2 + ","
                         + addressCity + ","
                         + addressState;

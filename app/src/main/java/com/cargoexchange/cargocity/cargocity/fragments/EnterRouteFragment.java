@@ -28,6 +28,7 @@ import com.cargoexchange.cargocity.cargocity.constants.CargoSharedPreferences;
 import com.cargoexchange.cargocity.cargocity.constants.RouteSession;
 import com.cargoexchange.cargocity.cargocity.constants.Constants;
 import com.cargoexchange.cargocity.cargocity.models.Order;
+import com.cargoexchange.cargocity.cargocity.models.Route;
 import com.cargoexchange.cargocity.cargocity.services.LocationService;
 import com.cargoexchange.cargocity.cargocity.utils.GenerateRequest;
 import com.cargoexchange.cargocity.cargocity.utils.ParseJSON;
@@ -114,10 +115,10 @@ public class EnterRouteFragment extends Fragment
                                 if (status.equalsIgnoreCase("success")) {
                                     String data = response.getString("data");
                                     Gson gson = new GsonBuilder().create();
-                                    Type listType = new TypeToken<List<Order>>() {
-                                    }.getType();
-                                    List<Order> orders = gson.fromJson(data, listType);
-                                    onSuccessOrdersList(orders);
+                                   /* Type listType = new TypeToken<List<Order>>() {
+                                    }.getType();*/
+                                    Route route = gson.fromJson(data, Route.class);
+                                    onSuccessOrdersList(route);
                                 } else {
                                     String error_message = response.getString("message");
                                     Toast toast = Toast.makeText(thisActivity,
@@ -162,7 +163,7 @@ public class EnterRouteFragment extends Fragment
         Log.e("LOGIN", message);
     }
 
-    private void onSuccessOrdersList(List<Order> orders) {
+    private void onSuccessOrdersList(Route route) {
         Intent serviceintent=new Intent(thisActivity,LocationService.class);
         thisActivity.startService(serviceintent);
         //TODO:Stop this service on the logout event

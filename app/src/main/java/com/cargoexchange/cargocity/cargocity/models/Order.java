@@ -7,6 +7,7 @@ public class Order {
     private String name;
     private String customerId;
     private List<Phone> phones;
+    private String mailId;
     private Address address;
     private List<OrderItem> items;
     private String deliveryStatus;
@@ -65,5 +66,13 @@ public class Order {
 
     public void setDeliveryStatus(String deliveryStatus) {
         this.deliveryStatus = deliveryStatus;
+    }
+
+    public String getMailId() {
+        return mailId;
+    }
+
+    public void setMailId(String mailId) {
+        this.mailId = mailId;
     }
 }

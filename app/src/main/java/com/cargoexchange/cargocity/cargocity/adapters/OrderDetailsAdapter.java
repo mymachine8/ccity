@@ -50,17 +50,17 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
     {
         mRouteSession=RouteSession.getInstance();
         //holder.mOrderno.setText(orderDetails.get(position).getOrderId());
-        holder.mName.setText(orderDetails.get(position).getCustomer().getFirstName()+" "+orderDetails.get(position).getCustomer().getLastName());
-        holder.mItems1.setText(orderDetails.get(position).getOrderItemsList().get(0).getItemName());
-        holder.mItems2.setText(orderDetails.get(position).getOrderItemsList().get(1).getItemName());
-        holder.mAddressLine1.setText(orderDetails.get(position).getAddress().getAddressLine1());
-        holder.mAddressLine2.setText(orderDetails.get(position).getAddress().getAddressLine2());
+        holder.mName.setText(orderDetails.get(position).getName());
+        holder.mItems1.setText(orderDetails.get(position).getItems().get(0).getItemName());
+        holder.mItems2.setText(orderDetails.get(position).getItems().get(1).getItemName());
+        holder.mAddressLine1.setText(orderDetails.get(position).getAddress().getLine1());
+        holder.mAddressLine2.setText(orderDetails.get(position).getAddress().getLine2());
 
         //holder.mAddressLine1.setText(orderDetails.get(position).getAddress().getHouseNumber());
         //holder.mAddressLocality.setText(orderDetails.get(position).getAddress().getAddressLine1());
         //holder.mAddressLandmark.setText(orderDetails.get(position).getAddress().getAddressLine2());
         //holder.mCity.setText(orderDetails.get(position).getAddress().getCity());
-        if(mRouteSession.getmOrderList().get(position).getMstatus()== OrderStatus.PENDING_DELIVERY && mRouteSession.getmMatrixDownloadStatus()==1)
+        if(mRouteSession.getmOrderList().get(position).getDeliveryStatus()== OrderStatus.IN_TRANSIT && mRouteSession.getmMatrixDownloadStatus()==1)
         {
             holder.mDistance.setText(mRouteSession.getmDistanceList().get(position));
             holder.mTime.setText(mRouteSession.getmDurationList().get(position));

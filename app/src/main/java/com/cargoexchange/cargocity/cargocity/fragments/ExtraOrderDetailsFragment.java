@@ -163,13 +163,7 @@ public class ExtraOrderDetailsFragment extends Fragment implements OnMapReadyCal
         mName.setText(mRouteSesion
                 .getmOrderList()
                 .get(position)
-                .getCustomer()
-                .getFirstName() + " " +
-                mRouteSesion
-                        .getmOrderList()
-                        .get(position)
-                        .getCustomer()
-                        .getLastName());
+                .getName());
         mOrdeNo.setText(mRouteSesion
                 .getmOrderList()
                 .get(position)
@@ -177,13 +171,11 @@ public class ExtraOrderDetailsFragment extends Fragment implements OnMapReadyCal
         mPhoneNo.setText(mRouteSesion
                 .getmOrderList()
                 .get(position)
-                .getCustomer()
-                .getPrimaryPhone());
+                .getPhones().get(0).getNumber());
         mEmailId.setText(mRouteSesion
                 .getmOrderList()
                 .get(position)
-                .getCustomer()
-                .getEmail());
+                .getMailId());
         mDistance.setText(mRouteSesion
                 .getmDistanceList()
                 .get(position));
@@ -192,12 +184,12 @@ public class ExtraOrderDetailsFragment extends Fragment implements OnMapReadyCal
                 .get(position));
 
         List<String> items=new ArrayList<>();
-        for(int i=0;i<mRouteSesion.getmOrderList().get(position).getOrderItemsList().size();i++)
+        for(int i=0;i<mRouteSesion.getmOrderList().get(position).getItems().size();i++)
         {
             items.add(mRouteSesion
                     .getmOrderList()
                     .get(position)
-                    .getOrderItemsList()
+                    .getItems()
                     .get(i)
                     .getItemName());
         }
@@ -208,17 +200,15 @@ public class ExtraOrderDetailsFragment extends Fragment implements OnMapReadyCal
         mItems.setAdapter(mItemsAdapter);
         items=new ArrayList<>();
         Address maddress=mRouteSesion.getmOrderList().get(position).getAddress();
-        if(!maddress.getHouseNumber().equals(null) && !maddress.getHouseNumber().equalsIgnoreCase(" "))
-            items.add(maddress.getHouseNumber());
-        if(!maddress.getAddressLine1().equals(null) && !maddress.getAddressLine1().equalsIgnoreCase(" "))
-            items.add(maddress.getAddressLine1());
-        if(!maddress.getAddressLine2().equals(null) && !maddress.getAddressLine2().equalsIgnoreCase(" ")) {
+        if(!maddress.getLine1().equals(null) && !maddress.getLine1().equalsIgnoreCase(" "))
+            items.add(maddress.getLine1());
+        if(!maddress.getLine2().equals(null) && !maddress.getLine2().equalsIgnoreCase(" ")) {
             if (!maddress.getPincode().equals(null) && !maddress.getPincode().equalsIgnoreCase(" "))
             {
-                items.add(maddress.getAddressLine2() + "," + maddress.getPincode());
+                items.add(maddress.getLine2() + "," + maddress.getPincode());
             }
             else
-                items.add(maddress.getAddressLine2());
+                items.add(maddress.getLine2());
         }
         if(!maddress.getCity().equals(null) && !maddress.getCity().equalsIgnoreCase(" ")) {
             if (!maddress.getState().equals(null) && !maddress.getState().equalsIgnoreCase(" ")) {
@@ -235,21 +225,16 @@ public class ExtraOrderDetailsFragment extends Fragment implements OnMapReadyCal
     }
 
     public void bindMap() {
-        String addressHouseNo = new ParseAddress().getProcessedaddress(mRouteSesion
-                .getmOrderList()
-                .get(position)
-                .getAddress()
-                .getHouseNumber());
         String addressLine1 = new ParseAddress().getProcessedaddress(mRouteSesion
                 .getmOrderList()
                 .get(position)
                 .getAddress()
-                .getAddressLine1());
+                .getLine1());
         String addressLine2 = new ParseAddress().getProcessedaddress(mRouteSesion
                 .getmOrderList()
                 .get(position)
                 .getAddress()
-                .getAddressLine2());
+                .getLine2());
         String addressCity = new ParseAddress().getProcessedaddress(mRouteSesion
                 .getmOrderList()
                 .get(position)
@@ -260,8 +245,7 @@ public class ExtraOrderDetailsFragment extends Fragment implements OnMapReadyCal
                 .get(position)
                 .getAddress()
                 .getState());
-        String mDestination = addressHouseNo + ","
-                + addressLine1 + ","
+        String mDestination =  addressLine1 + ","
                 + addressLine2 + ","
                 + addressCity + ","
                 + addressState;

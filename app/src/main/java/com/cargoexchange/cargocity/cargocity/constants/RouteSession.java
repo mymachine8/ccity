@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 public class RouteSession
 {
-    private Map<String, Integer> mOrderStatusList;
+    private Map<String, String> mOrderStatusList;
     private List<Order> mOrderList;
     private List<String> mDistanceList;
     private List<String> mDurationList;
@@ -27,11 +27,11 @@ public class RouteSession
         return instance;
     }
 
-    public Map<String, Integer> getmOrderStatusList() {
+    public Map<String, String> getmOrderStatusList() {
         return mOrderStatusList;
     }
 
-    public void setmOrderStatusList(Map<String, Integer> mOrderStatusList) {
+    public void setmOrderStatusList(Map<String, String> mOrderStatusList) {
         this.mOrderStatusList = mOrderStatusList;
     }
 
@@ -66,7 +66,7 @@ public class RouteSession
         RouteSession.instance = instance;
     }
 
-    public int getOrderStatus(String orderId) {
+    public String getOrderStatus(String orderId) {
         return mOrderStatusList.get(orderId);
     }
 

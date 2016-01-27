@@ -51,12 +51,11 @@ public class GenerateUrl
         {
             //if(mOrderList.get(i).getMstatus()== OrderStatus.PENDING_DELIVERY)
             //{
-                mHouseno = mParseAddress.getProcessedaddress(mOrderList.get(i).getAddress().getHouseNumber());
-                mAddressLine1 = mParseAddress.getProcessedaddress(mOrderList.get(i).getAddress().getAddressLine1());
-                mAddressLine2 = mParseAddress.getProcessedaddress(mOrderList.get(i).getAddress().getAddressLine2());
+                mAddressLine1 = mParseAddress.getProcessedaddress(mOrderList.get(i).getAddress().getLine1());
+                mAddressLine2 = mParseAddress.getProcessedaddress(mOrderList.get(i).getAddress().getLine2());
                 mCity = mOrderList.get(i).getAddress().getCity();
                 mState = mParseAddress.getProcessedaddress(mOrderList.get(i).getAddress().getState());
-                mTemp.add(mHouseno+","+mAddressLine1+","+mAddressLine2+","+mCity+","+mState);
+                mTemp.add(mAddressLine1+","+mAddressLine2+","+mCity+","+mState);
             //}
         }
         for(int i=0;i<mTemp.size()-1;i++)
