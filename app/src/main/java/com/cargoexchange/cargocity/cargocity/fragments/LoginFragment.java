@@ -139,7 +139,7 @@ public class LoginFragment extends Fragment
         //TODO: Send login credentials to server, get response and store them in shared prefs
         JSONObject credentialRequestData=new GenerateRequest().getRequest(username,password);
         if(credentialRequestData!=null) {
-            JsonRequest request = CargoCity.getmInstance().getProduct(
+            JsonRequest request = CargoCity.getmInstance().postLoginRequest(
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
@@ -151,14 +151,14 @@ public class LoginFragment extends Fragment
                                     JSONObject tokenObject = response.getJSONObject("token");
                                     token = tokenObject.getString("accessToken");
                                     SharedPreferences.Editor editor = thisActivity.getSharedPreferences(CargoSharedPreferences.MY_PREFS, thisActivity.MODE_PRIVATE).edit();
-                                    editor.putString(CargoSharedPreferences.PREFERENCE_USERNAME,username);
-                                    editor.putString(CargoSharedPreferences.PREFERENCE_ACCESSTOKEN,token);
+                                    editor.putString(CargoSharedPreferences.PREFERENCE_USERNAME, username);
+                                    editor.putString(CargoSharedPreferences.PREFERENCE_ACCESSTOKEN, token);
                                     editor.commit();
                                     Intent i = new Intent(thisActivity, OrdersActivity.class);
                                     startActivity(i);
 
                                 } else {
-                                   String error_message = response.getString("message");
+                                    String error_message = response.getString("message");
                                     Toast toast = Toast.makeText(thisActivity,
                                             error_message, Toast.LENGTH_LONG);
                                     toast.show();
@@ -175,13 +175,13 @@ public class LoginFragment extends Fragment
                             String json = null;
 
                             NetworkResponse response = error.networkResponse;
-                            if(response != null && response.data != null){
-                                switch(response.statusCode){
+                            if (response != null && response.data != null) {
+                                switch (response.statusCode) {
                                     case 401:
                                     case 400:
                                         json = new String(response.data);
                                         json = ParseJSON.trimMessage(json, "message");
-                                        if(json != null) displayToastMessage(json);
+                                        if (json != null) displayToastMessage(json);
                                         break;
                                 }
                                 //Additional cases

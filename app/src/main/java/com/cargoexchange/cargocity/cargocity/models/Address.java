@@ -4,44 +4,43 @@ package com.cargoexchange.cargocity.cargocity.models;
  * Created by thespidy on 14/01/16.
  */
 public class Address {
-    private String houseNumber=new String();
-    private String addressLine1=new String();
-    private String addressLine2=new String();
-    private String city=new String();
-    private String pincode=new String();
-    private String state=new String();
+    private String line1;
+    private String line2;
+    private String landmark;
+    private String city;
+    private String pincode;
+    private String state;
 
-    public Address(String houseNumber,String addressLine1, String addressLine2, String city, String pincode, String state) {
-        this.houseNumber = houseNumber;
-        this.addressLine1 = addressLine1;
-        this.addressLine2 = addressLine2;
+    public Address(String addressLine1, String addressLine2, String city, String pincode, String state) {
+        this.line1 = addressLine1;
+        this.line2 = addressLine2;
         this.city = city;
         this.pincode = pincode;
         this.state = state;
     }
 
-    public String getHouseNumber() {
-        return houseNumber;
+    public String getLine1() {
+        return line1;
     }
 
-    public void setHouseNumber(String houseNumber) {
-        this.houseNumber = houseNumber;
+    public void setLine1(String line1) {
+        this.line1 = line1;
     }
 
-    public String getAddressLine1() {
-        return addressLine1;
+    public String getLine2() {
+        return line2;
     }
 
-    public void setAddressLine1(String addressLine1) {
-        this.addressLine1 = addressLine1;
+    public void setLine2(String line2) {
+        this.line2 = line2;
     }
 
-    public String getAddressLine2() {
-        return addressLine2;
+    public String getLandmark() {
+        return landmark;
     }
 
-    public void setAddressLine2(String addressLine2) {
-        this.addressLine2 = addressLine2;
+    public void setLandmark(String landmark) {
+        this.landmark = landmark;
     }
 
     public String getCity() {

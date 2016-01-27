@@ -283,7 +283,7 @@ public class ExtraOrderDetailsFragment extends Fragment implements OnMapReadyCal
         mMapDataProgress.setTitle("Map");
         mMapDataProgress.setMessage("loading...");
         mMapDataProgress.show();
-        JsonRequest request=CargoCity.getmInstance().getProduct(new Response.Listener<JSONObject>() {
+        JsonRequest request=CargoCity.getmInstance().getGeneralRequest(new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response)
             {

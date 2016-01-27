@@ -152,7 +152,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mapDataProgress.setMessage("Loading...");
         mapDataProgress.setTitle("Map");
         mapDataProgress.show();
-        JsonObjectRequest request = CargoCity.getmInstance().getProduct(new Response.Listener<JSONObject>() {
+        JsonObjectRequest request = CargoCity.getmInstance().getGeneralRequest(new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 Log.d("test", response.toString());

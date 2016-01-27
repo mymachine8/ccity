@@ -4,6 +4,8 @@ package com.cargoexchange.cargocity.cargocity.constants;
  * Created by thespidy on 20/01/16.
  */
 public class OrderStatus {
-    public static final int PENDING_DELIVERY = 1;
-    public static final int DELIVERED = 2;
+    public static final String AT_WAREHOUSE = "At Warehouse";
+    public static final String IN_TRANSIT = "In Transit";
+    public static final String DELIVERED = "Delivered";
+    public static final String DELIVERY_FAILED = "Return";
 }

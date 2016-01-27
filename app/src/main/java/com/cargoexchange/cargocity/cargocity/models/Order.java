@@ -4,19 +4,12 @@ import java.util.List;
 
 public class Order {
     private String orderId;
-    private Customer customer;
+    private String name;
+    private String customerId;
+    private List<Phone> phones;
     private Address address;
-    private List<OrderItem> orderItemsList;
-    private int mstatus;
-
-    public Order(String orderId, Customer customer, Address address, List<OrderItem> orderItemsList,int mstatus)
-    {
-        this.orderId = orderId;
-        this.customer = customer;
-        this.address = address;
-        this.orderItemsList = orderItemsList;
-        this.mstatus=mstatus;
-    }
+    private List<OrderItem> items;
+    private String deliveryStatus;
 
     public String getOrderId() {
         return orderId;
@@ -26,12 +19,28 @@ public class Order {
         this.orderId = orderId;
     }
 
-    public Customer getCustomer() {
-        return customer;
+    public String getName() {
+        return name;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
+    }
+
+    public List<Phone> getPhones() {
+        return phones;
+    }
+
+    public void setPhones(List<Phone> phones) {
+        this.phones = phones;
     }
 
     public Address getAddress() {
@@ -42,19 +51,19 @@ public class Order {
         this.address = address;
     }
 
-    public List<OrderItem> getOrderItemsList() {
-        return orderItemsList;
+    public List<OrderItem> getItems() {
+        return items;
     }
 
-    public void setOrderItemsList(List<OrderItem> orderItemsList) {
-        this.orderItemsList = orderItemsList;
+    public void setItems(List<OrderItem> items) {
+        this.items = items;
     }
 
-    public int getMstatus() {
-        return mstatus;
+    public String getDeliveryStatus() {
+        return deliveryStatus;
     }
 
-    public void setMstatus(int mstatus) {
-        this.mstatus = mstatus;
+    public void setDeliveryStatus(String deliveryStatus) {
+        this.deliveryStatus = deliveryStatus;
     }
 }

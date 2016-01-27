@@ -118,7 +118,7 @@ public class OrdersListFragment extends Fragment
         }
         mLocation = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         String url=new GenerateUrl(mLocation).getMurl();
-        JsonObjectRequest request= CargoCity.getmInstance().getProduct(new Response.Listener<JSONObject>() {
+        JsonObjectRequest request= CargoCity.getmInstance().getGeneralRequest(new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response)
             {
