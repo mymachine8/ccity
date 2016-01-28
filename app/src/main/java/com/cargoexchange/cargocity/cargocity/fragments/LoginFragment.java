@@ -29,6 +29,7 @@ import com.cargoexchange.cargocity.cargocity.R;
 import com.cargoexchange.cargocity.cargocity.constants.CargoSharedPreferences;
 import com.cargoexchange.cargocity.cargocity.constants.Constants;
 import com.cargoexchange.cargocity.cargocity.utils.GenerateRequest;
+import com.cargoexchange.cargocity.cargocity.utils.NetworkAvailability;
 import com.cargoexchange.cargocity.cargocity.utils.ParseJSON;
 
 import org.json.JSONException;
@@ -47,6 +48,7 @@ public class LoginFragment extends Fragment
     private Activity thisActivity;
     private RelativeLayout loginLayout;
     String token = new String();
+    private NetworkAvailability mNetworkAvailability;
     public LoginFragment()
     {
         super();
@@ -58,6 +60,7 @@ public class LoginFragment extends Fragment
     {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
         thisActivity = getActivity();
+        mNetworkAvailability=new NetworkAvailability(thisActivity);
         thisActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         loginLayout=(RelativeLayout)view.findViewById(R.id.loginLayout);
         loginLayout.setOnClickListener(new RelativeLayout.OnClickListener() {
@@ -72,8 +75,12 @@ public class LoginFragment extends Fragment
         mLoginButton .setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View v) {
-                login();
+            public void onClick(View v)
+            {
+                if(mNetworkAvailability.isNetworkAvailable())
+                    login();
+                else
+                    Toast.makeText(thisActivity,"Network Unavailable",Toast.LENGTH_SHORT).show();
             }
         });
         return view;
@@ -85,7 +92,6 @@ public class LoginFragment extends Fragment
         }
 
         mLoginButton.setEnabled(false);
-
         mProgressDialog = new ProgressDialog(thisActivity,
                 R.style.AppTheme);
         mProgressDialog.setIndeterminate(true);

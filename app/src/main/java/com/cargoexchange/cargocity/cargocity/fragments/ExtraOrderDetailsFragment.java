@@ -37,6 +37,7 @@ import com.cargoexchange.cargocity.cargocity.constants.Constants;
 import com.cargoexchange.cargocity.cargocity.constants.RouteSession;
 import com.cargoexchange.cargocity.cargocity.models.Address;
 import com.cargoexchange.cargocity.cargocity.models.Order;
+import com.cargoexchange.cargocity.cargocity.utils.NetworkAvailability;
 import com.cargoexchange.cargocity.cargocity.utils.ParseAddress;
 import com.cargoexchange.cargocity.cargocity.utils.ParseDirections;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -139,9 +140,13 @@ public class ExtraOrderDetailsFragment extends Fragment implements OnMapReadyCal
             @Override
             public void onClick(View v)
             {
-                Log.d("hello","hi");
-                Intent MapIntent=new Intent(thisActivity,MapActivity.class);
-                startActivity(MapIntent);
+                Log.d("hello", "hi");
+                if(new NetworkAvailability(thisActivity).isNetworkAvailable()) {
+                    Intent MapIntent = new Intent(thisActivity, MapActivity.class);
+                    startActivity(MapIntent);
+                }
+                else
+                    Toast.makeText(thisActivity,"Network Unavailable",Toast.LENGTH_SHORT).show();
             }
         });
         final Handler handler = new Handler();
@@ -176,12 +181,14 @@ public class ExtraOrderDetailsFragment extends Fragment implements OnMapReadyCal
                 .getmOrderList()
                 .get(position)
                 .getMailId());
-        mDistance.setText(mRouteSesion
-                .getmDistanceList()
-                .get(position));
-        mDuration.setText(mRouteSesion
-                .getmDurationList()
-                .get(position));
+        if(mRouteSesion.getmMatrixDownloadStatus()==1) {
+            mDistance.setText(mRouteSesion
+                    .getmDistanceList()
+                    .get(position));
+            mDuration.setText(mRouteSesion
+                    .getmDurationList()
+                    .get(position));
+        }
 
         List<String> items=new ArrayList<>();
         for(int i=0;i<mRouteSesion.getmOrderList().get(position).getItems().size();i++)
@@ -224,6 +231,7 @@ public class ExtraOrderDetailsFragment extends Fragment implements OnMapReadyCal
     }
 
     public void bindMap() {
+        NetworkAvailability mNetworkAvailability=new NetworkAvailability(thisActivity);
         String addressLine1 = new ParseAddress().getProcessedaddress(mRouteSesion
                 .getmOrderList()
                 .get(position)
@@ -271,6 +279,7 @@ public class ExtraOrderDetailsFragment extends Fragment implements OnMapReadyCal
             public void onResponse(JSONObject response)
             {
                 routes = new ParseDirections(response).getRoutes();
+                //TODO:set routes as session variable
                 mapFragment.getMapAsync(ExtraOrderDetailsFragment.this);
 
             }
@@ -282,7 +291,11 @@ public class ExtraOrderDetailsFragment extends Fragment implements OnMapReadyCal
 
             }
         },url);
-        CargoCity.getmInstance().getRequestQueue().add(request);
+        if(mNetworkAvailability.isNetworkAvailable())
+            CargoCity.getmInstance().getRequestQueue().add(request);
+        else
+            Toast.makeText(thisActivity,"Network Unavailable",Toast.LENGTH_SHORT).show();
+
 
 
     }

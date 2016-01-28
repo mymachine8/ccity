@@ -25,7 +25,7 @@
                 android:id="@+id/companylogo"
                 android:layout_width="@dimen/logo_size"
                 android:layout_height="@dimen/logo_size"
-                android:src="@drawable/logo"
+                android:src="@drawable/logo_160_160"
                 android:layout_gravity="center_horizontal"/>
 
         </LinearLayout>
@@ -40,48 +40,48 @@
             android:layout_marginRight="70dp"
             >
 
-        <EditText
-            android:id="@+id/input_username"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_username"
-            android:textColor="@android:color/white"
-            android:hint="User Name"
-            android:drawablePadding="15dp"
-            android:textColorHint="@android:color/white"
-            android:layout_gravity="center_horizontal"
-            android:inputType="text"
-            android:maxLines="1"
-            >
-        </EditText>
+            <EditText
+                android:id="@+id/input_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_username"
+                android:textColor="@android:color/white"
+                android:hint="User Name"
+                android:drawablePadding="15dp"
+                android:textColorHint="@android:color/white"
+                android:layout_gravity="center_horizontal"
+                android:inputType="text"
+                android:maxLines="1"
+                >
+            </EditText>
 
-        <EditText
-            android:id="@+id/input_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/white"
-            android:layout_gravity="center_horizontal"
-            android:drawableLeft="@drawable/ic_password"
-            android:hint="**********"
-            android:drawablePadding="15dp"
-            android:password="true"
-            android:textColorHint="@android:color/white"
-            android:layout_marginTop="15dp"
-            android:inputType="text"
-            android:maxLines="1"
-            >
-        </EditText>
+            <EditText
+                android:id="@+id/input_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:layout_gravity="center_horizontal"
+                android:drawableLeft="@drawable/ic_password"
+                android:hint="**********"
+                android:drawablePadding="15dp"
+                android:password="true"
+                android:textColorHint="@android:color/white"
+                android:layout_marginTop="15dp"
+                android:inputType="text"
+                android:maxLines="1"
+                >
+            </EditText>
 
-        <Button
-            android:id="@+id/btn_login"
-            android:layout_gravity="center_horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:text="LOGIN"
-            android:textScaleX="2"
-            android:textColor="@android:color/white"
-            android:theme="@style/Button.Branded"
-            android:layout_marginTop="5dp" />
+            <Button
+                android:id="@+id/btn_login"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="LOGIN"
+                android:textScaleX="2"
+                android:textColor="@android:color/white"
+                android:theme="@style/Button.Branded"
+                android:layout_marginTop="5dp" />
 
         </LinearLayout>
         <TextView

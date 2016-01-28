@@ -17,23 +17,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/CancelImagePopUpButton"
-        android:text="Discard"
-        android:onClick="DiscardImage"
-        android:clickable="false"
-        android:background="?android:attr/selectableItemBackground"
-        />
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/OkImageButton"
-        android:text="OK"
-        android:background="?android:attr/selectableItemBackground"
-        android:onClick="DismissPopUp"
-        />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/CancelImagePopUpButton"
+            android:text="Discard"
+            android:clickable="false"
+            android:background="?android:attr/selectableItemBackground"
+            />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/OkImageButton"
+            android:text="OK"
+            android:background="?android:attr/selectableItemBackground"
+            />
         <!--android:theme="@style/Button.Branded"-->
     </LinearLayout>
 

@@ -3,24 +3,35 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:padding="16dp"
     tools:context="com.cargoexchange.cargocity.cargocity.fragments.EnterRouteFragment">
+        <!-- TODO: Change Layout -->
+        <TextView
+            android:layout_marginTop="7dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/enter_route_id"
+            android:paddingLeft="3dp"
+            android:textSize="25sp"/>
 
-    <!-- TODO: Change Layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/enter_route_id" />
+        <EditText
+            android:layout_marginTop="30dp"
+            android:id="@+id/input_route_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter ID Number"
+            android:textSize="15sp"
+            />
 
-    <EditText
-        android:id="@+id/input_route_id"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Route ID"
-        />
-    <Button
-        android:id="@+id/btn_route"
-        android:text="Submit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        <Button
+            android:theme="@style/Button.Branded"
+            android:id="@+id/btn_route"
+            android:text="GO"
+            android:textColor="@android:color/white"
+            android:textSize="25sp"
+            android:textScaleX="2"
+            android:layout_marginTop="40dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-</LinearLayout>
+    </LinearLayout>
