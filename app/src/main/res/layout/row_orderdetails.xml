@@ -7,8 +7,8 @@
     app:cardCornerRadius="2dp"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
-    android:layout_marginTop="10dp"
-    android:layout_marginBottom="10dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
     app:contentPadding="10dp"
     android:foregroundGravity="center"
     android:layout_centerHorizontal="true"
@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:text="Swapna Kundala"
             android:textSize="23sp"
-            android:textColor="@android:color/holo_purple"
+            android:textColor="#433876"
             />
 
         <RelativeLayout
@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <LinearLayout
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="6dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -69,7 +69,7 @@
                 android:id="@+id/orderstatusimage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_cargo"
+                android:src="@drawable/truck"
                 app:fabSize="mini"
                 app:backgroundTint="@android:color/holo_red_dark"
                 app:layout_anchor="@id/orderdetailscardview"
@@ -84,9 +84,10 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingBottom="3dp"
             android:orientation="horizontal">
             <LinearLayout
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="6dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -114,13 +115,14 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"/>-->
             <android.support.design.widget.FloatingActionButton
+                android:layout_marginTop="5dp"
                 android:id="@+id/CallActionFloatingActionButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
-                android:src="@drawable/ic_call_white"
+                android:src="@drawable/phone"
                 app:fabSize="mini"
-                app:backgroundTint="@android:color/holo_green_light"
+                app:backgroundTint="#4bae50"
                 app:layout_anchor="@id/orderdetailscardview"
                 app:elevation="5dp"
                 app:pressedTranslationZ="12dp"
@@ -135,11 +137,11 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:paddingBottom="2dp"
+            android:layout_marginTop="12dp"
+            android:paddingBottom="0dp"
             android:paddingTop="5dp"
             android:orientation="horizontal"
-            android:background="@android:color/holo_red_light">
+            android:background="#dd4f53">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -147,9 +149,10 @@
                 android:orientation="horizontal">
 
                 <ImageView
+                    android:layout_marginLeft="3dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_place"
+                    android:src="@drawable/map_icon_30_46"
                     />
                 <TextView
                     android:id="@+id/distancetextview"
@@ -181,7 +184,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_schedule"
+                    android:src="@drawable/clock"
                     />
                 <TextView
                     android:id="@+id/timetextview"
@@ -198,163 +201,163 @@
         </LinearLayout>
     </LinearLayout>
 
-   <!-- <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+    <!-- <LinearLayout
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+         <LinearLayout
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:orientation="horizontal">
 
-            <TextView android:id="@+id/ordernotextview" android:gravity="right"
-                android:layout_width="100dp" android:layout_height="wrap_content"
-                android:text="@string/orderno" android:layout_marginTop="16dp"
-                android:textSize="17dp"/>
+             <TextView android:id="@+id/ordernotextview" android:gravity="right"
+                 android:layout_width="100dp" android:layout_height="wrap_content"
+                 android:text="@string/orderno" android:layout_marginTop="16dp"
+                 android:textSize="17dp"/>
 
-            <TextView android:id="@+id/ordernoedittext" android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:layout_marginLeft="10dp"
-                android:textColor="@android:color/holo_red_dark" android:layout_marginTop="16dp"
-                android:textSize="17dp" android:textAllCaps="true"/>
+             <TextView android:id="@+id/ordernoedittext" android:layout_width="wrap_content"
+                 android:layout_height="wrap_content" android:layout_marginLeft="10dp"
+                 android:textColor="@android:color/holo_red_dark" android:layout_marginTop="16dp"
+                 android:textSize="17dp" android:textAllCaps="true"/>
 
-            <RelativeLayout android:layout_gravity="right" android:gravity="right"
-                android:layout_width="match_parent" android:layout_height="wrap_content">
+             <RelativeLayout android:layout_gravity="right" android:gravity="right"
+                 android:layout_width="match_parent" android:layout_height="wrap_content">
 
-                <ImageView android:id="@+id/orderstatusimage" android:layout_width="20dp"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_play_circle_outline" android:layout_gravity="right" />
-            </RelativeLayout>
+                 <ImageView android:id="@+id/orderstatusimage" android:layout_width="20dp"
+                     android:layout_height="wrap_content"
+                     android:src="@drawable/ic_play_circle_outline" android:layout_gravity="right" />
+             </RelativeLayout>
 
-        </LinearLayout>
+         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+         <LinearLayout
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:orientation="horizontal">
 
-            <TextView android:id="@+id/nametext" android:gravity="right"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content" android:text="@string/name"
-                android:layout_marginTop="10dp" android:textSize="17dp" />
+             <TextView android:id="@+id/nametext" android:gravity="right"
+                 android:layout_width="100dp"
+                 android:layout_height="wrap_content" android:text="@string/name"
+                 android:layout_marginTop="10dp" android:textSize="17dp" />
 
-            <TextView android:id="@+id/nameedittext" android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp" android:textSize="17dp" android:textAllCaps="true"/>
+             <TextView android:id="@+id/nameedittext" android:layout_width="wrap_content"
+                 android:layout_height="wrap_content" android:layout_marginLeft="10dp"
+                 android:layout_marginTop="10dp" android:textSize="17dp" android:textAllCaps="true"/>
 
-        </LinearLayout>
+         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+         <LinearLayout
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:orientation="horizontal">
 
-            <TextView android:id="@+id/addresstext" android:gravity="right"
-                android:layout_width="100dp" android:layout_height="wrap_content"
-                android:text="@string/address" android:layout_marginTop="10dp" android:textSize="17dp" />
+             <TextView android:id="@+id/addresstext" android:gravity="right"
+                 android:layout_width="100dp" android:layout_height="wrap_content"
+                 android:text="@string/address" android:layout_marginTop="10dp" android:textSize="17dp" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <TextView android:id="@+id/Line1addressedittext" android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:layout_marginLeft="10dp"
-                    android:layout_marginTop="10dp" android:textSize="17dp"
-                    android:textAllCaps="true"/>
-                <TextView android:id="@+id/Localityaddressedittext" android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:layout_marginLeft="10dp"
-                    android:layout_marginTop="2dp" android:textSize="17dp" android:textAllCaps="true"/>
-                <TextView android:id="@+id/Landmarkaddressedittext" android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:layout_marginLeft="10dp"
-                    android:layout_marginTop="2dp" android:textSize="17dp" android:textAllCaps="true"/>
-            </LinearLayout>
-
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView android:id="@+id/citytext" android:gravity="right" android:layout_width="100dp"
-                android:layout_height="wrap_content" android:text="@string/city"
-                android:layout_marginTop="10dp" android:textSize="17dp"/>
-            <TextView android:id="@+id/cityedittext" android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp" android:textSize="17dp" android:textAllCaps="true"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView android:id="@+id/itemtext" android:gravity="right" android:layout_width="100dp"
-                android:layout_height="wrap_content" android:text="@string/items"
-                android:layout_marginTop="10dp" android:textSize="17dp"/>
-            <TextView android:id="@+id/itemedittext" android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp" android:textSize="17dp" android:textAllCaps="true"/>
-
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_marginTop="10dp"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:textSize="15dp"
-                    android:textColor="@android:color/holo_red_dark"
-                    android:gravity="right"
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:text="Distance:-"/>
-
-                <TextView
-                    android:id="@+id/distancetextview"
-                    android:textSize="15dp"
-                    android:textColor="@android:color/holo_red_dark"
-                    android:layout_width="60dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:text="-&#45;&#45; Kms"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:textSize="15dp"
-                    android:textColor="@android:color/holo_red_dark"
-                    android:gravity="right"
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"
-                    android:text="Time:-"/>
-
-                <TextView
-                    android:id="@+id/timetextview"
-                    android:textSize="15dp"
-                    android:textColor="@android:color/holo_red_dark"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:text="-&#45;&#45; Hrs"/>
+             <LinearLayout
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:orientation="vertical">
+                 <TextView android:id="@+id/Line1addressedittext" android:layout_width="wrap_content"
+                     android:layout_height="wrap_content" android:layout_marginLeft="10dp"
+                     android:layout_marginTop="10dp" android:textSize="17dp"
+                     android:textAllCaps="true"/>
+                 <TextView android:id="@+id/Localityaddressedittext" android:layout_width="wrap_content"
+                     android:layout_height="wrap_content" android:layout_marginLeft="10dp"
+                     android:layout_marginTop="2dp" android:textSize="17dp" android:textAllCaps="true"/>
+                 <TextView android:id="@+id/Landmarkaddressedittext" android:layout_width="wrap_content"
+                     android:layout_height="wrap_content" android:layout_marginLeft="10dp"
+                     android:layout_marginTop="2dp" android:textSize="17dp" android:textAllCaps="true"/>
+             </LinearLayout>
 
 
-            </LinearLayout>
 
-        </LinearLayout>
-    </LinearLayout>-->
+         </LinearLayout>
+
+         <LinearLayout
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:orientation="horizontal">
+
+             <TextView android:id="@+id/citytext" android:gravity="right" android:layout_width="100dp"
+                 android:layout_height="wrap_content" android:text="@string/city"
+                 android:layout_marginTop="10dp" android:textSize="17dp"/>
+             <TextView android:id="@+id/cityedittext" android:layout_width="wrap_content"
+                 android:layout_height="wrap_content" android:layout_marginLeft="10dp"
+                 android:layout_marginTop="10dp" android:textSize="17dp" android:textAllCaps="true"/>
+
+         </LinearLayout>
+
+         <LinearLayout
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:orientation="horizontal">
+
+             <TextView android:id="@+id/itemtext" android:gravity="right" android:layout_width="100dp"
+                 android:layout_height="wrap_content" android:text="@string/items"
+                 android:layout_marginTop="10dp" android:textSize="17dp"/>
+             <TextView android:id="@+id/itemedittext" android:layout_width="wrap_content"
+                 android:layout_height="wrap_content" android:layout_marginLeft="10dp"
+                 android:layout_marginTop="10dp" android:textSize="17dp" android:textAllCaps="true"/>
+
+         </LinearLayout>
+         <LinearLayout
+             android:layout_width="match_parent"
+             android:layout_marginTop="10dp"
+             android:layout_height="wrap_content"
+             android:orientation="horizontal">
+
+             <LinearLayout
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:orientation="horizontal">
+
+                 <TextView
+                     android:textSize="15dp"
+                     android:textColor="@android:color/holo_red_dark"
+                     android:gravity="right"
+                     android:layout_width="100dp"
+                     android:layout_height="wrap_content"
+                     android:text="Distance:-"/>
+
+                 <TextView
+                     android:id="@+id/distancetextview"
+                     android:textSize="15dp"
+                     android:textColor="@android:color/holo_red_dark"
+                     android:layout_width="60dp"
+                     android:layout_height="wrap_content"
+                     android:layout_marginLeft="10dp"
+                     android:text="-&#45;&#45; Kms"/>
+             </LinearLayout>
+             <LinearLayout
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:orientation="horizontal">
+
+                 <TextView
+                     android:textSize="15dp"
+                     android:textColor="@android:color/holo_red_dark"
+                     android:gravity="right"
+                     android:layout_width="50dp"
+                     android:layout_height="wrap_content"
+                     android:text="Time:-"/>
+
+                 <TextView
+                     android:id="@+id/timetextview"
+                     android:textSize="15dp"
+                     android:textColor="@android:color/holo_red_dark"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:layout_marginLeft="10dp"
+                     android:text="-&#45;&#45; Hrs"/>
+
+
+             </LinearLayout>
+
+         </LinearLayout>
+     </LinearLayout>-->
 
 </android.support.v7.widget.CardView>
 

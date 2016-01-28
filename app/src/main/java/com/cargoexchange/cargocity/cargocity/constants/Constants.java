@@ -1,5 +1,7 @@
 package com.cargoexchange.cargocity.cargocity.constants;
 
+import android.location.LocationManager;
+
 /**
  * Created by thespidy on 18/01/16.
  */
@@ -16,4 +18,9 @@ public class Constants
     public static final String MAP_TRANSTMODE = "bus";
     public static final int LOCATION_MAX_TIME=50000;
     public static final int LOCATION_MAX_DISTANCE=500;
+    public static final int PERMISSION_ACCESS_LOCATION=1;
+    public static final String LOCATION_PROVIDER= LocationManager.GPS_PROVIDER;
+    public static final String NETWORK_LOCATION_PROVIDER=LocationManager.NETWORK_PROVIDER;
+    public static final int TWO_MINUTES = 1000 * 60 * 2;
+    public static final int LOCATION_SETTINGS_ACTION=2;
 }

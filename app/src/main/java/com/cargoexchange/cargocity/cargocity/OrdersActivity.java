@@ -22,8 +22,8 @@ public class OrdersActivity extends AppCompatActivity {
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_orders);
-        IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-        Intent batterystatus=getApplicationContext().registerReceiver(new BatteryStatusReciever(),ifilter);
+        //IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+        //Intent batterystatus=getApplicationContext().registerReceiver(new BatteryStatusReciever(),ifilter);
 
         String source=getIntent().getStringExtra("source");
         if(source!=null) {
@@ -41,7 +41,6 @@ public class OrdersActivity extends AppCompatActivity {
     @Override
     protected void onResume()
     {
-
         super.onResume();
     }
 }

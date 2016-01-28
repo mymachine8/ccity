@@ -117,72 +117,106 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         + addressLine2 + ","
                         + addressCity + ","
                         + addressState;
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
+        checkpermission();
+    }
+
+    public void checkpermission()
+    {
+        if (ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION},Constants.PERMISSION_ACCESS_LOCATION);
         }
-        //Location location=mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        //boolean isNew=new IsLocationLatest(location).IsLatest();
-        /*if(!isNew){
-            //get a latest fix
-            location=new IsLocationLatest().getSingleFix(MapActivity.this);
-        }*/
-        Location location = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-
-        url= Constants.GOOGLE_MAP_DIRECTIONS_API_BASE_URL
-                +"key=" +Constants.GOOGLE_MAP_SERVER_KEY
-                +"&origin="+location.getLatitude()+","+location.getLongitude()
-                +"&destination="+mDestination
-                +"&departure_time="+Constants.MAP_DEPARTURETIME
-                +"&traffic_model="+Constants.MAP_TRAFFICMODEL_PESSIMISTIC
-                +"&mode="+Constants.MAP_TRANSTMODE;
-        mapDataProgress = new ProgressDialog(this);
-        mapDataProgress.setMessage("Loading...");
-        mapDataProgress.setTitle("Map");
-        mapDataProgress.show();
-        JsonObjectRequest request = CargoCity.getmInstance().getGeneralRequest(new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Log.d("test", response.toString());
-                //Use the routes to draw polyline on map
-                routes = new ParseDirections(response).getRoutes();
-
-                //pass this bundle to extract the navigation instructions
-                sendToNavigationFragmentBundle = new Bundle();
-                sendToNavigationFragmentBundle.putString("mapData", response.toString());
-                mapFragment.getMapAsync(MapActivity.this);
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                mapDataProgress.dismiss();
-                Toast.makeText(MapActivity.this, "Error!Please try again", Toast.LENGTH_LONG).show();
-                error.printStackTrace();
-            }
-        }, url);
-        CargoCity.getmInstance().getRequestQueue().add(request);
-
-        mNavigationFloatingActionButton = (FloatingActionButton)
-                findViewById(R.id.navigationFloatingActionButton);
-        mNavigationFloatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                navigationIntent = new Intent(android.content.Intent.ACTION_VIEW,
-                        Uri.parse("google.navigation:q=" + mDestination + "&mode=d"))
-                        .setPackage("com.google.android.apps.maps");
-
-                if (navigationIntent.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(navigationIntent, 1);
+        else
+        {
+            if(mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
+            {
+                Location location = mLocationManager.getLastKnownLocation(Constants.LOCATION_PROVIDER);
+                if (location != null)
+                    fetchMapData(location);
+                else
+                {
+                    location = mLocationManager.getLastKnownLocation(Constants.NETWORK_LOCATION_PROVIDER);
+                    if(location!=null)
+                        fetchMapData(location);
+                    else
+                    {
+                            Toast.makeText(this,"Unable to fetch location",Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
-        });
+            else
+            {
+                Intent viewIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivityForResult(viewIntent,Constants.LOCATION_SETTINGS_ACTION);
+            }
+        }
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if(requestCode==Constants.LOCATION_SETTINGS_ACTION)
+        {
+            if(mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                checkpermission();
+            }
+            else {
+                Toast.makeText(this, "Please turn on Location services", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+    public void fetchMapData(Location location)
+    {
+        if (location != null) {
+            url = Constants.GOOGLE_MAP_DIRECTIONS_API_BASE_URL
+                    + "key=" + Constants.GOOGLE_MAP_SERVER_KEY
+                    + "&origin=" + location.getLatitude() + "," + location.getLongitude()
+                    + "&destination=" + mDestination
+                    + "&departure_time=" + Constants.MAP_DEPARTURETIME
+                    + "&traffic_model=" + Constants.MAP_TRAFFICMODEL_PESSIMISTIC
+                    + "&mode=" + Constants.MAP_TRANSTMODE;
+            mapDataProgress = new ProgressDialog(this);
+            mapDataProgress.setMessage("Loading...");
+            mapDataProgress.setTitle("Map");
+            mapDataProgress.show();
+            JsonObjectRequest request = CargoCity.getmInstance().getGeneralRequest(new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    Log.d("test", response.toString());
+                    //Use the routes to draw polyline on map
+                    routes = new ParseDirections(response).getRoutes();
+
+                    //pass this bundle to extract the navigation instructions
+                    sendToNavigationFragmentBundle = new Bundle();
+                    sendToNavigationFragmentBundle.putString("mapData", response.toString());
+                    mapFragment.getMapAsync(MapActivity.this);
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    mapDataProgress.dismiss();
+                    Toast.makeText(MapActivity.this, "Error!Please try again", Toast.LENGTH_LONG).show();
+                    error.printStackTrace();
+                }
+            }, url);
+            CargoCity.getmInstance().getRequestQueue().add(request);
+
+            mNavigationFloatingActionButton = (FloatingActionButton)
+                    findViewById(R.id.navigationFloatingActionButton);
+            mNavigationFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    navigationIntent = new Intent(android.content.Intent.ACTION_VIEW,
+                            Uri.parse("google.navigation:q=" + mDestination + "&mode=d"))
+                            .setPackage("com.google.android.apps.maps");
+
+                    if (navigationIntent.resolveActivity(getPackageManager()) != null) {
+                        startActivityForResult(navigationIntent, 1);
+                    }
+                }
+            });
+        } else
+            Toast.makeText(this, "Error fethcing location", Toast.LENGTH_SHORT);
     }
 
     @Override
@@ -333,7 +367,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        mPrevLocation = mLocationManager.getLastKnownLocation(mLocationManager.GPS_PROVIDER);
+       /* mPrevLocation = mLocationManager.getLastKnownLocation(mLocationManager.GPS_PROVIDER);
         mLocationManager.requestLocationUpdates(mLocationManager.GPS_PROVIDER, 3000, 0, new LocationListener()
         {
             @Override
@@ -371,6 +405,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             {
 
             }
-        });
+        });*/
     }
 }

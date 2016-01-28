@@ -1,13 +1,17 @@
 package com.cargoexchange.cargocity.cargocity.fragments;
 
 
+import android.Manifest;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +35,7 @@ import com.cargoexchange.cargocity.cargocity.models.Order;
 import com.cargoexchange.cargocity.cargocity.models.Route;
 import com.cargoexchange.cargocity.cargocity.services.LocationService;
 import com.cargoexchange.cargocity.cargocity.utils.GenerateRequest;
+import com.cargoexchange.cargocity.cargocity.utils.NetworkAvailability;
 import com.cargoexchange.cargocity.cargocity.utils.ParseJSON;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -53,6 +58,7 @@ public class EnterRouteFragment extends Fragment
     private ProgressDialog mProgressDialog;
     private RouteSession mApplicationSession;
     private String routeId;
+    Intent serviceintent;
 
     public EnterRouteFragment() {
     }
@@ -75,7 +81,10 @@ public class EnterRouteFragment extends Fragment
 
             @Override
             public void onClick(View v) {
-                routeSubmit();
+                if (new NetworkAvailability(thisActivity).isNetworkAvailable())
+                    routeSubmit();
+                else
+                    Toast.makeText(thisActivity, "Network Unavailable", Toast.LENGTH_SHORT).show();
             }
         });
         return view;
@@ -169,12 +178,46 @@ public class EnterRouteFragment extends Fragment
     }
 
     private void onSuccessOrdersList(Route route) {
-        Intent serviceintent=new Intent(thisActivity,LocationService.class);
-        thisActivity.startService(serviceintent);
-        //TODO:Stop this service on the logout event
-        mApplicationSession= RouteSession.getInstance();
-        mApplicationSession.setRouteId(routeId);
-        Fragment ordersListFragment = new OrdersListFragment() ;
-        thisActivity.getSupportFragmentManager().beginTransaction().replace(R.id.orders_container, ordersListFragment).commit();
+        int hasFineLocationPermission = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION);
+        serviceintent=new Intent(thisActivity,LocationService.class);
+        if (hasFineLocationPermission == PackageManager.PERMISSION_GRANTED) {
+            thisActivity.startService(serviceintent);
+            //TODO:Stop this service on the logout event
+            mApplicationSession = RouteSession.getInstance();
+            mApplicationSession.setRouteId(routeId);
+            Fragment ordersListFragment = new OrdersListFragment();
+            thisActivity.getSupportFragmentManager().beginTransaction().replace(R.id.orders_container, ordersListFragment).commit();
+        }
+        else
+        {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 3);
+            thisActivity.startService(serviceintent);
+            mApplicationSession= RouteSession.getInstance();
+            mApplicationSession.setRouteId(routeId);
+            Fragment ordersListFragment = new OrdersListFragment();
+            thisActivity.getSupportFragmentManager().beginTransaction().replace(R.id.orders_container, ordersListFragment).commit();
+            return;
+        }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode,String permissions[], int[] grantResults)
+    {
+        switch (requestCode) {
+            case 3 : {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    thisActivity.startService(serviceintent);
+                    mApplicationSession= RouteSession.getInstance();
+                    mApplicationSession.setRouteId(routeId);
+                    Fragment ordersListFragment = new OrdersListFragment() ;
+                    thisActivity.getSupportFragmentManager().beginTransaction().replace(R.id.orders_container, ordersListFragment).commit();
+
+
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+        }
     }
 }
