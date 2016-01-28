@@ -15,8 +15,9 @@ import com.cargoexchange.cargocity.cargocity.R;
 public class RouteDetails extends Fragment {
 
 
-    public RouteDetails() {
-        // Required empty public constructor
+    public RouteDetails()
+    {
+
     }
 
 
