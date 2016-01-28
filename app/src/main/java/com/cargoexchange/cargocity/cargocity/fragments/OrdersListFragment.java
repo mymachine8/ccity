@@ -33,6 +33,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.cargoexchange.cargocity.cargocity.CargoCity;
+import com.cargoexchange.cargocity.cargocity.DeliveryFeedbackActivity;
 import com.cargoexchange.cargocity.cargocity.MapActivity;
 import com.cargoexchange.cargocity.cargocity.OrdersActivity;
 import com.cargoexchange.cargocity.cargocity.R;
@@ -42,6 +43,7 @@ import com.cargoexchange.cargocity.cargocity.constants.OrderStatus;
 import com.cargoexchange.cargocity.cargocity.constants.RouteSession;
 import com.cargoexchange.cargocity.cargocity.models.Address;
 import com.cargoexchange.cargocity.cargocity.models.Customer;
+import com.cargoexchange.cargocity.cargocity.models.Feedback;
 import com.cargoexchange.cargocity.cargocity.models.Order;
 import com.cargoexchange.cargocity.cargocity.models.Route;
 import com.cargoexchange.cargocity.cargocity.utils.GenerateUrl;
@@ -60,6 +62,7 @@ import java.util.Map;
 
 public class OrdersListFragment extends Fragment
 {
+    private static String ORDERS_LIST_KEY = "orders_list_key";
     private RecyclerView mOrdersListFragmentRecycler;
     private RecyclerView.LayoutManager mOrdersListLayoutManager;
     private LocationManager mLocationManager;
@@ -81,16 +84,22 @@ public class OrdersListFragment extends Fragment
         // Required empty public constructor
     }
 
+    public static Fragment newInstance(Route route) {
+        OrdersListFragment fragment = new OrdersListFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(ORDERS_LIST_KEY, route);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         mRouteSession = RouteSession.getInstance();
         mOrdersList = mRouteSession.getmOrderList();
         if (mOrdersList == null || mOrdersList.size() == 0) {
-            mOrdersList = new ArrayList<>();
-            List<OrderItem> items=new ArrayList<>();
-            items.add(new OrderItem("123","Lens"));
-            items.add(new OrderItem("123","Bike"));
-        /*    mOrdersList.add(new Order("ABC", new Customer("Somesh", "NA", "Mohan", "abc@xyz.com", "NA", "NA"), new Address("Sri Nagar Colony", "Khairatabad", "Hyderabad", "NA", "Telangana"),items, OrderStatus.IN_TRANSIT));
+            mRoute = (Route) getArguments().getSerializable(ORDERS_LIST_KEY);
+            mOrdersList = mRoute.getOrderList();
+            /*mOrdersList.add(new Order("ABC", new Customer("Somesh", "NA", "Mohan", "abc@xyz.com", "NA", "NA"), new Address("Sri Nagar Colony", "Khairatabad", "Hyderabad", "NA", "Telangana"),items, OrderStatus.IN_TRANSIT));
             mOrdersList.add(new Order("ABC", new Customer("Krishna", "NA", "Chaitanya", "def@xyz.com", "NA", "NA"), new Address("Ayappa Society", "Madhapur", "Hyderabad", "NA", "Telangana"),items, OrderStatus.IN_TRANSIT));
             mOrdersList.add(new Order("ABC", new Customer("Kinkar", "NA", "Banerji", "xyz@xyz.com", "NA", "NA"), new Address("ROAD NO 21", "Banjara Hills", "Hyderabad", "NA", "Telangana"),items, OrderStatus.IN_TRANSIT));*/
             Map<String, String> orderStatusList = new HashMap<String, String>();
@@ -123,7 +132,7 @@ public class OrdersListFragment extends Fragment
         int hasLocationCoarsePermission=ContextCompat.checkSelfPermission(getActivity(),Manifest.permission.ACCESS_COARSE_LOCATION);
         if (hasLocationfinePermission == PackageManager.PERMISSION_GRANTED && hasLocationCoarsePermission==PackageManager.PERMISSION_GRANTED)
         {
-            if(mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            if(mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                 setData();
             }
             else
@@ -286,14 +295,18 @@ public class OrdersListFragment extends Fragment
     }
     public void onCardClickAction(View view,int position)
     {
-        if(mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            if (mRouteSession.getmOrderList().get(position).getDeliveryStatus() == OrderStatus.IN_TRANSIT) {
-                //Intent mapIntent = new Intent(thisActivity, MapActivity.class);
+        if(mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
+        {
+            if (mRouteSession.getmOrderList().get(position).getDeliveryStatus().equals(OrderStatus.IN_TRANSIT))
+            {
+                //Intent mapIntent = new Intent(thisActivity, DeliveryFeedbackActivity.class);
+
                 Fragment mExtraDetailsFragment = new ExtraOrderDetailsFragment();
                 Bundle mDataForExtraDetailsFragment = new Bundle();
                 mDataForExtraDetailsFragment.putInt("position", position);
                 mExtraDetailsFragment.setArguments(mDataForExtraDetailsFragment);
                 mRouteSession.setPosition(position);
+
                 thisActivity
                         .getSupportFragmentManager()
                         .beginTransaction()
@@ -311,7 +324,7 @@ public class OrdersListFragment extends Fragment
             }
             else
             {
-                Toast.makeText(thisActivity, "Delivery Completed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(thisActivity, mRouteSession.getmOrderList().get(position).getDeliveryStatus(), Toast.LENGTH_SHORT).show();
             }
         }
         else

@@ -1,9 +1,11 @@
 package com.cargoexchange.cargocity.cargocity.models;
 
+import java.io.Serializable;
+
 /**
  * Created by thespidy on 14/01/16.
  */
-public class Address {
+public class Address implements Serializable{
     private String line1;
     private String line2;
     private String landmark;

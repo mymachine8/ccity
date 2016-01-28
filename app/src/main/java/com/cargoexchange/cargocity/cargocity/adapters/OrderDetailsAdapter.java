@@ -60,14 +60,13 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         //holder.mAddressLocality.setText(orderDetails.get(position).getAddress().getAddressLine1());
         //holder.mAddressLandmark.setText(orderDetails.get(position).getAddress().getAddressLine2());
         //holder.mCity.setText(orderDetails.get(position).getAddress().getCity());
-        if(mRouteSession.getmOrderList().get(position).getDeliveryStatus()== OrderStatus.IN_TRANSIT && mRouteSession.getmMatrixDownloadStatus()==1)
-        {
-            holder.mDistance.setText(mRouteSession.getmDistanceList().get(position));
-            holder.mTime.setText(mRouteSession.getmDurationList().get(position));
-        }
-        else
-        {
-            holder.mStatusImage.setImageResource(R.drawable.ic_tick);
+        if( mRouteSession.getmMatrixDownloadStatus()==1) {
+            if (mRouteSession.getmOrderList().get(position).getDeliveryStatus() == OrderStatus.IN_TRANSIT) {
+                holder.mDistance.setText(mRouteSession.getmDistanceList().get(position));
+                holder.mTime.setText(mRouteSession.getmDurationList().get(position));
+            } else {
+                holder.mStatusImage.setImageResource(R.drawable.ic_tick);
+            }
         }
     }
 

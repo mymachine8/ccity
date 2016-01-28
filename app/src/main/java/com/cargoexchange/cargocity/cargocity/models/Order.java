@@ -1,8 +1,9 @@
 package com.cargoexchange.cargocity.cargocity.models;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Order {
+public class Order implements Serializable{
     private String orderId;
     private String name;
     private String customerId;

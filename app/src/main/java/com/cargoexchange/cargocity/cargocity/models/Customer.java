@@ -1,9 +1,11 @@
 package com.cargoexchange.cargocity.cargocity.models;
 
+import java.io.Serializable;
+
 /**
  * Created by thespidy on 14/01/16.
  */
-public class Customer {
+public class Customer implements Serializable{
     private String firstName;
     private String middleName;
     private String lastName;

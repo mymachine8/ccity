@@ -1,13 +1,14 @@
 package com.cargoexchange.cargocity.cargocity.models;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Feedback {
+public class Feedback implements Serializable{
     private boolean isOrderDelivered;
     private boolean inGoodCondition;
     private String additionalComments;
     private List<String> documentImageList;
-    private int Rating;
+    private int deliveryRating;
     private String feedback;
 
     public boolean isOrderDelivered() {
@@ -42,12 +43,12 @@ public class Feedback {
         this.documentImageList = documentImageList;
     }
 
-    public int getRating() {
-        return Rating;
+    public int getDeliveryRating() {
+        return deliveryRating;
     }
 
-    public void setRating(int rating) {
-        Rating = rating;
+    public void setDeliveryRating(int deliveryRating) {
+        this.deliveryRating = deliveryRating;
     }
 
     public String getFeedback() {

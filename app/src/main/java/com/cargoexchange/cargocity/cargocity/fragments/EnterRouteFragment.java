@@ -125,8 +125,6 @@ public class EnterRouteFragment extends Fragment
                                 if (status.equalsIgnoreCase("success")) {
                                     String data = response.getString("data");
                                     Gson gson = new GsonBuilder().create();
-                                   /* Type listType = new TypeToken<List<Order>>() {
-                                    }.getType();*/
                                     Route route = gson.fromJson(data, Route.class);
                                     onSuccessOrdersList(route);
                                 } else {
@@ -181,43 +179,20 @@ public class EnterRouteFragment extends Fragment
         int hasFineLocationPermission = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION);
         serviceintent=new Intent(thisActivity,LocationService.class);
         if (hasFineLocationPermission == PackageManager.PERMISSION_GRANTED) {
-            thisActivity.startService(serviceintent);
-            //TODO:Stop this service on the logout event
-            mApplicationSession = RouteSession.getInstance();
-            mApplicationSession.setRouteId(routeId);
-            Fragment ordersListFragment = new OrdersListFragment();
-            thisActivity.getSupportFragmentManager().beginTransaction().replace(R.id.orders_container, ordersListFragment).commit();
+          callRouteDetailsFragment(route);
         }
         else
         {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 3);
-            thisActivity.startService(serviceintent);
-            mApplicationSession= RouteSession.getInstance();
-            mApplicationSession.setRouteId(routeId);
-            Fragment ordersListFragment = new OrdersListFragment();
-            thisActivity.getSupportFragmentManager().beginTransaction().replace(R.id.orders_container, ordersListFragment).commit();
-            return;
+            //TODO: SOME TOAST OR PERMISSION REQUEST
         }
     }
-    @Override
-    public void onRequestPermissionsResult(int requestCode,String permissions[], int[] grantResults)
-    {
-        switch (requestCode) {
-            case 3 : {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    thisActivity.startService(serviceintent);
-                    mApplicationSession= RouteSession.getInstance();
-                    mApplicationSession.setRouteId(routeId);
-                    Fragment ordersListFragment = new OrdersListFragment() ;
-                    thisActivity.getSupportFragmentManager().beginTransaction().replace(R.id.orders_container, ordersListFragment).commit();
 
-
-                } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                }
-                return;
-            }
-        }
+    public void callRouteDetailsFragment(Route route){
+        thisActivity.startService(serviceintent);
+        //TODO:Stop this service on the logout event
+        mApplicationSession = RouteSession.getInstance();
+        mApplicationSession.setRouteId(routeId);
+        Fragment routeDetailsFragment = RouteDetailsFragment.newInstance(route);
+        thisActivity.getSupportFragmentManager().beginTransaction().replace(R.id.orders_container, routeDetailsFragment).commit();
     }
 }

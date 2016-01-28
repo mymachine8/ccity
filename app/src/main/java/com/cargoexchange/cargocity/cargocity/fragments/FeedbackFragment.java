@@ -253,16 +253,18 @@ public class FeedbackFragment extends Fragment
     private Feedback createFeedbackObject(){
         Feedback feedback = new Feedback();
         feedback.setInGoodCondition(isItemGoodConditionSwitch.isChecked());
-        feedback.setRating(mRatingBar.getNumStars());
+        feedback.setDeliveryRating(mRatingBar.getNumStars());
         feedback.setAdditionalComments(mAdditionalCommentsEditText.getText().toString());
         feedback.setFeedback(mCommentEditText.getText().toString());
         List<String> images = new ArrayList<String>();
         for(String image : base64Images) {
-            if(!image.isEmpty()){
+            if(image!=null && !image.isEmpty()){
                 images.add(image);
             }
         }
-        feedback.setDocumentImageList(images);
+        if(images.size() > 0) {
+            feedback.setDocumentImageList(images);
+        }
         return feedback;
     }
 
@@ -300,7 +302,7 @@ public class FeedbackFragment extends Fragment
         Gson gson = new Gson();
         try {
             JSONObject feedbackJson = new JSONObject(gson.toJson(feedback));
-                JsonRequest request = CargoCity.getmInstance().postLoginRequest(
+                JsonRequest request = CargoCity.getmInstance().postRequest(
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
@@ -310,7 +312,6 @@ public class FeedbackFragment extends Fragment
                                     status = response.getString("status");
                                     if (status.equalsIgnoreCase("success")) {
                                         afterSubmitCallback();
-
                                     } else {
                                         String error_message = response.getString("message");
                                         Toast toast = Toast.makeText(mActivityContext,

@@ -1,9 +1,11 @@
 package com.cargoexchange.cargocity.cargocity.models;
 
+import java.io.Serializable;
+
 /**
  * Created by thespidy on 27/01/16.
  */
-public class Phone {
+public class Phone implements Serializable{
 private String countryCode;
     private String number;
 

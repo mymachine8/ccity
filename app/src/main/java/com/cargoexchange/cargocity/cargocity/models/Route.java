@@ -1,14 +1,16 @@
 package com.cargoexchange.cargocity.cargocity.models;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by thespidy on 27/01/16.
  */
-public class Route {
+public class Route implements Serializable {
     private String name;
     private int routeId;
     private String vehicleNumber;
+    private String driverName;
     private List<Phone> driverPhoneList;
     private List<Order> orderList;
 
@@ -50,5 +52,13 @@ public class Route {
 
     public void setOrderList(List<Order> orderList) {
         this.orderList = orderList;
+    }
+
+    public String getDriverName() {
+        return driverName;
+    }
+
+    public void setDriverName(String driverName) {
+        this.driverName = driverName;
     }
 }
