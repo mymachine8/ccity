@@ -46,6 +46,7 @@ import com.cargoexchange.cargocity.cargocity.models.Customer;
 import com.cargoexchange.cargocity.cargocity.models.Feedback;
 import com.cargoexchange.cargocity.cargocity.models.Order;
 import com.cargoexchange.cargocity.cargocity.models.Route;
+import com.cargoexchange.cargocity.cargocity.utils.AnimationHelper;
 import com.cargoexchange.cargocity.cargocity.utils.GenerateUrl;
 import com.cargoexchange.cargocity.cargocity.utils.NetworkAvailability;
 import com.cargoexchange.cargocity.cargocity.utils.ParseDistanceMatrix;
@@ -77,6 +78,9 @@ public class OrdersListFragment extends Fragment
     private Location mLastKnownLocation;
     List<String> mDistanceList;
     List<String> mDurationList;
+    private final int CARD_EXPANDED=1;
+    private final int CARD_COMPACT=0;
+    private int cardStatus=0;
 
     private FragmentActivity thisActivity;
 
@@ -307,7 +311,20 @@ public class OrdersListFragment extends Fragment
                 mExtraDetailsFragment.setArguments(mDataForExtraDetailsFragment);
                 mRouteSession.setPosition(position);
 
-                thisActivity
+                if(cardStatus==CARD_COMPACT)
+                {
+                    //slideDown(view);
+                    cardStatus=CARD_EXPANDED;
+                    new AnimationHelper(view,cardStatus);
+                }
+                else
+                {
+                    //slideUp(view);
+                    cardStatus=CARD_COMPACT;
+                    new AnimationHelper(view,cardStatus);
+                }
+
+                /*thisActivity
                         .getSupportFragmentManager()
                         .beginTransaction()
                         .setCustomAnimations(
@@ -317,7 +334,7 @@ public class OrdersListFragment extends Fragment
                                 R.anim.card_flip_left_out)
                         .replace(R.id.orders_container, mExtraDetailsFragment)
                         .addToBackStack("OrdersState")
-                        .commit();
+                        .commit();*/
                 //mRouteSession.setPosition(position);
                 //startActivity(mapIntent);
                 //TODO:use a singleton class to keep track of the orders completed and according disable intents to next activity
