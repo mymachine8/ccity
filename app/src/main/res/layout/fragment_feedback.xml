@@ -71,7 +71,13 @@
                 android:layout_marginBottom="10dp" android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp">
 
+                <ImageView
+                    android:id="@+id/missedTagImageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp" />
+
                 <Button android:layout_width="wrap_content" android:layout_height="65dp"
+                    android:layout_below="@id/missedTagImageView"
                     android:paddingLeft="50dp" android:paddingRight="50dp"
                     android:id="@+id/submitMissedTagButton" android:text="Submit"
                     android:theme="@style/Button.Branded" android:elevation="5dp"
@@ -130,7 +136,8 @@
             android:layout_marginLeft="16dp" android:layout_marginRight="16dp">
 
             <TextView android:id="@+id/DeliveryProofLabel" android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:text="Proof of Delivery" android:layout_marginTop="15dp"
+                android:layout_height="wrap_content" android:text="Proof of Delivery"
+                android:layout_marginTop="15dp"
                 android:layout_alignParentLeft="true" android:textSize="15dp"/>
 
             <ImageView android:id="@+id/ProofUploadImageView1" android:layout_width="30dp"
@@ -229,7 +236,8 @@
 
         <LinearLayout android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" android:layout_marginBottom="10dp" android:layout_marginLeft="16dp" android:layout_marginRight="16dp">
+            android:orientation="horizontal" android:layout_marginBottom="10dp"
+            android:layout_marginLeft="16dp" android:layout_marginRight="16dp">
             <TextView android:id="@+id/FeedBackLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -74,6 +75,8 @@ public class FeedbackFragment extends Fragment
 
     private static final int SCAN_REQUEST_CODE = 99;
 
+    private static final int SCAN_MISSED_TAG = 200;
+
     private ImageView mCameraImage;
 
     private Activity mActivityContext;
@@ -137,6 +140,8 @@ public class FeedbackFragment extends Fragment
     private TextView mTimeOfDelivery;
 
     private ImageView mSignature;
+
+    private ImageView mMissedTagImage;
 
     private RelativeLayout mMissedLayout;
 
@@ -348,6 +353,8 @@ public class FeedbackFragment extends Fragment
         mUploadMissedTagFAB=(FloatingActionButton)view.findViewById(R.id.uploadMissedTagFAB);
 
         mUploadSignature=(ImageButton)view.findViewById(R.id.signRecieptButton);
+
+        mMissedTagImage=(ImageView)view.findViewById(R.id.missedTagImageView);
     }
     private void bindListeners()
     {
@@ -391,6 +398,10 @@ public class FeedbackFragment extends Fragment
         public void onClick(View v)
         {
             //TODO:Open the camera for taking picture
+            int preference = ScanConstants.OPEN_CAMERA;
+            Intent intent = new Intent(getActivity(), ScanActivity.class);
+            intent.putExtra(ScanConstants.OPEN_INTENT_PREFERENCE, preference);
+            startActivityForResult(intent,SCAN_MISSED_TAG);
         }
     }
 
@@ -402,7 +413,7 @@ public class FeedbackFragment extends Fragment
             //TODO:Open the Signature Pad
             Intent DeliveryFeedbackInent=new Intent(mActivityContext,DeliveryFeedbackActivity.class);
             DeliveryFeedbackInent.putExtra("source","FeedbackFragment");
-            DeliveryFeedbackInent.putExtra("fragment","SignPadFragment");
+            DeliveryFeedbackInent.putExtra("fragment", "SignPadFragment");
             startActivity(DeliveryFeedbackInent);
 
         }
@@ -548,6 +559,23 @@ public class FeedbackFragment extends Fragment
                     mProofUploadImageView3.setImageBitmap(UploadImage3);
                     count = (count + 1) % 3;
                 }
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        else if(requestCode==SCAN_MISSED_TAG && resultCode==Activity.RESULT_OK)
+        {
+            //TODO:Show the image in missed tag image viewer
+            Uri uri =data.getExtras().getParcelable(ScanConstants.SCANNED_RESULT);
+            Bitmap bitmap=null;
+            try
+            {
+                bitmap=MediaStore.Images.Media.getBitmap(mActivityContext.getContentResolver(),uri);
+                mMissedTagImage.setImageBitmap(Bitmap.createScaledBitmap(bitmap,300,300,true));
+                mActivityContext.getContentResolver().delete(uri,null,null);
+
             }
             catch (IOException e)
             {
