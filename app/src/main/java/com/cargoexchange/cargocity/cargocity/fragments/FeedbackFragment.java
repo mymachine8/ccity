@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -22,9 +23,14 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,6 +41,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonRequest;
 import com.cargoexchange.cargocity.cargocity.CargoCity;
+import com.cargoexchange.cargocity.cargocity.DeliveryFeedbackActivity;
 import com.cargoexchange.cargocity.cargocity.MapActivity;
 import com.cargoexchange.cargocity.cargocity.OrdersActivity;
 import com.cargoexchange.cargocity.cargocity.R;
@@ -64,27 +71,84 @@ import java.util.List;
 public class FeedbackFragment extends Fragment
 {
     //TODO:Implement the image window logic here
+
     private static final int SCAN_REQUEST_CODE = 99;
+
     private ImageView mCameraImage;
+
     private Activity mActivityContext;
 
     private RatingBar mRatingBar;
+
     private TextView mTextView;
-    private TextView mItemRecievedLabel,mCommentLabel,mDeliveryProofLabel,mRatingLabel,mRatingValueLabel,mFeedBackLabel;
+
+    private TextView mItemRecievedLabel;
+
+    private TextView mCommentLabel;
+
+    private TextView mDeliveryProofLabel;
+
+    private TextView mRatingLabel;
+
+    private TextView mRatingValueLabel;
+
+    private TextView mFeedBackLabel;
+
     private EditText mAdditionalCommentsEditText,mCommentEditText;
+
     private Button mSubmitButton;
-    private ImageView mProofUploadImageView1,mProofUploadImageView2,mProofUploadImageView3,mCaptureImageImageView,mPopUpImageView;
+
+    private ImageView mProofUploadImageView1;
+
+    private ImageView mProofUploadImageView2;
+
+    private ImageView mProofUploadImageView3;
+
+    private ImageView mCaptureImageImageView;
+
+    private ImageView mPopUpImageView;
+
     private Switch isItemGoodConditionSwitch;
+
     private Dialog mImagePopUpDialog;
-    private Bitmap UploadImage1,UploadImage2,UploadImage3;
+
+    private Bitmap UploadImage1;
+
+    private Bitmap UploadImage2;
+
+    private Bitmap UploadImage3;
+
     private Resources mResource;
+
     private ProgressDialog mProgressDialog;
+
     private String base64Images[] = new String[3];
 
     private String mOrderNo=new String();
+
     private int count=0;
 
-    public FeedbackFragment() {
+    private Switch isCustomerPresent;
+
+    private ImageButton mUploadSignature;
+
+    private CheckBox mAcceptGoods;
+
+    private TextView mTimeOfDelivery;
+
+    private ImageView mSignature;
+
+    private RelativeLayout mMissedLayout;
+
+    private LinearLayout mDeliveredLayout;
+
+    private FloatingActionButton mUploadMissedTagFAB;
+
+    private Button mSubmitMissedTagButton;
+
+    public FeedbackFragment()
+    {
+
     }
 
     @Override
@@ -99,6 +163,7 @@ public class FeedbackFragment extends Fragment
         mActivityContext = getActivity();
         mActivityContext.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         bindViewVariables(view);
+        bindListeners();
         mResource=this.getResources();
 
         InitializeDialog();
@@ -228,26 +293,119 @@ public class FeedbackFragment extends Fragment
         });
     }
 
-    public void bindViewVariables(View view){
+    public void bindViewVariables(View view)
+    {
         mRatingBar=(RatingBar)view.findViewById(R.id.FeedbackRatingBar);
+
         mTextView=(TextView)view.findViewById(R.id.RatingValueLabel);
+
         mItemRecievedLabel=(TextView)view.findViewById(R.id.ItemRecievedLabel);
+
         mCommentLabel=(TextView)view.findViewById(R.id.CommentsLabel);
+
         mDeliveryProofLabel=(TextView)view.findViewById(R.id.DeliveryProofLabel);
+
         mFeedBackLabel=(TextView)view.findViewById(R.id.FeedBackLabel);
+
         mSubmitButton=(Button)view.findViewById(R.id.SubmitButton);
+
         mProofUploadImageView1=(ImageView)view.findViewById(R.id.ProofUploadImageView1);
+
         mProofUploadImageView2=(ImageView)view.findViewById(R.id.ProofUploadImageView2);
+
         mProofUploadImageView3=(ImageView)view.findViewById(R.id.ProofUploadImageView3);
+
         mCameraImage = (ImageView) view.findViewById(R.id.camera_image);
+
         isItemGoodConditionSwitch=(Switch)view.findViewById(R.id.ItemReceivedSwitch);
+
         mAdditionalCommentsEditText=(EditText)view.findViewById(R.id.FeedBackEditText);
+
         mCommentEditText=(EditText)view.findViewById(R.id.CommentsEditText);
+
         mRatingLabel=(TextView)view.findViewById(R.id.RatingLabel);
 
         UploadImage1= BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_imagedefault2);
-        UploadImage2= BitmapFactory.decodeResource(this.getResources(),R.drawable.ic_imagedefault2);
+
+        UploadImage2= BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_imagedefault2);
+
         UploadImage3= BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_imagedefault2);
+
+        isCustomerPresent=(Switch)view.findViewById(R.id.isCustomerPresentSwitch);
+
+        mAcceptGoods=(CheckBox)view.findViewById(R.id.acceptGoodsCheckbox);
+
+        mTimeOfDelivery=(TextView)view.findViewById(R.id.deliveryTimeTextView);
+
+        mSignature=(ImageView)view.findViewById(R.id.signRecieptButton);
+
+        mMissedLayout=(RelativeLayout)view.findViewById(R.id.uploadtagLayout);
+
+        mDeliveredLayout=(LinearLayout)view.findViewById(R.id.goodsDeliveredLayout);
+
+        mSubmitMissedTagButton=(Button)view.findViewById(R.id.submitMissedTagButton);
+
+        mUploadMissedTagFAB=(FloatingActionButton)view.findViewById(R.id.uploadMissedTagFAB);
+
+        mUploadSignature=(ImageButton)view.findViewById(R.id.signRecieptButton);
+    }
+    private void bindListeners()
+    {
+        isCustomerPresent.setOnCheckedChangeListener(new isCustomerPresentListener());
+        mSubmitMissedTagButton.setOnClickListener(new submitMissedTagButtonListener());
+        mUploadMissedTagFAB.setOnClickListener(new uploadMissedTagFABListener());
+        mUploadSignature.setOnClickListener(new uploadSignatureButtonListener());
+
+    }
+
+    private class isCustomerPresentListener implements CompoundButton.OnCheckedChangeListener
+    {
+
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+        {
+          if(!isChecked) {
+              mDeliveredLayout.setVisibility(View.GONE);
+              mMissedLayout.setVisibility(View.VISIBLE);
+          }
+            else
+          {
+              mMissedLayout.setVisibility(View.GONE);
+              mDeliveredLayout.setVisibility(View.VISIBLE);
+          }
+        }
+    }
+
+    private class submitMissedTagButtonListener implements View.OnClickListener
+    {
+        @Override
+        public void onClick(View v)
+        {
+            //TODO:Send the missed tag to server
+        }
+    }
+
+    private class uploadMissedTagFABListener implements View.OnClickListener
+    {
+        @Override
+        public void onClick(View v)
+        {
+            //TODO:Open the camera for taking picture
+        }
+    }
+
+    private class uploadSignatureButtonListener implements View.OnClickListener
+    {
+        @Override
+        public void onClick(View v)
+        {
+            //TODO:Open the Signature Pad
+            Intent DeliveryFeedbackInent=new Intent(mActivityContext,DeliveryFeedbackActivity.class);
+            DeliveryFeedbackInent.putExtra("source","FeedbackFragment");
+            DeliveryFeedbackInent.putExtra("fragment","SignPadFragment");
+            startActivity(DeliveryFeedbackInent);
+
+        }
     }
 
     private Feedback createFeedbackObject(){
@@ -397,4 +555,5 @@ public class FeedbackFragment extends Fragment
             }
         }
     }
+
 }
