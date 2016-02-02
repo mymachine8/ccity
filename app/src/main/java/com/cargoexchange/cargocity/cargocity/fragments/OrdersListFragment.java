@@ -27,6 +27,9 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
@@ -103,9 +106,6 @@ public class OrdersListFragment extends Fragment
         if (mOrdersList == null || mOrdersList.size() == 0) {
             mRoute = (Route) getArguments().getSerializable(ORDERS_LIST_KEY);
             mOrdersList = mRoute.getOrderList();
-            /*mOrdersList.add(new Order("ABC", new Customer("Somesh", "NA", "Mohan", "abc@xyz.com", "NA", "NA"), new Address("Sri Nagar Colony", "Khairatabad", "Hyderabad", "NA", "Telangana"),items, OrderStatus.IN_TRANSIT));
-            mOrdersList.add(new Order("ABC", new Customer("Krishna", "NA", "Chaitanya", "def@xyz.com", "NA", "NA"), new Address("Ayappa Society", "Madhapur", "Hyderabad", "NA", "Telangana"),items, OrderStatus.IN_TRANSIT));
-            mOrdersList.add(new Order("ABC", new Customer("Kinkar", "NA", "Banerji", "xyz@xyz.com", "NA", "NA"), new Address("ROAD NO 21", "Banjara Hills", "Hyderabad", "NA", "Telangana"),items, OrderStatus.IN_TRANSIT));*/
             Map<String, String> orderStatusList = new HashMap<String, String>();
             for (Order order : mOrdersList) {
                 orderStatusList.put(order.getOrderId(), OrderStatus.IN_TRANSIT);
@@ -119,7 +119,6 @@ public class OrdersListFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
 
         View view = inflater.inflate(R.layout.fragment_orders_list, container, false);
         thisActivity = getActivity();
@@ -131,6 +130,12 @@ public class OrdersListFragment extends Fragment
         processData=new ProgressDialog(getActivity());
         processData.setMessage("Loading data");
         processData.setTitle("Orders");
+
+
+        mOrderDetailsAdapter = new OrderDetailsAdapter(mOrdersList);
+        mOrdersListFragmentRecycler.setAdapter(mOrderDetailsAdapter);
+
+        registerClickEvents();
 
         int hasLocationfinePermission = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION);
         int hasLocationCoarsePermission=ContextCompat.checkSelfPermission(getActivity(),Manifest.permission.ACCESS_COARSE_LOCATION);
@@ -271,15 +276,7 @@ public class OrdersListFragment extends Fragment
     {
         mOrderDetailsAdapter = new OrderDetailsAdapter(mOrdersList);
         mOrdersListFragmentRecycler.setAdapter(mOrderDetailsAdapter);
-        mOrdersListFragmentRecycler.addOnItemTouchListener(new RecyclerItemClickListener(thisActivity, new RecyclerItemClickListener.OnItemClickListener()
-        {
-            @Override
-            public void onItemClick(View view, int position)
-            {
-                //if (mRouteSession.getOrderStatus(mOrderDetailsAdapter.getItem(position).getOrderId()) == OrderStatus.PENDING_DELIVERY)
-                onCardClickAction(view,position);
-            }
-        }));
+        registerClickEvents();
     }
 
     public void showEnableGPSDialog()
@@ -352,6 +349,41 @@ public class OrdersListFragment extends Fragment
         }
     }
 
+
+    public void registerClickEvents(){
+        mOrderDetailsAdapter.setOnItemClickListener(new OrderDetailsAdapter.OrderItemClickListener() {
+            @Override
+            public void onItemClick(int position, View v) {
+                onCardClickAction(v, position);
+                ImageView orderStatusImage =  (ImageView)v.findViewById(R.id.orderstatusimage);
+                FloatingActionButton callExecutive = (FloatingActionButton) v.findViewById(R.id.CallActionFloatingActionButton);
+                //orderStatusImage.setTag(orderId);
+                orderStatusImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onClickOrderStatus(v);
+                    }
+                });
+                callExecutive.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onClickCallExecutive(v);
+                    }
+                });
+            }
+        });
+    }
+
+    private void onClickOrderStatus(View v) {
+        Log.d("Order_Click","Clicked on the order status");
+    }
+
+    private void onClickCallExecutive(View v){
+        String phone="9000051535";
+        Intent intent = new Intent(Intent.ACTION_DIAL,Uri.parse("tel:"+phone));
+        startActivity(intent);
+    }
+
     public void download(Location location)
     {
         NetworkAvailability mNetworkAvailability=new NetworkAvailability(thisActivity);
@@ -369,16 +401,6 @@ public class OrdersListFragment extends Fragment
                 mDurationList = mParseDistanceMatrix.getDurationList();
                 mRouteSession.setmDistanceList(mDistanceList);
                 mRouteSession.setmDurationList(mDurationList);
-                mOrderDetailsAdapter = new OrderDetailsAdapter(mOrdersList);
-                mOrdersListFragmentRecycler.setAdapter(mOrderDetailsAdapter);
-
-                mOrdersListFragmentRecycler.addOnItemTouchListener(new RecyclerItemClickListener(thisActivity, new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        //if (mRouteSession.getOrderStatus(mOrderDetailsAdapter.getItem(position).getOrderId()) == OrderStatus.PENDING_DELIVERY)
-                        onCardClickAction(view, position);
-                    }
-                }));
             }
         }, new Response.ErrorListener() {
             @Override
@@ -387,12 +409,7 @@ public class OrdersListFragment extends Fragment
                 mRouteSession.setmMatrixDownloadStatus(0);
                 mOrderDetailsAdapter = new OrderDetailsAdapter(mOrdersList);
                 mOrdersListFragmentRecycler.setAdapter(mOrderDetailsAdapter);
-                mOrdersListFragmentRecycler.addOnItemTouchListener(new RecyclerItemClickListener(thisActivity, new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        onCardClickAction(view, position);
-                    }
-                }));
+                registerClickEvents();
                 processData.dismiss();
                 processData.cancel();
                 Toast.makeText(thisActivity, "Error Downloading Distance", Toast.LENGTH_SHORT).show();

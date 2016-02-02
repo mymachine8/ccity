@@ -24,9 +24,18 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
 {
     private List<Order> orderDetails;
     private RouteSession mRouteSession;
+    private static OrderItemClickListener mItemClickListener;
     public OrderDetailsAdapter(List<Order> orderDetails)
     {
         this.orderDetails=orderDetails;
+    }
+
+    public void setOnItemClickListener(OrderItemClickListener careClickListener) {
+        this.mItemClickListener = careClickListener;
+    }
+
+    public OrderDetailsAdapter() {
+
     }
 
     @Override
@@ -84,7 +93,7 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         return orderDetails.get(position);
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
         TextView mOrderno;
         TextView mName;
@@ -110,13 +119,18 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
             mTime=(TextView)itemView.findViewById(R.id.timetextview);
             mStatusImage=(ImageView)itemView.findViewById(R.id.orderstatusimage);
             mCallCustomer=(FloatingActionButton)itemView.findViewById(R.id.CallActionFloatingActionButton);
-            //mExtraName=(TextView)itemView.findViewById(R.id.extra)
-            //mCallImage=(ImageView)itemView.findViewById(R.id.callimage);
-            //mOrderno=(TextView)itemView.findViewById(R.id.ordernoedittext);
-            //mAddressLocality=(TextView)itemView.findViewById(R.id.Localityaddressedittext);
-            //mAddressLandmark=(TextView)itemView.findViewById(R.id.Landmarkaddressedittext);
-            //mCity=(TextView)itemView.findViewById(R.id.cityedittext);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            mItemClickListener.onItemClick(getAdapterPosition(), v);
         }
     }
+
+    public interface OrderItemClickListener {
+        public void onItemClick(int position, View v);
+    }
 }
+
 
