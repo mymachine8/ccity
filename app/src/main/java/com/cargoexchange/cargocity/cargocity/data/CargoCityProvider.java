@@ -25,7 +25,8 @@ public class CargoCityProvider extends ContentProvider {
             CargoCityContract.LocationEntry.TABLE_NAME+
                     "." + CargoCityContract.LocationEntry.COLUMN_ORDER_ID + " = ? ";
 
-    private Cursor getLocationByOrderSetting(Uri uri, String[] projection, String sortOrder) {
+    private Cursor getLocationByOrderSetting(Uri uri, String[] projection, String sortOrder)
+    {
         String orderId = CargoCityContract.LocationEntry.getOrderIdFromUri(uri);
         String[] selectionArgs;
         selectionArgs = new String[]{orderId};

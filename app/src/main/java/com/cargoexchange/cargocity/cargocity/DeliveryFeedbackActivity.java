@@ -14,10 +14,11 @@ import com.cargoexchange.cargocity.cargocity.fragments.FeedbackFragment;
 import com.cargoexchange.cargocity.cargocity.fragments.OrdersListFragment;
 import com.cargoexchange.cargocity.cargocity.fragments.SignPadFragment;
 
-public class DeliveryFeedbackActivity extends AppCompatActivity {
-
+public class DeliveryFeedbackActivity extends AppCompatActivity
+{
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_delivery_feedback);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -28,7 +29,7 @@ public class DeliveryFeedbackActivity extends AppCompatActivity {
             if (source.equalsIgnoreCase("FeedbackFragment"))
             {
                 Fragment mSignPadFragment=new SignPadFragment();
-                getSupportFragmentManager().beginTransaction().add(R.id.feedback_fragment_container, mSignPadFragment).commit();
+                getSupportFragmentManager().beginTransaction().add(R.id.feedback_fragment_container,mSignPadFragment).commit();
             }
         }
         else
@@ -38,6 +39,5 @@ public class DeliveryFeedbackActivity extends AppCompatActivity {
             FeedbackFragment feedbackFragment = new FeedbackFragment();
             ft.add(R.id.feedback_fragment_container,feedbackFragment).commit();
         }
-
     }
 }

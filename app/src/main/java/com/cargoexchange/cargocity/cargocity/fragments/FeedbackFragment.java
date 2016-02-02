@@ -293,7 +293,6 @@ public class FeedbackFragment extends Fragment
             public void onClick(View v)
             {
                 submitFeedback();
-
             }
         });
     }

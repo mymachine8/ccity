@@ -184,7 +184,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     Log.d("test", response.toString());
                     //Use the routes to draw polyline on map
                     routes = new ParseDirections(response).getRoutes();
-
                     //pass this bundle to extract the navigation instructions
                     sendToNavigationFragmentBundle = new Bundle();
                     sendToNavigationFragmentBundle.putString("mapData", response.toString());

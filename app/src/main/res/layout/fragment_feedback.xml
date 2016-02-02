@@ -143,17 +143,20 @@
             <ImageView android:id="@+id/ProofUploadImageView1" android:layout_width="30dp"
                 android:layout_height="30dp" android:layout_marginLeft="30dp"
                 android:layout_toRightOf="@id/DeliveryProofLabel" android:layout_marginTop="10dp"
-                android:src="@drawable/ic_imagedefault2" android:background="@drawable/imageviewback"/>
+                android:src="@drawable/ic_imagedefault2"
+                android:background="@drawable/imageviewback"/>
 
             <ImageView android:id="@+id/ProofUploadImageView2" android:layout_width="30dp"
                 android:layout_height="30dp" android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@id/ProofUploadImageView1" android:layout_marginTop="10dp"
-                android:src="@drawable/ic_imagedefault2" android:background="@drawable/imageviewback" />
+                android:src="@drawable/ic_imagedefault2"
+                android:background="@drawable/imageviewback" />
 
             <ImageView android:id="@+id/ProofUploadImageView3" android:layout_width="30dp"
                 android:layout_height="30dp" android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@id/ProofUploadImageView2" android:layout_marginTop="10dp"
-                android:src="@drawable/ic_imagedefault2" android:background="@drawable/imageviewback"/>
+                android:src="@drawable/ic_imagedefault2"
+                android:background="@drawable/imageviewback"/>
 
             <ImageView
                 android:layout_marginTop="10dp"
@@ -219,10 +222,19 @@
             android:layout_height="1dp"
             android:background="@android:color/darker_gray"/>
 
-        <RelativeLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="10dp" android:layout_marginLeft="16dp" android:layout_marginRight="16dp">
-            <TextView android:layout_marginTop="15dp" android:layout_alignParentLeft="true" android:id="@+id/RatingLabel" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Rating" android:textSize="15dp"/>
-            <RatingBar android:layout_toRightOf="@id/RatingLabel" android:layout_marginLeft="50dp" android:id="@+id/FeedbackRatingBar" android:layout_width="wrap_content" android:layout_height="wrap_content" android:max="5" android:stepSize="1" android:numStars="5" android:rating="5" android:scaleX="0.7" android:scaleY="0.7"/>
-            <TextView android:layout_alignParentRight="true" android:id="@+id/RatingValueLabel" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="12dp" />
+        <RelativeLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp" android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp">
+            <TextView android:layout_marginTop="15dp" android:layout_alignParentLeft="true"
+                android:id="@+id/RatingLabel" android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:text="Rating" android:textSize="15dp"/>
+            <RatingBar android:layout_toRightOf="@id/RatingLabel" android:layout_marginLeft="50dp"
+                android:id="@+id/FeedbackRatingBar" android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:max="5" android:stepSize="1"
+                android:numStars="5" android:rating="5" android:scaleX="0.7" android:scaleY="0.7"/>
+            <TextView android:layout_alignParentRight="true" android:id="@+id/RatingValueLabel"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:textSize="12dp" />
         </RelativeLayout>
 
         <View
@@ -329,10 +341,15 @@
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp" android:layout_marginLeft="16dp" android:layout_marginRight="16dp">
-            <Button android:layout_width="wrap_content" android:layout_height="65dp"  android:paddingLeft="50dp" android:paddingRight="50dp" android:id="@+id/SubmitButton" android:text="Submit" android:theme="@style/Button.Branded" android:elevation="5dp" android:scaleX="2" android:layout_centerHorizontal="true" android:textColor="@android:color/white"
+            android:layout_marginBottom="10dp" android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp">
+            <Button android:layout_width="wrap_content" android:layout_height="65dp"
+                android:paddingLeft="50dp" android:paddingRight="50dp"
+                android:id="@+id/SubmitButton" android:text="Submit"
+                android:theme="@style/Button.Branded" android:elevation="5dp"
+                android:scaleX="2" android:layout_centerHorizontal="true"
+                android:textColor="@android:color/white"
                 />
-
         </RelativeLayout>
         </LinearLayout>
     </LinearLayout>

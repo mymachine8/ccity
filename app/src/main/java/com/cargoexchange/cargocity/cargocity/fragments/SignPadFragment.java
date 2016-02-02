@@ -28,7 +28,6 @@ public class SignPadFragment extends Fragment
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState)
     {
@@ -36,7 +35,6 @@ public class SignPadFragment extends Fragment
         setHasOptionsMenu(true);
         View view=inflater.inflate(R.layout.fragment_sign_pad, container, false);
         mSignPadView=(SignPadView)view.findViewById(R.id.signdrawPadView);
-
         return view;
     }
 
@@ -55,7 +53,6 @@ public class SignPadFragment extends Fragment
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
         switch (id)
         {
@@ -73,9 +70,7 @@ public class SignPadFragment extends Fragment
             case R.id.action_clear:
                 mSignPadView.clearScreen(mSignPadView);
                 break;
-
         }
         return super.onOptionsItemSelected(item);
     }
-
 }
