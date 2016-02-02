@@ -49,8 +49,8 @@ public class LocationService extends IntentService
     public LocationService()
     {
         super("com.cargoexchange.cargocity.cargocity.LocationService");
-        mPubnub = new Pubnub("pub-c-1a772f6d-629d-415b-bedc-1f5addf4fcbc", "sub-c-e07d3d66-be1c-11e5-bcee-0619f8945a4f");
-        count=0;
+        //mPubnub = new Pubnub("pub-c-1a772f6d-629d-415b-bedc-1f5addf4fcbc", "sub-c-e07d3d66-be1c-11e5-bcee-0619f8945a4f");
+        //count=0;
         //initfile();
     }
 
@@ -71,11 +71,11 @@ public class LocationService extends IntentService
     {
         final LocationManager mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
 
-        mLocationManager.requestLocationUpdates(mLocationManager.GPS_PROVIDER, 10000, 0, new LocationListener() {
+        mLocationManager.requestLocationUpdates(mLocationManager.GPS_PROVIDER, 20000, 0, new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
 
@@ -85,15 +85,14 @@ public class LocationService extends IntentService
                     data.put("latitude", location.getLatitude());
                     data.put("longitude", location.getLongitude());
                     data.put("speed", location.getSpeed());
-                    data.put("routeId",routeId);
                     data.put("timestamp",location.getTime());
                             //updateToDeliveryTextFile("delivery_tracking.txt", data.toString());
                     count++;
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-               mPubnub.publish("delivery_tracking", data, new Callback() {
-                });
+               //mPubnub.publish("delivery_tracking", data, new Callback() {
+               // });
 
             }
 
