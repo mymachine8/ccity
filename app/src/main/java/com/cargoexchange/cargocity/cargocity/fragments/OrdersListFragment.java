@@ -314,12 +314,14 @@ public class OrdersListFragment extends Fragment
                 if(cardStatus==CARD_COMPACT)
                 {
                     //slideDown(view);
+                    Log.d("response","compact card");
                     cardStatus=CARD_EXPANDED;
                     new AnimationHelper(view,cardStatus);
                 }
                 else
                 {
                     //slideUp(view);
+                    Log.d("response","compact expanded");
                     cardStatus=CARD_COMPACT;
                     new AnimationHelper(view,cardStatus);
                 }

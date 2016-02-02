@@ -37,6 +37,10 @@ public class AnimationHelper
             EXECUTION_COUNT++;
         }
         childCard.setVisibility(View.GONE);
+        if(cardStatus==CARD_COMPACT)
+            unFoldWithAnimation(view);
+        else if(cardStatus==CARD_EXPANDED)
+            foldWithAnimation(view);
     }
     public void foldWithAnimation(final View view)
     {

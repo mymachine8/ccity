@@ -60,11 +60,15 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         //holder.mAddressLocality.setText(orderDetails.get(position).getAddress().getAddressLine1());
         //holder.mAddressLandmark.setText(orderDetails.get(position).getAddress().getAddressLine2());
         //holder.mCity.setText(orderDetails.get(position).getAddress().getCity());
-        if( mRouteSession.getmMatrixDownloadStatus()==1) {
-            if (mRouteSession.getmOrderList().get(position).getDeliveryStatus() == OrderStatus.IN_TRANSIT) {
+        if( mRouteSession.getmMatrixDownloadStatus()==1)
+        {
+            if (mRouteSession.getmOrderList().get(position).getDeliveryStatus().equalsIgnoreCase(OrderStatus.IN_TRANSIT))
+            {
                 holder.mDistance.setText(mRouteSession.getmDistanceList().get(position));
                 holder.mTime.setText(mRouteSession.getmDurationList().get(position));
-            } else {
+            }
+            else
+            {
                 holder.mStatusImage.setImageResource(R.drawable.ic_tick);
             }
         }
@@ -92,6 +96,7 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         ImageView mStatusImage,mCallImage;
         TextView mDistance;
         TextView mTime;
+        TextView mExtraName;
         FloatingActionButton mCallCustomer;
         public ViewHolder(View itemView)
         {
@@ -105,6 +110,7 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
             mTime=(TextView)itemView.findViewById(R.id.timetextview);
             mStatusImage=(ImageView)itemView.findViewById(R.id.orderstatusimage);
             mCallCustomer=(FloatingActionButton)itemView.findViewById(R.id.CallActionFloatingActionButton);
+            //mExtraName=(TextView)itemView.findViewById(R.id.extra)
             //mCallImage=(ImageView)itemView.findViewById(R.id.callimage);
             //mOrderno=(TextView)itemView.findViewById(R.id.ordernoedittext);
             //mAddressLocality=(TextView)itemView.findViewById(R.id.Localityaddressedittext);
