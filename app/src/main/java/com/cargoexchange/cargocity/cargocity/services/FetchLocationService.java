@@ -22,9 +22,12 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.cargoexchange.cargocity.cargocity.CargoCity;
 import com.cargoexchange.cargocity.cargocity.R;
 import com.cargoexchange.cargocity.cargocity.constants.Constants;
+import com.cargoexchange.cargocity.cargocity.constants.IntentConstants;
 import com.cargoexchange.cargocity.cargocity.utils.ParseDirections;
 
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 /**
  * Created by root on 2/2/16.
@@ -38,6 +41,7 @@ public class FetchLocationService extends IntentService {
     public FetchLocationService(String name) {
         super(name);
     }
+    private ArrayList<String> mOrderIds;
 
     public FetchLocationService() {
         super("com.cargoexchange.cargocity.cargocity.FetchLocationService");
@@ -47,8 +51,8 @@ public class FetchLocationService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent)
     {
+        mOrderIds = intent.getExtras().getStringArrayList(IntentConstants.ORDER_ID);
         fetchRouteData();
-
     }
 
     public void fetchRouteData()

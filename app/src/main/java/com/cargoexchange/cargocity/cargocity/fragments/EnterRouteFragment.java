@@ -4,6 +4,7 @@ package com.cargoexchange.cargocity.cargocity.fragments;
 import android.Manifest;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.app.ProgressDialog;
@@ -29,10 +30,12 @@ import com.cargoexchange.cargocity.cargocity.CargoCity;
 import com.cargoexchange.cargocity.cargocity.OrdersActivity;
 import com.cargoexchange.cargocity.cargocity.R;
 import com.cargoexchange.cargocity.cargocity.constants.CargoSharedPreferences;
+import com.cargoexchange.cargocity.cargocity.constants.IntentConstants;
 import com.cargoexchange.cargocity.cargocity.constants.RouteSession;
 import com.cargoexchange.cargocity.cargocity.constants.Constants;
 import com.cargoexchange.cargocity.cargocity.models.Order;
 import com.cargoexchange.cargocity.cargocity.models.Route;
+import com.cargoexchange.cargocity.cargocity.services.FetchLocationService;
 import com.cargoexchange.cargocity.cargocity.services.LocationService;
 import com.cargoexchange.cargocity.cargocity.utils.GenerateRequest;
 import com.cargoexchange.cargocity.cargocity.utils.NetworkAvailability;
@@ -111,7 +114,6 @@ public class EnterRouteFragment extends Fragment
 
     private void getOrdersForRoute(final String routeId){
         String uri = Constants.CARGO_API_BASE_URL + "cityroutes/" + routeId;
-        //TODO: Send login credentials to server, get response and store them in shared prefs
             JsonRequest request = CargoCity.getmInstance().getRequest(
                     new Response.Listener<JSONObject>() {
                         @Override
@@ -144,20 +146,14 @@ public class EnterRouteFragment extends Fragment
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             mProgressDialog.hide();
-                            String json = null;
                             mRouteSubmitBtn.setEnabled(true);
                             NetworkResponse response = error.networkResponse;
                             if (response != null && response.data != null) {
-                                switch (response.statusCode) {
-                                    case 401:
-                                    case 400:
-                                    case 404:
-                                        json = new String(response.data);
+                                       String json = new String(response.data);
                                         json = ParseJSON.trimMessage(json, "message");
-                                        if (json != null) displayToastMessage(json);
-                                        break;
-                                }
-                                //Additional cases
+                                        if (json != null) {
+                                            displayToastMessage(json);
+                                        }
                             }
                         }
                     }, uri);
@@ -170,14 +166,12 @@ public class EnterRouteFragment extends Fragment
 
     private void displayToastMessage(String message) {
         Toast.makeText(thisActivity, message, Toast.LENGTH_LONG).show();
-        Log.e("LOGIN", message);
+        Log.e("ROUTE", message);
     }
 
     private void onSuccessOrdersList(Route route) {
-        int hasFineLocationPermission = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION);
-        serviceintent=new Intent(thisActivity,LocationService.class);
+        int hasFineLocationPermission = ContextCompat.checkSelfPermission(thisActivity, Manifest.permission.ACCESS_FINE_LOCATION);
         if (hasFineLocationPermission == PackageManager.PERMISSION_GRANTED) {
-
             callRouteDetailsFragment(route);
         }
         else
@@ -186,6 +180,7 @@ public class EnterRouteFragment extends Fragment
         }
     }
     public void callRouteDetailsFragment(Route route){
+        serviceintent=new Intent(thisActivity,LocationService.class);
         thisActivity.startService(serviceintent);
         //TODO:Stop this service on the logout event
         mApplicationSession = RouteSession.getInstance();

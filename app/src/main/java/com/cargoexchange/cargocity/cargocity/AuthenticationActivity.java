@@ -27,43 +27,8 @@ public class AuthenticationActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authentication);
-        int accessFineLocationPermissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
-        int accessCoarseLocationPermissionCheck=ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION);
-        if(accessFineLocationPermissionCheck!= PackageManager.PERMISSION_GRANTED && accessCoarseLocationPermissionCheck!=PackageManager.PERMISSION_GRANTED)
-        {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
-                            Manifest.permission.ACCESS_FINE_LOCATION},
-                    Constants.PERMISSION_ACCESS_LOCATION);
-        }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
-    {
-        switch (requestCode)
-        {
-            case Constants.PERMISSION_ACCESS_LOCATION:
-            {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                {
-                    Fragment fm = new LoginFragment();
-                    getSupportFragmentManager().beginTransaction().add(fm,"xyz").commitAllowingStateLoss();
-                }
-                else
-                {
-                    Log.d("outgoing", "hello");
-                    System.runFinalization();
-                    Intent startMain = new Intent(Intent.ACTION_MAIN);
-                    startMain.addCategory(Intent.CATEGORY_HOME);
-                    startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(startMain);
-                    //TODO:Why we cannot hide the activity here
-                }
-                break;
-            }
-        }
-    }
     @Override
     protected void onPause()
     {
@@ -74,15 +39,6 @@ public class AuthenticationActivity extends AppCompatActivity
     protected void onRestart()
     {
         super.onRestart();
-        int accessFineLocationPermissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
-        int accessCoarseLocationPermissionCheck=ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION);
-        if(accessFineLocationPermissionCheck!= PackageManager.PERMISSION_GRANTED && accessCoarseLocationPermissionCheck!=PackageManager.PERMISSION_GRANTED)
-        {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
-                            Manifest.permission.ACCESS_FINE_LOCATION},
-                    Constants.PERMISSION_ACCESS_LOCATION);
-        }
     }
 
 

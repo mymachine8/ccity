@@ -142,7 +142,6 @@ public class LoginFragment extends Fragment
 
     private void submitLogin(final String username,final String password){
         String uri = Constants.CARGO_API_BASE_URL + "auth/login";
-        //TODO: Send login credentials to server, get response and store them in shared prefs
         JSONObject credentialRequestData=new GenerateRequest().getRequest(username,password);
         if(credentialRequestData!=null) {
             JsonRequest request = CargoCity.getmInstance().postLoginRequest(
@@ -150,7 +149,7 @@ public class LoginFragment extends Fragment
                         @Override
                         public void onResponse(JSONObject response) {
                             String status;
-                            mProgressDialog.hide();
+
                             try {
                                 status = response.getString("status");
                                 if (status.equalsIgnoreCase("success")) {
@@ -160,16 +159,16 @@ public class LoginFragment extends Fragment
                                     editor.putString(CargoSharedPreferences.PREFERENCE_USERNAME, username);
                                     editor.putString(CargoSharedPreferences.PREFERENCE_ACCESSTOKEN, token);
                                     editor.commit();
+                                    mProgressDialog.hide();
                                     Intent i = new Intent(thisActivity, OrdersActivity.class);
                                     startActivity(i);
 
                                 } else {
-                                    String error_message = response.getString("message");
-                                    Toast toast = Toast.makeText(thisActivity,
-                                            error_message, Toast.LENGTH_LONG);
-                                    toast.show();
+                                    mProgressDialog.hide();
+                                    displayToastMessage(response.getString("message"));
                                 }
                             } catch (JSONException e) {
+                                mProgressDialog.hide();
                                 e.printStackTrace();
                             }
 
@@ -178,21 +177,13 @@ public class LoginFragment extends Fragment
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             mProgressDialog.hide();
-                            String json = null;
-
                             NetworkResponse response = error.networkResponse;
                             if (response != null && response.data != null) {
-                                switch (response.statusCode) {
-                                    case 401:
-                                    case 400:
-                                        json = new String(response.data);
+                                     String json = new String(response.data);
                                         json = ParseJSON.trimMessage(json, "message");
                                         if (json != null) displayToastMessage(json);
-                                        break;
                                 }
-                                //Additional cases
                             }
-                        }
                     }, uri, credentialRequestData);
             request.setRetryPolicy(new DefaultRetryPolicy(
                     30000,
