@@ -37,23 +37,28 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon,android:theme">
+
         <service android:name=".services.LocationService" />
+        <service android:name=".services.FetchLocationService"/>
 
         <activity
             android:name=".AuthenticationActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
 
-        </activity>
-        <activity
-            android:name=".DeliveryFeedbackActivity"
-            android:label="@string/title_activity_delivery_feedback"
-            android:theme="@style/AppTheme.NoActionBar">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+        </activity>
+        <activity
+            android:name=".DeliveryFeedbackActivity"
+            android:label="@string/title_activity_delivery_feedback"
+            android:theme="@style/AppTheme.NoActionBar">
+
         </activity>
         <activity android:name=".OrdersActivity" />
         <activity android:name=".MapActivity" />
@@ -62,11 +67,13 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAa_HArC674Ruuyw91n2jNvntSoaIPyZ64" />
         <activity android:name=".Camera"></activity>
+
         <receiver android:name=".services.BatteryStatusReciever">
             <intent-filter>
                 <action android:name="android.intent.action.BATTERY_CHANGED"/>
             </intent-filter>
         </receiver>
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="1fc5c71c890d22fa73b02d244bf23e967759333a" />

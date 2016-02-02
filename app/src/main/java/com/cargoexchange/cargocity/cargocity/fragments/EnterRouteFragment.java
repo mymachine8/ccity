@@ -95,8 +95,6 @@ public class EnterRouteFragment extends Fragment
         if (routeId.isEmpty()) {
             mRouteIdText.setError("Please enter Route Id");
             return;
-        }else{
-            mRouteIdText.setError("");
         }
         mRouteSubmitBtn.setEnabled(false);
         mProgressDialog.show();
@@ -179,14 +177,14 @@ public class EnterRouteFragment extends Fragment
         int hasFineLocationPermission = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION);
         serviceintent=new Intent(thisActivity,LocationService.class);
         if (hasFineLocationPermission == PackageManager.PERMISSION_GRANTED) {
-          callRouteDetailsFragment(route);
+
+            callRouteDetailsFragment(route);
         }
         else
         {
             //TODO: SOME TOAST OR PERMISSION REQUEST
         }
     }
-
     public void callRouteDetailsFragment(Route route){
         thisActivity.startService(serviceintent);
         //TODO:Stop this service on the logout event

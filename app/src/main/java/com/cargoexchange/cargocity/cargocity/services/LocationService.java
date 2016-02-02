@@ -75,8 +75,7 @@ public class LocationService extends IntentService
             return;
         }
 
-
-        mLocationManager.requestLocationUpdates(mLocationManager.GPS_PROVIDER, 10, 0, new LocationListener() {
+        mLocationManager.requestLocationUpdates(mLocationManager.GPS_PROVIDER, 10000, 0, new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
 
@@ -87,7 +86,8 @@ public class LocationService extends IntentService
                     data.put("longitude", location.getLongitude());
                     data.put("speed", location.getSpeed());
                     data.put("routeId",routeId);
-                            updateToDeliveryTextFile("delivery_tracking.txt", data.toString());
+                    data.put("timestamp",location.getTime());
+                            //updateToDeliveryTextFile("delivery_tracking.txt", data.toString());
                     count++;
                 } catch (JSONException e) {
                     e.printStackTrace();
