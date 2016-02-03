@@ -2,6 +2,7 @@ package com.cargoexchange.cargocity.cargocity.adapters;
 
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import com.cargoexchange.cargocity.cargocity.R;
 import com.cargoexchange.cargocity.cargocity.constants.OrderStatus;
 import com.cargoexchange.cargocity.cargocity.constants.RouteSession;
+import com.cargoexchange.cargocity.cargocity.fragments.OrdersListFragment;
 import com.cargoexchange.cargocity.cargocity.models.Order;
 
 import java.util.List;
@@ -25,9 +27,11 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
     private List<Order> orderDetails;
     private RouteSession mRouteSession;
     private static OrderItemClickListener mItemClickListener;
-    public OrderDetailsAdapter(List<Order> orderDetails)
-    {
-        this.orderDetails=orderDetails;
+    private Fragment mFragmentInstance;
+
+    public OrderDetailsAdapter(List<Order> orderDetails, Fragment fragment) {
+        mFragmentInstance = fragment;
+        this.orderDetails = orderDetails;
     }
 
     public void setOnItemClickListener(OrderItemClickListener careClickListener) {
@@ -64,6 +68,10 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         holder.mItems2.setText(orderDetails.get(position).getItems().get(1));
         holder.mAddressLine1.setText(orderDetails.get(position).getAddress().getLine1());
         holder.mAddressLine2.setText(orderDetails.get(position).getAddress().getLine2());
+        holder.mExtraName.setText(orderDetails.get(position).getName());
+        holder.mExtraOrderno.setText(orderDetails.get(position).getOrderId());
+        holder.mExtraPhone.setText(orderDetails.get(position).getPhones().get(0).getNumber());
+        holder.mExtraEmail.setText(orderDetails.get(position).getMailId());
 
         //holder.mAddressLine1.setText(orderDetails.get(position).getAddress().getHouseNumber());
         //holder.mAddressLocality.setText(orderDetails.get(position).getAddress().getAddressLine1());
@@ -75,6 +83,9 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
             {
                 holder.mDistance.setText(mRouteSession.getmDistanceList().get(position));
                 holder.mTime.setText(mRouteSession.getmDurationList().get(position));
+                holder.mExtraDistance.setText(mRouteSession.getmDistanceList().get(position));
+                holder.mExtraTime.setText(mRouteSession.getmDurationList().get(position));
+
             }
             else
             {
@@ -106,7 +117,16 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         TextView mDistance;
         TextView mTime;
         TextView mExtraName;
+        TextView mExtraOrderno;
+        TextView mExtraExpectedTime;
+        TextView mExtraProducts;
+        TextView mExtraPhone;
+        TextView mExtraEmail;
+        TextView mExtraAddress;
+        TextView mExtraDistance;
+        TextView mExtraTime;
         FloatingActionButton mCallCustomer;
+        FloatingActionButton mFullScreenMapFAB;
         public ViewHolder(View itemView)
         {
             super(itemView);
@@ -118,8 +138,28 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
             mDistance=(TextView)itemView.findViewById(R.id.distancetextview);
             mTime=(TextView)itemView.findViewById(R.id.timetextview);
             mStatusImage=(ImageView)itemView.findViewById(R.id.orderstatusimage);
+            mExtraName=(TextView)itemView.findViewById(R.id.nametextview);
+            mExtraOrderno=(TextView)itemView.findViewById(R.id.ordernotextview);
+            mExtraExpectedTime=(TextView)itemView.findViewById(R.id.expectedtimetextview);
+            mExtraPhone=(TextView)itemView.findViewById(R.id.phonetextview);
+            mExtraEmail=(TextView)itemView.findViewById(R.id.emailtextview);
+            mExtraDistance=(TextView)itemView.findViewById(R.id.Extradistancetextview);
+            mExtraTime=(TextView)itemView.findViewById(R.id.Extratimetextview);
+            mFullScreenMapFAB=(FloatingActionButton)itemView.findViewById(R.id.FullScreenMapFloatingActionButton);
             mCallCustomer=(FloatingActionButton)itemView.findViewById(R.id.CallActionFloatingActionButton);
             itemView.setOnClickListener(this);
+            mStatusImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((OrdersListFragment) mFragmentInstance).onClickOrderStatus(v);
+                }
+            });
+            mCallCustomer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((OrdersListFragment) mFragmentInstance).onClickCallExecutive(v);
+                }
+            });
         }
 
         @Override

@@ -84,7 +84,7 @@ public class OrdersListFragment extends Fragment
     private final int CARD_EXPANDED=1;
     private final int CARD_COMPACT=0;
     private int cardStatus=0;
-
+    private Fragment thisFragment;
     private FragmentActivity thisActivity;
 
     public OrdersListFragment() {
@@ -103,6 +103,7 @@ public class OrdersListFragment extends Fragment
     public void onCreate(Bundle savedInstanceState) {
         mRouteSession = RouteSession.getInstance();
         mOrdersList = mRouteSession.getmOrderList();
+        thisFragment = this;
         if (mOrdersList == null || mOrdersList.size() == 0) {
             mRoute = (Route) getArguments().getSerializable(ORDERS_LIST_KEY);
             mOrdersList = mRoute.getOrderList();
@@ -132,7 +133,7 @@ public class OrdersListFragment extends Fragment
         processData.setTitle("Orders");
 
 
-        mOrderDetailsAdapter = new OrderDetailsAdapter(mOrdersList);
+        mOrderDetailsAdapter = new OrderDetailsAdapter(mOrdersList, thisFragment);
         mOrdersListFragmentRecycler.setAdapter(mOrderDetailsAdapter);
 
         registerClickEvents();
@@ -274,7 +275,7 @@ public class OrdersListFragment extends Fragment
 
     public void setOldData()
     {
-        mOrderDetailsAdapter = new OrderDetailsAdapter(mOrdersList);
+        mOrderDetailsAdapter = new OrderDetailsAdapter(mOrdersList, thisFragment);
         mOrdersListFragmentRecycler.setAdapter(mOrderDetailsAdapter);
         registerClickEvents();
     }
@@ -355,30 +356,15 @@ public class OrdersListFragment extends Fragment
             @Override
             public void onItemClick(int position, View v) {
                 onCardClickAction(v, position);
-                ImageView orderStatusImage =  (ImageView)v.findViewById(R.id.orderstatusimage);
-                FloatingActionButton callExecutive = (FloatingActionButton) v.findViewById(R.id.CallActionFloatingActionButton);
-                //orderStatusImage.setTag(orderId);
-                orderStatusImage.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        onClickOrderStatus(v);
-                    }
-                });
-                callExecutive.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        onClickCallExecutive(v);
-                    }
-                });
             }
         });
     }
 
-    private void onClickOrderStatus(View v) {
+    public void onClickOrderStatus(View v) {
         Log.d("Order_Click","Clicked on the order status");
     }
 
-    private void onClickCallExecutive(View v){
+    public void onClickCallExecutive(View v){
         String phone="9000051535";
         Intent intent = new Intent(Intent.ACTION_DIAL,Uri.parse("tel:"+phone));
         startActivity(intent);
@@ -407,7 +393,7 @@ public class OrdersListFragment extends Fragment
             public void onErrorResponse(VolleyError error) {
                 Log.d("response", "error");
                 mRouteSession.setmMatrixDownloadStatus(0);
-                mOrderDetailsAdapter = new OrderDetailsAdapter(mOrdersList);
+                mOrderDetailsAdapter = new OrderDetailsAdapter(mOrdersList,thisFragment);
                 mOrdersListFragmentRecycler.setAdapter(mOrderDetailsAdapter);
                 registerClickEvents();
                 processData.dismiss();
