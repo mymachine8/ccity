@@ -346,7 +346,7 @@ public class OrdersListFragment extends Fragment
                     //if(mSmallMapFragment==null)
                     //    mSmallMapFragment=SupportMapFragment.newInstance();
                     //LocationManager mLocationManager=(LocationManager)thisActivity.getSystemService(Context.LOCATION_SERVICE);
-                    Location location=mLocationManager.getLastKnownLocation(Constants.LOCATION_PROVIDER);
+                    //Location location=mLocationManager.getLastKnownLocation(Constants.LOCATION_PROVIDER);
                     //fetchMapData(location);
 
                     new AnimationHelper(view,cardStatus,context,thisActivity);

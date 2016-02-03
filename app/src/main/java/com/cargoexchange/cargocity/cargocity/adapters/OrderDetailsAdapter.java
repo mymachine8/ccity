@@ -1,6 +1,11 @@
 package com.cargoexchange.cargocity.cargocity.adapters;
 
+import android.content.Context;
 import android.graphics.Color;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.support.v4.app.Fragment;
@@ -10,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -41,8 +47,7 @@ import java.util.List;
 /**
  * Created by root on 19/1/16.
  */
-public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapter.ViewHolder> implements OnMapReadyCallback
-{
+public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapter.ViewHolder> implements OnMapReadyCallback {
     private List<Order> orderDetails;
     private RouteSession mRouteSession;
     private static OrderItemClickListener mItemClickListener;
@@ -55,10 +60,14 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
     ArrayList<LatLng> points;
     LatLng start;
     PolylineOptions lineOptions;
+    private LocationManager mLocationManager;
+
+    private ViewHolder mholder;
 
     public OrderDetailsAdapter(List<Order> orderDetails, Fragment fragment) {
         mFragmentInstance = fragment;
         this.orderDetails = orderDetails;
+        mLocationManager = (LocationManager) ((OrdersListFragment) mFragmentInstance).getActivity().getSystemService(Context.LOCATION_SERVICE);
     }
 
     public void setOnItemClickListener(OrderItemClickListener careClickListener) {
@@ -70,25 +79,24 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
-    {
-        final LayoutInflater layoutInflator=LayoutInflater.from(parent.getContext());
-        final View v=layoutInflator.inflate(R.layout.row_orderdetails, parent, false);
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        final LayoutInflater layoutInflator = LayoutInflater.from(parent.getContext());
+        final View v = layoutInflator.inflate(R.layout.row_orderdetails, parent, false);
         v.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {Log.d("HelloholderClick", "hi");
+            public void onClick(View v) {
+                Log.d("HelloholderClick", "hi");
 
             }
         });
-        final ViewHolder vh=new ViewHolder(v);
+        final ViewHolder vh = new ViewHolder(v);
         return vh;
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position)
-    {
-        mRouteSession=RouteSession.getInstance();
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        mholder=holder;
+        mRouteSession = RouteSession.getInstance();
         //holder.mOrderno.setText(orderDetails.get(position).getOrderId());
         holder.mName.setText(orderDetails.get(position).getName());
         holder.mItems1.setText(orderDetails.get(position).getItems().get(0));
@@ -100,32 +108,27 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         holder.mExtraPhone.setText(orderDetails.get(position).getPhones().get(0).getNumber());
         holder.mExtraEmail.setText(orderDetails.get(position).getMailId());
 
-        fetchMapData(holder);
+        getLocation();
 
         //holder.mAddressLine1.setText(orderDetails.get(position).getAddress().getHouseNumber());
         //holder.mAddressLocality.setText(orderDetails.get(position).getAddress().getAddressLine1());
         //holder.mAddressLandmark.setText(orderDetails.get(position).getAddress().getAddressLine2());
         //holder.mCity.setText(orderDetails.get(position).getAddress().getCity());
-        if( mRouteSession.getmMatrixDownloadStatus()==1)
-        {
-            if (mRouteSession.getmOrderList().get(position).getDeliveryStatus().equalsIgnoreCase(OrderStatus.IN_TRANSIT))
-            {
+        if (mRouteSession.getmMatrixDownloadStatus() == 1) {
+            if (mRouteSession.getmOrderList().get(position).getDeliveryStatus().equalsIgnoreCase(OrderStatus.IN_TRANSIT)) {
                 holder.mDistance.setText(mRouteSession.getmDistanceList().get(position));
                 holder.mTime.setText(mRouteSession.getmDurationList().get(position));
                 holder.mExtraDistance.setText(mRouteSession.getmDistanceList().get(position));
                 holder.mExtraTime.setText(mRouteSession.getmDurationList().get(position));
 
-            }
-            else
-            {
+            } else {
                 holder.mStatusImage.setImageResource(R.drawable.ic_tick);
             }
         }
     }
 
     @Override
-    public int getItemCount()
-    {
+    public int getItemCount() {
         return orderDetails.size();
     }
 
@@ -134,8 +137,7 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap)
-    {
+    public void onMapReady(GoogleMap googleMap) {
         //MapsInitializer.initialize(null);
         for (int i = 0; i < routes.size(); i++) {
             points = new ArrayList<LatLng>();
@@ -174,16 +176,15 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         googleMap.addPolyline(lineOptions);
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
-    {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView mOrderno;
         TextView mName;
-        TextView mAddressLine1,mAddressLine2;
+        TextView mAddressLine1, mAddressLine2;
         TextView mAddressLocality;
         TextView mAddressLandmark;
         TextView mCity;
-        TextView mItems1,mItems2;
-        ImageView mStatusImage,mCallImage;
+        TextView mItems1, mItems2;
+        ImageView mStatusImage, mCallImage;
         TextView mDistance;
         TextView mTime;
         TextView mExtraName;
@@ -199,28 +200,28 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         FloatingActionButton mFullScreenMapFAB;
 
         MapView mSmallMap;
-        public ViewHolder(View itemView)
-        {
-            super(itemView);
-            mName=(TextView)itemView.findViewById(R.id.nameedittext);
-            mAddressLine1=(TextView)itemView.findViewById(R.id.Line1addressedittext);
-            mAddressLine2=(TextView)itemView.findViewById(R.id.Line2addressedittext);
-            mItems1=(TextView)itemView.findViewById(R.id.itemedittext1);
-            mItems2=(TextView)itemView.findViewById(R.id.itemedittext2);
-            mDistance=(TextView)itemView.findViewById(R.id.distancetextview);
-            mTime=(TextView)itemView.findViewById(R.id.timetextview);
-            mStatusImage=(ImageView)itemView.findViewById(R.id.orderstatusimage);
-            mExtraName=(TextView)itemView.findViewById(R.id.nametextview);
-            mExtraOrderno=(TextView)itemView.findViewById(R.id.ordernotextview);
-            mExtraExpectedTime=(TextView)itemView.findViewById(R.id.expectedtimetextview);
-            mExtraPhone=(TextView)itemView.findViewById(R.id.phonetextview);
-            mExtraEmail=(TextView)itemView.findViewById(R.id.emailtextview);
-            mExtraDistance=(TextView)itemView.findViewById(R.id.Extradistancetextview);
-            mExtraTime=(TextView)itemView.findViewById(R.id.Extratimetextview);
-            mFullScreenMapFAB=(FloatingActionButton)itemView.findViewById(R.id.mFullScreenMapFloatingActionButton);
-            mCallCustomer=(FloatingActionButton)itemView.findViewById(R.id.CallActionFloatingActionButton);
 
-            mSmallMap=(MapView)itemView.findViewById(R.id.mapfragment);
+        public ViewHolder(View itemView) {
+            super(itemView);
+            mName = (TextView) itemView.findViewById(R.id.nameedittext);
+            mAddressLine1 = (TextView) itemView.findViewById(R.id.Line1addressedittext);
+            mAddressLine2 = (TextView) itemView.findViewById(R.id.Line2addressedittext);
+            mItems1 = (TextView) itemView.findViewById(R.id.itemedittext1);
+            mItems2 = (TextView) itemView.findViewById(R.id.itemedittext2);
+            mDistance = (TextView) itemView.findViewById(R.id.distancetextview);
+            mTime = (TextView) itemView.findViewById(R.id.timetextview);
+            mStatusImage = (ImageView) itemView.findViewById(R.id.orderstatusimage);
+            mExtraName = (TextView) itemView.findViewById(R.id.nametextview);
+            mExtraOrderno = (TextView) itemView.findViewById(R.id.ordernotextview);
+            mExtraExpectedTime = (TextView) itemView.findViewById(R.id.expectedtimetextview);
+            mExtraPhone = (TextView) itemView.findViewById(R.id.phonetextview);
+            mExtraEmail = (TextView) itemView.findViewById(R.id.emailtextview);
+            mExtraDistance = (TextView) itemView.findViewById(R.id.Extradistancetextview);
+            mExtraTime = (TextView) itemView.findViewById(R.id.Extratimetextview);
+            mFullScreenMapFAB = (FloatingActionButton) itemView.findViewById(R.id.mFullScreenMapFloatingActionButton);
+            mCallCustomer = (FloatingActionButton) itemView.findViewById(R.id.CallActionFloatingActionButton);
+
+            mSmallMap = (MapView) itemView.findViewById(R.id.mapfragment);
             mSmallMap.onCreate(null);
             mSmallMap.onResume();
 
@@ -256,13 +257,13 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
     }
 
 
-    public void fetchMapData(final ViewHolder holder)
+    public void fetchMapData(Location location)
     {
 
-        //if (location != null) {
+        if (location != null) {
             String url = Constants.GOOGLE_MAP_DIRECTIONS_API_BASE_URL
                     + "key=" + Constants.GOOGLE_MAP_SERVER_KEY
-                    + "&origin=" + "Madahpur"//location.getLatitude() + "," + location.getLongitude()
+                    + "&origin=" + location.getLatitude() + "," + location.getLongitude()
                     + "&destination=" + "Kondapur"
                     + "&departure_time=" + Constants.MAP_DEPARTURETIME
                     + "&traffic_model=" + Constants.MAP_TRAFFICMODEL_PESSIMISTIC
@@ -277,7 +278,7 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
                     //TODO:pass this bundle to extract the navigation instructions
                     //sendToNavigationFragmentBundle = new Bundle();
                     //sendToNavigationFragmentBundle.putString("mapData", response.toString());
-                    holder.mSmallMap.getMapAsync(OrderDetailsAdapter.this);
+                    mholder.mSmallMap.getMapAsync(OrderDetailsAdapter.this);
 
 
                 }
@@ -289,8 +290,44 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
                 }
             }, url);
             CargoCity.getmInstance().getRequestQueue().add(request);
-        }/* else
-            Toast.makeText(thisActivity, "Error fetching location", Toast.LENGTH_SHORT);*/
+        }
     }
+
+    public void getLocation()
+    {
+        Location location=mLocationManager.getLastKnownLocation(Constants.LOCATION_PROVIDER);
+        if(location!=null)
+        {
+            fetchMapData(location);
+        }
+        else
+        {
+            mLocationManager.requestSingleUpdate(Constants.LOCATION_PROVIDER,new singleLocationFixListener(),null);
+        }
+    }
+    private class singleLocationFixListener implements LocationListener
+    {
+        @Override
+        public void onLocationChanged(Location location)
+        {
+            fetchMapData(location);
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
+    }
+}
 
 
