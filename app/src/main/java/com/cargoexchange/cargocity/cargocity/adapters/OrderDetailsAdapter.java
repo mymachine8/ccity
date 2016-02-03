@@ -82,13 +82,6 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final LayoutInflater layoutInflator = LayoutInflater.from(parent.getContext());
         final View v = layoutInflator.inflate(R.layout.row_orderdetails, parent, false);
-        v.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("HelloholderClick", "hi");
-
-            }
-        });
         final ViewHolder vh = new ViewHolder(v);
         return vh;
     }
@@ -108,7 +101,7 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         holder.mExtraPhone.setText(orderDetails.get(position).getPhones().get(0).getNumber());
         holder.mExtraEmail.setText(orderDetails.get(position).getMailId());
 
-        getLocation();
+
 
         //holder.mAddressLine1.setText(orderDetails.get(position).getAddress().getHouseNumber());
         //holder.mAddressLocality.setText(orderDetails.get(position).getAddress().getAddressLine1());
@@ -125,6 +118,7 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
                 holder.mStatusImage.setImageResource(R.drawable.ic_tick);
             }
         }
+        getLocation();
     }
 
     @Override
@@ -272,7 +266,7 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
             JsonObjectRequest request = CargoCity.getmInstance().getGeneralRequest(new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-                    Log.d("test", response.toString());
+                    Log.d("new", response.toString());
                     //Use the routes to draw polyline on map
                     routes = new ParseDirections(response).getRoutes();
                     //TODO:pass this bundle to extract the navigation instructions
@@ -295,15 +289,14 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
 
     public void getLocation()
     {
-        Location location=mLocationManager.getLastKnownLocation(Constants.LOCATION_PROVIDER);
+        /*Location location=mLocationManager.getLastKnownLocation(Constants.LOCATION_PROVIDER);
         if(location!=null)
         {
             fetchMapData(location);
         }
         else
-        {
+        {*/
             mLocationManager.requestSingleUpdate(Constants.LOCATION_PROVIDER,new singleLocationFixListener(),null);
-        }
     }
     private class singleLocationFixListener implements LocationListener
     {
