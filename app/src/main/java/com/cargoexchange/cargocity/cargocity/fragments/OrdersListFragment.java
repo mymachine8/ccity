@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -15,6 +16,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -52,9 +54,20 @@ import com.cargoexchange.cargocity.cargocity.models.Route;
 import com.cargoexchange.cargocity.cargocity.utils.AnimationHelper;
 import com.cargoexchange.cargocity.cargocity.utils.GenerateUrl;
 import com.cargoexchange.cargocity.cargocity.utils.NetworkAvailability;
+import com.cargoexchange.cargocity.cargocity.utils.ParseDirections;
 import com.cargoexchange.cargocity.cargocity.utils.ParseDistanceMatrix;
 import com.cargoexchange.cargocity.cargocity.utils.RecyclerItemClickListener;
 import com.cargoexchange.cargocity.cargocity.models.OrderItem;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.json.JSONObject;
 
@@ -86,6 +99,16 @@ public class OrdersListFragment extends Fragment
     private int cardStatus=0;
     private Fragment thisFragment;
     private FragmentActivity thisActivity;
+    private GoogleMap mSmallMap;
+    private SupportMapFragment mSmallMapFragment;
+    private List<List<HashMap<String, String>>> routes;
+    final MarkerOptions markerA = new MarkerOptions();
+    final MarkerOptions markerB = new MarkerOptions();
+    ArrayList<LatLng> points;
+    LatLng start;
+    PolylineOptions lineOptions;
+    private OrdersListFragment context;
+    private MapView mSmallMapView;
 
     public OrdersListFragment() {
         // Required empty public constructor
@@ -104,6 +127,7 @@ public class OrdersListFragment extends Fragment
         mRouteSession = RouteSession.getInstance();
         mOrdersList = mRouteSession.getmOrderList();
         thisFragment = this;
+        context=this;
         if (mOrdersList == null || mOrdersList.size() == 0) {
             mRoute = (Route) getArguments().getSerializable(ORDERS_LIST_KEY);
             mOrdersList = mRoute.getOrderList();
@@ -212,6 +236,9 @@ public class OrdersListFragment extends Fragment
             }
         }
     }
+
+
+
     public class mLocationListener implements LocationListener
     {
 
@@ -314,14 +341,23 @@ public class OrdersListFragment extends Fragment
                     //slideDown(view);
                     Log.d("response","compact card");
                     cardStatus=CARD_EXPANDED;
-                    new AnimationHelper(view,cardStatus);
+                    //FragmentManager fm=getChildFragmentManager();
+                    //mSmallMapFragment=((SupportMapFragment)fm.findFragmentById(R.id.mapfragment));
+                    //if(mSmallMapFragment==null)
+                    //    mSmallMapFragment=SupportMapFragment.newInstance();
+                    //LocationManager mLocationManager=(LocationManager)thisActivity.getSystemService(Context.LOCATION_SERVICE);
+                    Location location=mLocationManager.getLastKnownLocation(Constants.LOCATION_PROVIDER);
+                    //fetchMapData(location);
+
+                    new AnimationHelper(view,cardStatus,context,thisActivity);
+
                 }
                 else
                 {
                     //slideUp(view);
                     Log.d("response","compact expanded");
                     cardStatus=CARD_COMPACT;
-                    new AnimationHelper(view,cardStatus);
+                    new AnimationHelper(view,cardStatus,context,thisActivity);
                 }
 
                 /*thisActivity
@@ -361,13 +397,18 @@ public class OrdersListFragment extends Fragment
     }
 
     public void onClickOrderStatus(View v) {
-        Log.d("Order_Click","Clicked on the order status");
+        Log.d("Order_Click", "Clicked on the order status");
     }
 
     public void onClickCallExecutive(View v){
         String phone="9000051535";
         Intent intent = new Intent(Intent.ACTION_DIAL,Uri.parse("tel:"+phone));
         startActivity(intent);
+    }
+    public void onClickFullScreenMap(View v)
+    {
+        Intent MapIntent = new Intent(thisActivity, MapActivity.class);
+        startActivity(MapIntent);
     }
 
     public void download(Location location)
@@ -406,7 +447,6 @@ public class OrdersListFragment extends Fragment
         else
             Toast.makeText(thisActivity,"Network Unavailable",Toast.LENGTH_SHORT).show();
     }
-
 }
 /*public void something()
 {

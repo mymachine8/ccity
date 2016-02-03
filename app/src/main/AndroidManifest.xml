@@ -55,12 +55,14 @@
 
         </activity>
         <activity
+            android:screenOrientation="portrait"
             android:name=".DeliveryFeedbackActivity"
             android:label="@string/title_activity_delivery_feedback"
             android:theme="@style/AppTheme.NoActionBar">
 
         </activity>
-        <activity android:name=".OrdersActivity" />
+        <activity android:name=".OrdersActivity"
+            android:screenOrientation="portrait"/>
         <activity android:name=".MapActivity" />
 
         <meta-data
