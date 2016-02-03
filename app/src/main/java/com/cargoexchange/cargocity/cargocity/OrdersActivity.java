@@ -27,12 +27,14 @@ public class OrdersActivity extends AppCompatActivity {
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_orders);
+        grantLocationPermissions();
         //TODO: Have to look into battery status (temportary comment)
         //IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
         //Intent batterystatus=getApplicationContext().registerReceiver(new BatteryStatusReciever(),ifilter);
+    }
 
+    private void callFragment() {
         String source=getIntent().getStringExtra("context_of_intent");
-        grantLocationPermissions();
         if(source!=null) { // When the intent is coming from feedback fragment
             if (source.equalsIgnoreCase("FeedbackFragment")) {
                 Fragment ordersListFragment = new OrdersListFragment();
@@ -43,6 +45,11 @@ public class OrdersActivity extends AppCompatActivity {
             Fragment enterRouteFragment = new EnterRouteFragment();
             getSupportFragmentManager().beginTransaction().add(R.id.orders_container, enterRouteFragment).commit();
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        //No call for super(). Bug on API Level > 11.
     }
 
     @Override
@@ -61,6 +68,9 @@ public class OrdersActivity extends AppCompatActivity {
                             Manifest.permission.ACCESS_FINE_LOCATION},
                     Constants.PERMISSION_ACCESS_LOCATION);
         }
+        else {
+            callFragment();
+        }
     }
 
     @Override
@@ -72,8 +82,7 @@ public class OrdersActivity extends AppCompatActivity {
             {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
                 {
-                    Fragment fm = new LoginFragment();
-                    getSupportFragmentManager().beginTransaction().add(fm,"xyz").commitAllowingStateLoss();
+                    callFragment();
                 }
                 else
                 {

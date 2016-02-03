@@ -1,10 +1,12 @@
 package com.cargoexchange.cargocity.cargocity.fragments;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,8 +15,10 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.util.Log;
@@ -46,14 +50,17 @@ import com.cargoexchange.cargocity.cargocity.DeliveryFeedbackActivity;
 import com.cargoexchange.cargocity.cargocity.MapActivity;
 import com.cargoexchange.cargocity.cargocity.OrdersActivity;
 import com.cargoexchange.cargocity.cargocity.R;
+import com.cargoexchange.cargocity.cargocity.SignatureActivity;
 import com.cargoexchange.cargocity.cargocity.constants.CargoSharedPreferences;
 import com.cargoexchange.cargocity.cargocity.constants.Constants;
+import com.cargoexchange.cargocity.cargocity.constants.FragmentTag;
 import com.cargoexchange.cargocity.cargocity.constants.OrderStatus;
 import com.cargoexchange.cargocity.cargocity.constants.RouteSession;
 import com.cargoexchange.cargocity.cargocity.models.Feedback;
 import com.cargoexchange.cargocity.cargocity.utils.GenerateRequest;
 import com.cargoexchange.cargocity.cargocity.utils.ImageHelper;
 import com.cargoexchange.cargocity.cargocity.utils.ParseJSON;
+import com.cargoexchange.cargocity.cargocity.utils.SaveSignPad;
 import com.google.gson.Gson;
 import com.scanlibrary.ScanActivity;
 import com.scanlibrary.ScanConstants;
@@ -62,7 +69,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,6 +85,8 @@ public class FeedbackFragment extends Fragment
     private static final int SCAN_REQUEST_CODE = 99;
 
     private static final int SCAN_MISSED_TAG = 200;
+
+    private static final int SIGNATURE_REQUEST_CODE = 100;
 
     private ImageView mCameraImage;
 
@@ -133,13 +144,13 @@ public class FeedbackFragment extends Fragment
 
     private Switch isCustomerPresent;
 
-    private ImageButton mUploadSignature;
+    private ImageButton mUploadSignatureButton;
 
     private CheckBox mAcceptGoods;
 
     private TextView mTimeOfDelivery;
 
-    private ImageView mSignature;
+    private ImageView mSignatureImage;
 
     private ImageView mMissedTagImage;
 
@@ -151,8 +162,16 @@ public class FeedbackFragment extends Fragment
 
     private Button mSubmitMissedTagButton;
 
+    public SaveSignPad signPadInstance = null;
+
     public FeedbackFragment()
     {
+
+    }
+
+    @Override
+    public void onCreate(Bundle inBundle){
+        super.onCreate(inBundle);
 
     }
 
@@ -341,7 +360,7 @@ public class FeedbackFragment extends Fragment
 
         mTimeOfDelivery=(TextView)view.findViewById(R.id.deliveryTimeTextView);
 
-        mSignature=(ImageView)view.findViewById(R.id.signRecieptButton);
+        mUploadSignatureButton =(ImageButton)view.findViewById(R.id.signRecieptButton); //Go to sign_pad button
 
         mMissedLayout=(RelativeLayout)view.findViewById(R.id.uploadtagLayout);
 
@@ -351,7 +370,7 @@ public class FeedbackFragment extends Fragment
 
         mUploadMissedTagFAB=(FloatingActionButton)view.findViewById(R.id.uploadMissedTagFAB);
 
-        mUploadSignature=(ImageButton)view.findViewById(R.id.signRecieptButton);
+        mSignatureImage =(ImageView)view.findViewById(R.id.signatureImageView);
 
         mMissedTagImage=(ImageView)view.findViewById(R.id.missedTagImageView);
     }
@@ -360,10 +379,31 @@ public class FeedbackFragment extends Fragment
         isCustomerPresent.setOnCheckedChangeListener(new isCustomerPresentListener());
         mSubmitMissedTagButton.setOnClickListener(new submitMissedTagButtonListener());
         mUploadMissedTagFAB.setOnClickListener(new uploadMissedTagFABListener());
-        mUploadSignature.setOnClickListener(new uploadSignatureButtonListener());
+        mUploadSignatureButton.setOnClickListener(new uploadSignatureButtonListener());
 
     }
 
+    public void setSignature(String fileName){
+        if(fileName!=null) {
+            File image = new File(fileName);
+            if(image.exists())
+            {
+                Bitmap bitmap=BitmapFactory.decodeFile(fileName);
+                mSignatureImage.setImageBitmap(bitmap);
+                mProofUploadImageView1.setImageBitmap(Bitmap.createScaledBitmap(bitmap,100,100,true));
+            }else {
+                Log.d("ss","sfdsfs");
+            }
+            /*Uri uri= Uri.fromFile(image);
+            try {
+                Bitmap bitmap=MediaStore.Images.Media.getBitmap(mActivityContext.getContentResolver(),uri);
+                mSignatureImage.setImageBitmap(bitmap);
+                mProofUploadImageView1.setImageBitmap(Bitmap.createScaledBitmap(bitmap,100,100,true));
+            } catch (IOException e) {
+                Log.e("IO_EXCEPTION",e.getMessage());
+            }*/
+        }
+    }
     private class isCustomerPresentListener implements CompoundButton.OnCheckedChangeListener
     {
 
@@ -410,13 +450,11 @@ public class FeedbackFragment extends Fragment
         public void onClick(View v)
         {
             //TODO:Open the Signature Pad
-            Intent DeliveryFeedbackInent=new Intent(mActivityContext,DeliveryFeedbackActivity.class);
-            DeliveryFeedbackInent.putExtra("source","FeedbackFragment");
-            DeliveryFeedbackInent.putExtra("fragment", "SignPadFragment");
-            startActivity(DeliveryFeedbackInent);
+            checkForReadWritePermission();
 
         }
     }
+
 
     private Feedback createFeedbackObject(){
         Feedback feedback = new Feedback();
@@ -531,6 +569,52 @@ public class FeedbackFragment extends Fragment
         mImagePopUpDialog.cancel();
     }
 
+    private void checkForReadWritePermission(){
+        int accessWritePermissionCheck = ContextCompat.checkSelfPermission(mActivityContext, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int accessReadPermissionCheck=ContextCompat.checkSelfPermission(mActivityContext, Manifest.permission.READ_EXTERNAL_STORAGE);
+        if(accessWritePermissionCheck!= PackageManager.PERMISSION_GRANTED && accessReadPermissionCheck!=PackageManager.PERMISSION_GRANTED)
+        {
+                    requestPermissions(
+                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                    Manifest.permission.READ_EXTERNAL_STORAGE},
+                            Constants.PERMISSION_EXTERNAL_STORAGE);
+        }
+        else {
+            callSignatureActivity();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
+    {
+        switch (requestCode)
+        {
+            case Constants.PERMISSION_EXTERNAL_STORAGE:
+            {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                {
+                    callSignatureActivity();
+                }
+                else
+                {
+                    Log.d("outgoing", "hello");
+                    System.runFinalization();
+                    Intent startMain = new Intent(Intent.ACTION_MAIN);
+                    startMain.addCategory(Intent.CATEGORY_HOME);
+                    startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(startMain);
+                    //TODO:Why we cannot hide the activity here
+                }
+                break;
+            }
+        }
+    }
+
+    private void callSignatureActivity() {
+        Intent intent = new Intent(getActivity(), SignatureActivity.class);
+        startActivityForResult(intent, SIGNATURE_REQUEST_CODE);
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -580,6 +664,9 @@ public class FeedbackFragment extends Fragment
             {
                 e.printStackTrace();
             }
+        }
+        else if(requestCode == SIGNATURE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            setSignature(data.getExtras().getString("SIGN_FILE_NAME"));
         }
     }
 

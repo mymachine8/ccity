@@ -16,21 +16,23 @@ import java.io.FileOutputStream;
  */
 public class SaveSignPad
 {
-    private static final File rootDir = new File(Environment.getExternalStorageDirectory()+File.separator+"sign/");
-
-    public static boolean saveScreen(View view)
+    File rootFile = new File(Environment.getExternalStorageDirectory(), "Sign");
+    private String fileName;
+    public boolean saveScreen(View view)
     {
         if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
             return false;
         }
-        if (!rootDir.exists()) {
-            rootDir.mkdir();
+        if (!rootFile.exists()) {
+            rootFile.mkdir();
         }
         view.setDrawingCacheEnabled(true);
         view.buildDrawingCache();
         Bitmap bitmap = view.getDrawingCache();
         try {
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, new FileOutputStream(new File(rootDir, System.currentTimeMillis() + ".jpg")));
+            File file = new File(rootFile,System.currentTimeMillis() + ".jpg");
+            fileName  = file.getAbsolutePath();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, new FileOutputStream(file));
             return true;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -39,5 +41,9 @@ public class SaveSignPad
             view.setDrawingCacheEnabled(false);
             bitmap = null;
         }
+    }
+
+    public String getSaveSignFileName() {
+        return fileName;
     }
 }

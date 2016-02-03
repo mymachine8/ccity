@@ -2,8 +2,11 @@ package com.cargoexchange.cargocity.cargocity.fragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -49,6 +52,7 @@ public class LoginFragment extends Fragment
     private RelativeLayout loginLayout;
     String token = new String();
     private NetworkAvailability mNetworkAvailability;
+    private NetworkInfo mWifi;
     public LoginFragment()
     {
         super();
@@ -61,6 +65,8 @@ public class LoginFragment extends Fragment
         View view = inflater.inflate(R.layout.fragment_login, container, false);
         thisActivity = getActivity();
         mNetworkAvailability=new NetworkAvailability(thisActivity);
+        ConnectivityManager connManager = (ConnectivityManager) thisActivity.getSystemService(Context.CONNECTIVITY_SERVICE);
+        mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         thisActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         loginLayout=(RelativeLayout)view.findViewById(R.id.loginLayout);
         loginLayout.setOnClickListener(new RelativeLayout.OnClickListener() {
@@ -75,12 +81,10 @@ public class LoginFragment extends Fragment
         mLoginButton .setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View v)
-            {
-                if(mNetworkAvailability.isNetworkAvailable())
+            public void onClick(View v) {
+                if (isNetworkConnected()) {
                     login();
-                else
-                    Toast.makeText(thisActivity,"Network Unavailable",Toast.LENGTH_SHORT).show();
+                }
             }
         });
         return view;
@@ -103,6 +107,14 @@ public class LoginFragment extends Fragment
 
         submitLogin(email, password);
 
+    }
+
+    public boolean isNetworkConnected(){
+        if(!mNetworkAvailability.isNetworkAvailable()) {
+            Toast.makeText(thisActivity, "Network Unavailable", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 
     public boolean validate() {
@@ -128,12 +140,6 @@ public class LoginFragment extends Fragment
         return valid;
     }
 
-    public void onLoginFailed() {
-        Toast.makeText(getContext(), "Login failed", Toast.LENGTH_LONG).show();
-
-        mLoginButton.setEnabled(true);
-    }
-
     private void bindViewVariables(View view) {
         mLoginButton = (Button) view.findViewById(R.id.btn_login);
         mUsernameText = (TextView) view.findViewById(R.id.input_username);
@@ -151,6 +157,7 @@ public class LoginFragment extends Fragment
                             String status;
 
                             try {
+                                mLoginButton.setEnabled(true);
                                 status = response.getString("status");
                                 if (status.equalsIgnoreCase("success")) {
                                     JSONObject tokenObject = response.getJSONObject("token");
@@ -177,17 +184,21 @@ public class LoginFragment extends Fragment
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             mProgressDialog.hide();
+                            mLoginButton.setEnabled(true);
                             NetworkResponse response = error.networkResponse;
                             if (response != null && response.data != null) {
                                      String json = new String(response.data);
                                         json = ParseJSON.trimMessage(json, "message");
                                         if (json != null) displayToastMessage(json);
                                 }
+                            else {
+                                displayToastMessage("Network error, please try later");
+                            }
                             }
                     }, uri, credentialRequestData);
             request.setRetryPolicy(new DefaultRetryPolicy(
-                    30000,
-                    3,
+                    Constants.SOCKET_TIMEOUT_MS,
+                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                     DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             CargoCity.getmInstance().getRequestQueue().add(request);
         }
