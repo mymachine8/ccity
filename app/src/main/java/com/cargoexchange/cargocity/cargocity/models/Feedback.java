@@ -10,6 +10,7 @@ public class Feedback implements Serializable{
     private List<String> documentImageList;
     private int deliveryRating;
     private String feedback;
+    private String deliveryFailedImage;
 
     public boolean isOrderDelivered() {
         return isOrderDelivered;
@@ -57,5 +58,13 @@ public class Feedback implements Serializable{
 
     public void setFeedback(String feedback) {
         this.feedback = feedback;
+    }
+
+    public String getDeliveryFailedImage() {
+        return deliveryFailedImage;
+    }
+
+    public void setDeliveryFailedImage(String deliveryFailedTag) {
+        this.deliveryFailedImage = deliveryFailedTag;
     }
 }

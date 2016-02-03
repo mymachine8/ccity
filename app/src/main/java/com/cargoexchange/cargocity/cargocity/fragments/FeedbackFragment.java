@@ -138,6 +138,8 @@ public class FeedbackFragment extends Fragment
 
     private String base64Images[] = new String[3];
 
+    private String mMissedtagBase64Image;
+
     private String mOrderNo=new String();
 
     private int count=0;
@@ -427,7 +429,8 @@ public class FeedbackFragment extends Fragment
         @Override
         public void onClick(View v)
         {
-            //TODO:Send the missed tag to server
+            submitFeedback();
+
         }
     }
 
@@ -458,18 +461,23 @@ public class FeedbackFragment extends Fragment
 
     private Feedback createFeedbackObject(){
         Feedback feedback = new Feedback();
-        feedback.setInGoodCondition(isItemGoodConditionSwitch.isChecked());
-        feedback.setDeliveryRating(mRatingBar.getNumStars());
-        feedback.setAdditionalComments(mAdditionalCommentsEditText.getText().toString());
-        feedback.setFeedback(mCommentEditText.getText().toString());
-        List<String> images = new ArrayList<String>();
-        for(String image : base64Images) {
-            if(image!=null && !image.isEmpty()){
-                images.add(image);
+        feedback.setIsOrderDelivered(isCustomerPresent.isChecked());
+        if(!feedback.isOrderDelivered()){
+            feedback.setDeliveryFailedImage(mMissedtagBase64Image);
+        }else {
+            feedback.setInGoodCondition(isItemGoodConditionSwitch.isChecked());
+            feedback.setDeliveryRating(mRatingBar.getNumStars());
+            feedback.setAdditionalComments(mAdditionalCommentsEditText.getText().toString());
+            feedback.setFeedback(mCommentEditText.getText().toString());
+            List<String> images = new ArrayList<String>();
+            for (String image : base64Images) {
+                if (image != null && !image.isEmpty()) {
+                    images.add(image);
+                }
             }
-        }
-        if(images.size() > 0) {
-            feedback.setDocumentImageList(images);
+            if (images.size() > 0) {
+                feedback.setDocumentImageList(images);
+            }
         }
         return feedback;
     }
@@ -482,16 +490,20 @@ public class FeedbackFragment extends Fragment
 
         if(pos<mRouteSession.getmOrderList().size()-1)
         {
-            Intent MapInent=new Intent(mActivityContext,OrdersActivity.class);
-            MapInent.putExtra("source","FeedbackFragment");
-            MapInent.putExtra("fragment","OrdersListFragment");
-            startActivity(MapInent);
+            goToOrdersListFragment();
         }
         else //For last Order go to Maps
         {
             Intent OrdersIntent=new Intent(mActivityContext, MapActivity.class);
             startActivity(OrdersIntent);
         }
+    }
+
+    private void goToOrdersListFragment(){
+        Intent MapInent=new Intent(mActivityContext,OrdersActivity.class);
+        MapInent.putExtra("context_of_intent","FeedbackFragment");
+        MapInent.putExtra("fragment","OrdersListFragment");
+        startActivity(MapInent);
     }
 
     private void InitializeDialog(){
@@ -657,6 +669,7 @@ public class FeedbackFragment extends Fragment
             {
                 bitmap=MediaStore.Images.Media.getBitmap(mActivityContext.getContentResolver(),uri);
                 mMissedTagImage.setImageBitmap(Bitmap.createScaledBitmap(bitmap,300,300,true));
+                mMissedtagBase64Image = ImageHelper.convertBitmapToBase64(bitmap);
                 mActivityContext.getContentResolver().delete(uri,null,null);
 
             }
