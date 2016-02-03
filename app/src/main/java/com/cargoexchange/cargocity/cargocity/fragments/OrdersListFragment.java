@@ -397,12 +397,12 @@ public class OrdersListFragment extends Fragment
         Intent intent = new Intent(Intent.ACTION_DIAL,Uri.parse("tel:"+phone));
         startActivity(intent);
     }
-    public void onClickFullScreenMap(View v)
+    public void onClickFullScreenMap(View v,int position)
     {
         //int position=(int)v.getTag();
        // Log.d("finalposition",position+"");
         Intent MapIntent = new Intent(thisActivity, MapActivity.class);
-       // MapIntent.putExtra("position",position);
+        MapIntent.putExtra("position",position);
         startActivity(MapIntent);
     }
 
