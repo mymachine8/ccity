@@ -166,6 +166,8 @@ public class FeedbackFragment extends Fragment
 
     public SaveSignPad signPadInstance = null;
 
+    private boolean isOrderDelivered = false;
+
     public FeedbackFragment()
     {
 
@@ -464,7 +466,9 @@ public class FeedbackFragment extends Fragment
         feedback.setIsOrderDelivered(isCustomerPresent.isChecked());
         if(!feedback.isOrderDelivered()){
             feedback.setDeliveryFailedImage(mMissedtagBase64Image);
+            isOrderDelivered = false;
         }else {
+            isOrderDelivered = true;
             feedback.setInGoodCondition(isItemGoodConditionSwitch.isChecked());
             feedback.setDeliveryRating(mRatingBar.getNumStars());
             feedback.setAdditionalComments(mAdditionalCommentsEditText.getText().toString());
@@ -486,7 +490,11 @@ public class FeedbackFragment extends Fragment
         RouteSession mRouteSession=RouteSession.getInstance();
         int pos=mRouteSession.getPosition();
         mOrderNo=mRouteSession.getmOrderList().get(pos).getOrderId();
-        mRouteSession.getmOrderList().get(pos).setDeliveryStatus(OrderStatus.DELIVERED);
+        if(isOrderDelivered) {
+            mRouteSession.getmOrderList().get(pos).setDeliveryStatus(OrderStatus.DELIVERED);
+        }else {
+            mRouteSession.getmOrderList().get(pos).setDeliveryStatus(OrderStatus.DELIVERY_FAILED);
+        }
 
         if(pos<mRouteSession.getmOrderList().size()-1)
         {
