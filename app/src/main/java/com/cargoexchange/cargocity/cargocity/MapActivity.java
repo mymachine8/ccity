@@ -90,9 +90,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapfragment); //R.id.mapfragment
         mRouteSession = RouteSession.getInstance();
+        //int pos=(int)getIntent().getExtras().get("position");
         mParseAddress = new ParseAddress();
         mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         int position = mRouteSession.getPosition();
+        //int position=pos;
         String addressLine1 = mParseAddress.getProcessedaddress(mRouteSession
                 .getmOrderList()
                 .get(position)

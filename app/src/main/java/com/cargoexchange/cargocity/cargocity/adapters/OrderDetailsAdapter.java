@@ -91,8 +91,9 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         mRouteSession = RouteSession.getInstance();
+
         //holder.mOrderno.setText(orderDetails.get(position).getOrderId());
         holder.mName.setText(orderDetails.get(position).getName());
         holder.mItems1.setText(orderDetails.get(position).getItems().get(0));
@@ -119,6 +120,7 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
             } else {
                 holder.mStatusImage.setImageResource(R.drawable.ic_tick);
             }
+
         }
         getDestination(mRouteSession, position);
         holder.mExtraAddress.setText(orderDetails.get(position).getAddress().getLine1()+" , "
@@ -163,6 +165,26 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
                 }
             },null);
         //getLocation();
+
+        holder.itemView.setOnClickListener(holder);
+        holder.mStatusImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((OrdersListFragment) mFragmentInstance).onClickOrderStatus(v);
+            }
+        });
+        holder.mCallCustomer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((OrdersListFragment) mFragmentInstance).onClickCallExecutive(v);
+            }
+        });
+        holder.mFullScreenMapFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((OrdersListFragment) mFragmentInstance).onClickFullScreenMap(v,position);
+            }
+        });
     }
 
     @Override
@@ -264,25 +286,7 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
             mSmallMap.onCreate(null);
             mSmallMap.onResume();
 
-            itemView.setOnClickListener(this);
-            mStatusImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ((OrdersListFragment) mFragmentInstance).onClickOrderStatus(v);
-                }
-            });
-            mCallCustomer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ((OrdersListFragment) mFragmentInstance).onClickCallExecutive(v);
-                }
-            });
-            mFullScreenMapFAB.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ((OrdersListFragment) mFragmentInstance).onClickFullScreenMap(v);
-                }
-            });
+
         }
 
         @Override

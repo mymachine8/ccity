@@ -399,7 +399,10 @@ public class OrdersListFragment extends Fragment
     }
     public void onClickFullScreenMap(View v)
     {
+        //int position=(int)v.getTag();
+       // Log.d("finalposition",position+"");
         Intent MapIntent = new Intent(thisActivity, MapActivity.class);
+       // MapIntent.putExtra("position",position);
         startActivity(MapIntent);
     }
 
