@@ -1,12 +1,15 @@
 package com.cargoexchange.cargocity.cargocity.adapters;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -27,6 +30,7 @@ import com.cargoexchange.cargocity.cargocity.constants.OrderStatus;
 import com.cargoexchange.cargocity.cargocity.constants.RouteSession;
 import com.cargoexchange.cargocity.cargocity.fragments.OrdersListFragment;
 import com.cargoexchange.cargocity.cargocity.models.Order;
+import com.cargoexchange.cargocity.cargocity.utils.ParseAddress;
 import com.cargoexchange.cargocity.cargocity.utils.ParseDirections;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -62,7 +66,7 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
     PolylineOptions lineOptions;
     private LocationManager mLocationManager;
 
-    private ViewHolder mholder;
+    private String mDestination;
 
     public OrderDetailsAdapter(List<Order> orderDetails, Fragment fragment) {
         mFragmentInstance = fragment;
@@ -87,8 +91,7 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        mholder=holder;
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         mRouteSession = RouteSession.getInstance();
         //holder.mOrderno.setText(orderDetails.get(position).getOrderId());
         holder.mName.setText(orderDetails.get(position).getName());
@@ -100,7 +103,6 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         holder.mExtraOrderno.setText(orderDetails.get(position).getOrderId());
         holder.mExtraPhone.setText(orderDetails.get(position).getPhones().get(0).getNumber());
         holder.mExtraEmail.setText(orderDetails.get(position).getMailId());
-
 
 
         //holder.mAddressLine1.setText(orderDetails.get(position).getAddress().getHouseNumber());
@@ -118,7 +120,49 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
                 holder.mStatusImage.setImageResource(R.drawable.ic_tick);
             }
         }
-        getLocation();
+        getDestination(mRouteSession, position);
+        holder.mExtraAddress.setText(orderDetails.get(position).getAddress().getLine1()+" , "
+                +orderDetails.get(position).getAddress().getLine2()+" , "
+                +orderDetails.get(position).getAddress().getCity()+" , "
+                +orderDetails.get(position).getAddress().getState());
+
+        if (ActivityCompat.checkSelfPermission(((OrdersListFragment)mFragmentInstance).getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(((OrdersListFragment)mFragmentInstance).getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        Location location = mLocationManager.getLastKnownLocation(Constants.LOCATION_PROVIDER);
+        if(location!=null)
+            fetchMapData(holder,location);
+        else
+            mLocationManager.requestSingleUpdate(Constants.LOCATION_PROVIDER, new LocationListener() {
+                @Override
+                public void onLocationChanged(Location location)
+                {
+                    fetchMapData(holder,location);
+                }
+
+                @Override
+                public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                }
+
+                @Override
+                public void onProviderEnabled(String provider) {
+
+                }
+
+                @Override
+                public void onProviderDisabled(String provider) {
+
+                }
+            },null);
+        //getLocation();
     }
 
     @Override
@@ -214,6 +258,7 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
             mExtraTime = (TextView) itemView.findViewById(R.id.Extratimetextview);
             mFullScreenMapFAB = (FloatingActionButton) itemView.findViewById(R.id.mFullScreenMapFloatingActionButton);
             mCallCustomer = (FloatingActionButton) itemView.findViewById(R.id.CallActionFloatingActionButton);
+            mExtraAddress=(TextView)itemView.findViewById(R.id.addresstextview);
 
             mSmallMap = (MapView) itemView.findViewById(R.id.mapfragment);
             mSmallMap.onCreate(null);
@@ -251,14 +296,14 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
     }
 
 
-    public void fetchMapData(Location location)
+    public void fetchMapData(final ViewHolder mholder,Location location)
     {
 
         if (location != null) {
             String url = Constants.GOOGLE_MAP_DIRECTIONS_API_BASE_URL
                     + "key=" + Constants.GOOGLE_MAP_SERVER_KEY
                     + "&origin=" + location.getLatitude() + "," + location.getLongitude()
-                    + "&destination=" + "Kondapur"
+                    + "&destination=" + mDestination
                     + "&departure_time=" + Constants.MAP_DEPARTURETIME
                     + "&traffic_model=" + Constants.MAP_TRAFFICMODEL_PESSIMISTIC
                     + "&mode=" + Constants.MAP_TRANSTMODE;
@@ -286,40 +331,34 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
             CargoCity.getmInstance().getRequestQueue().add(request);
         }
     }
-
-    public void getLocation()
+    public void getDestination(RouteSession mRouteSession,int position)
     {
-        /*Location location=mLocationManager.getLastKnownLocation(Constants.LOCATION_PROVIDER);
-        if(location!=null)
-        {
-            fetchMapData(location);
-        }
-        else
-        {*/
-            mLocationManager.requestSingleUpdate(Constants.LOCATION_PROVIDER,new singleLocationFixListener(),null);
-    }
-    private class singleLocationFixListener implements LocationListener
-    {
-        @Override
-        public void onLocationChanged(Location location)
-        {
-            fetchMapData(location);
-        }
 
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
+        String addressLine1 = new ParseAddress().getProcessedaddress(mRouteSession
+                .getmOrderList()
+                .get(position)
+                .getAddress()
+                .getLine1());
+        String addressLine2 = new ParseAddress().getProcessedaddress(mRouteSession
+                .getmOrderList()
+                .get(position)
+                .getAddress()
+                .getLine2());
+        String addressCity = new ParseAddress().getProcessedaddress(mRouteSession
+                .getmOrderList()
+                .get(position)
+                .getAddress()
+                .getCity());
+        String addressState = new ParseAddress().getProcessedaddress(mRouteSession
+                .getmOrderList()
+                .get(position)
+                .getAddress()
+                .getState());
+        mDestination =  addressLine1 + ","
+                + addressLine2 + ","
+                + addressCity + ","
+                + addressState;
 
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-
-        }
     }
 }
 

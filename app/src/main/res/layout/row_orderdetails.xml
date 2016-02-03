@@ -421,13 +421,14 @@
                     android:layout_height="wrap_content"
                     android:text="Products:"
                     />
-
-                <ListView
+                <TextView
                     android:id="@+id/itemlistlistview"
                     android:layout_marginLeft="5dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-                </ListView>
+                </TextView>
+
+
 
             </LinearLayout>
             <LinearLayout
@@ -485,13 +486,15 @@
                     android:layout_height="wrap_content"
                     android:text="Address:"
                     />
-                <ListView
+                <TextView
                     android:layout_marginLeft="5dp"
-                    android:id="@+id/addresslistview"
+                    android:id="@+id/addresstextview"
+                    android:maxLines="2"
+                    android:width="100dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                </ListView>
+                </TextView>
             </LinearLayout>
 
             <LinearLayout

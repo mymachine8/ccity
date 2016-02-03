@@ -340,16 +340,16 @@ public class OrdersListFragment extends Fragment
                 {
                     //slideDown(view);
                     Log.d("response","compact card");
-                    cardStatus=CARD_EXPANDED;
                     new AnimationHelper(view,cardStatus,context,thisActivity);
+                    cardStatus=CARD_EXPANDED;
 
                 }
                 else
                 {
                     //slideUp(view);
                     Log.d("response","compact expanded");
-                    cardStatus=CARD_COMPACT;
                     new AnimationHelper(view,cardStatus,context,thisActivity);
+                    cardStatus=CARD_COMPACT;
                 }
 
                 /*thisActivity

@@ -21,7 +21,13 @@ public class GenerateUrl
     private Map<String,Integer> mOrderStatus;
     private List<Order> mOrderList;
     private RouteSession mRouteSession;
+
+    public String getDestination() {
+        return Destination;
+    }
+
     private String murl=new String();
+    private String Destination;
 
     public GenerateUrl(Location mLocation)
     {
@@ -55,6 +61,7 @@ public class GenerateUrl
                 mAddressLine2 = mParseAddress.getProcessedaddress(mOrderList.get(i).getAddress().getLine2());
                 mCity = mOrderList.get(i).getAddress().getCity();
                 mState = mParseAddress.getProcessedaddress(mOrderList.get(i).getAddress().getState());
+                Destination=(mAddressLine1+mAddressLine2+mCity+mState);
                 mTemp.add(mAddressLine1+","+mAddressLine2+","+mCity+","+mState);
             //}
         }
