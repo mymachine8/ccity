@@ -3,6 +3,7 @@ package com.cargoexchange.cargocity.cargocity.utils;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 
 /**
  * Created by root on 27/1/16.
