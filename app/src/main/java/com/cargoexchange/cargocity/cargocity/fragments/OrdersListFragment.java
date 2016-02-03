@@ -390,6 +390,8 @@ public class OrdersListFragment extends Fragment
 
     public void onClickOrderStatus(View v) {
         Log.d("Order_Click", "Clicked on the order status");
+        Intent testintent=new Intent(getActivity(),DeliveryFeedbackActivity.class);
+        startActivity(testintent);
     }
 
     public void onClickCallExecutive(View v){
