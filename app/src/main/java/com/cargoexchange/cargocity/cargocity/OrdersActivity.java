@@ -48,11 +48,6 @@ public class OrdersActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        //No call for super(). Bug on API Level > 11.
-    }
-
-    @Override
     protected void onResume()
     {
         super.onResume();
@@ -86,12 +81,7 @@ public class OrdersActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    Log.d("outgoing", "hello");
-                    System.runFinalization();
-                    Intent startMain = new Intent(Intent.ACTION_MAIN);
-                    startMain.addCategory(Intent.CATEGORY_HOME);
-                    startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(startMain);
+                    goToHomeScreen();
                     //TODO:Why we cannot hide the activity here
                 }
                 break;
@@ -103,6 +93,19 @@ public class OrdersActivity extends AppCompatActivity {
     protected void onRestart()
     {
         super.onRestart();
-        grantLocationPermissions();
+        int accessFineLocationPermissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+        int accessCoarseLocationPermissionCheck=ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
+        if(accessFineLocationPermissionCheck!= PackageManager.PERMISSION_GRANTED && accessCoarseLocationPermissionCheck!=PackageManager.PERMISSION_GRANTED){
+            goToHomeScreen();
+        }
+    }
+
+    private void goToHomeScreen(){
+        Log.d("outgoing", "hello");
+        System.runFinalization();
+        Intent startMain = new Intent(Intent.ACTION_MAIN);
+        startMain.addCategory(Intent.CATEGORY_HOME);
+        startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(startMain);
     }
 }
