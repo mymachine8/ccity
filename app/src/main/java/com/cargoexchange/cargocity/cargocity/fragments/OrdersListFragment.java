@@ -340,24 +340,16 @@ public class OrdersListFragment extends Fragment
                 {
                     //slideDown(view);
                     Log.d("response","compact card");
-                    cardStatus=CARD_EXPANDED;
-                    //FragmentManager fm=getChildFragmentManager();
-                    //mSmallMapFragment=((SupportMapFragment)fm.findFragmentById(R.id.mapfragment));
-                    //if(mSmallMapFragment==null)
-                    //    mSmallMapFragment=SupportMapFragment.newInstance();
-                    //LocationManager mLocationManager=(LocationManager)thisActivity.getSystemService(Context.LOCATION_SERVICE);
-                    //Location location=mLocationManager.getLastKnownLocation(Constants.LOCATION_PROVIDER);
-                    //fetchMapData(location);
-
                     new AnimationHelper(view,cardStatus,context,thisActivity);
+                    cardStatus=CARD_EXPANDED;
 
                 }
                 else
                 {
                     //slideUp(view);
                     Log.d("response","compact expanded");
-                    cardStatus=CARD_COMPACT;
                     new AnimationHelper(view,cardStatus,context,thisActivity);
+                    cardStatus=CARD_COMPACT;
                 }
 
                 /*thisActivity
@@ -430,6 +422,8 @@ public class OrdersListFragment extends Fragment
                 mDurationList = mParseDistanceMatrix.getDurationList();
                 mRouteSession.setmDistanceList(mDistanceList);
                 mRouteSession.setmDurationList(mDurationList);
+                mOrdersListFragmentRecycler.setAdapter(mOrderDetailsAdapter);
+
             }
         }, new Response.ErrorListener() {
             @Override
@@ -450,80 +444,4 @@ public class OrdersListFragment extends Fragment
             Toast.makeText(thisActivity,"Network Unavailable",Toast.LENGTH_SHORT).show();
     }
 }
-/*public void something()
-{
-    if (ActivityCompat.checkSelfPermission(thisActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(thisActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-        // TODO: Consider calling
-        //    ActivityCompat#requestPermissions
-        // here to request the missing permissions, and then overriding
-        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-        //                                          int[] grantResults)
-        // to handle the case where the user grants the permission. See the documentation
-        // for ActivityCompat#requestPermissions for more details.
-        //return TODO;
-    }
-    mLocation = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-    String url=new GenerateUrl(mLocation).getMurl();
-    JsonObjectRequest request= CargoCity.getmInstance().getGeneralRequest(new Response.Listener<JSONObject>() {
-        @Override
-        public void onResponse(JSONObject response) {
-            Log.d("response", response.toString());
-            mRouteSession.setmMatrixDownloadStatus(1);
-            ParseDistanceMatrix mParseDistanceMatrix = new ParseDistanceMatrix(response);
-            mDistanceList = mParseDistanceMatrix.getDistanceList();
-            mDurationList = mParseDistanceMatrix.getDurationList();
-            mRouteSession.setmDistanceList(mDistanceList);
-            mRouteSession.setmDurationList(mDurationList);
-            mOrderDetailsAdapter = new OrderDetailsAdapter(mOrdersList);
-            mOrdersListFragmentRecycler.setAdapter(mOrderDetailsAdapter);
-            mOrdersListFragmentRecycler.addOnItemTouchListener(new RecyclerItemClickListener(thisActivity, new RecyclerItemClickListener.OnItemClickListener() {
-                @Override
-                public void onItemClick(View view, int position) {
-                    //if (mRouteSession.getOrderStatus(mOrderDetailsAdapter.getItem(position).getOrderId()) == OrderStatus.PENDING_DELIVERY)
-                    if (mRouteSession.getmOrderList().get(position).getDeliveryStatus() == OrderStatus.IN_TRANSIT) {
-                        //Intent mapIntent = new Intent(thisActivity, MapActivity.class);
-                        Fragment mExtraDetailsFragment = new ExtraOrderDetailsFragment();
-                        Bundle mDataForExtraDetailsFragment = new Bundle();
-                        mDataForExtraDetailsFragment.putInt("position", position);
-                        mExtraDetailsFragment.setArguments(mDataForExtraDetailsFragment);
-                        thisActivity
-                                .getSupportFragmentManager()
-                                .beginTransaction()
-                                .setCustomAnimations(
-                                        R.anim.card_flip_right_in,
-                                        R.anim.card_flip_right_out,
-                                        R.anim.card_flip_left_in,
-                                        R.anim.card_flip_left_out)
-                                .replace(R.id.orders_container, mExtraDetailsFragment)
-                                .addToBackStack(null)
-                                .commit();
-                        //mRouteSession.setPosition(position);
-                        //startActivity(mapIntent);
-                        //TODO:use a singleton class to keep track of the orders completed and according disable intents to next activity
-                    } else {
-                        Toast.makeText(thisActivity, "Delivery Completed", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }));
-        }
-    }, new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            mRouteSession.setmMatrixDownloadStatus(0);
-            mOrderDetailsAdapter = new OrderDetailsAdapter(mOrdersList);
-            mOrdersListFragmentRecycler.setAdapter(mOrderDetailsAdapter);
-            mOrdersListFragmentRecycler.addOnItemTouchListener(new RecyclerItemClickListener(thisActivity, new RecyclerItemClickListener.OnItemClickListener() {
-                @Override
-                public void onItemClick(View view, int position) {
-                    if (mRouteSession.getOrderStatus(mOrderDetailsAdapter.getItem(position).getOrderId()) == OrderStatus.IN_TRANSIT) {
-                        Intent mapIntent = new Intent(thisActivity, MapActivity.class);
-                        startActivity(mapIntent);
-                        //TODO:use a singleton class to keep track of the orders completed and according disable intents to next activity
-                    }
-                }
-            }));
-            Toast.makeText(thisActivity, "Error Downloading Distance", Toast.LENGTH_SHORT).show();
-        }
-    }, url);
-    CargoCity.getmInstance().getRequestQueue().add(request);
-}*/
+
