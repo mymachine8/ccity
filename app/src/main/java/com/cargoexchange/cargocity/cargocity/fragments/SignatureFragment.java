@@ -1,6 +1,8 @@
 package com.cargoexchange.cargocity.cargocity.fragments;
 
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -12,18 +14,21 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.cargoexchange.cargocity.cargocity.R;
+import com.cargoexchange.cargocity.cargocity.constants.FragmentTag;
 import com.cargoexchange.cargocity.cargocity.utils.SaveSignPad;
 import com.cargoexchange.cargocity.cargocity.utils.SignPadView;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SignPadFragment extends Fragment
+public class SignatureFragment extends Fragment
 {
 
     private SignPadView mSignPadView;
+    private SaveSignPad signPad;
+    private static final int SIGNATURE_REQUEST_CODE = 100;
 
-    public SignPadFragment()
+    public SignatureFragment()
     {
         // Required empty public constructor
     }
@@ -33,7 +38,7 @@ public class SignPadFragment extends Fragment
     {
         // Inflate the layout for this fragment
         setHasOptionsMenu(true);
-        View view=inflater.inflate(R.layout.fragment_sign_pad, container, false);
+        View view=inflater.inflate(R.layout.content_signature, container, false);
         mSignPadView=(SignPadView)view.findViewById(R.id.signdrawPadView);
         return view;
     }
@@ -49,17 +54,17 @@ public class SignPadFragment extends Fragment
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
         switch (id)
         {
             case R.id.action_save:
-                if(new SaveSignPad().saveScreen(mSignPadView))
+                signPad = new SaveSignPad();
+                if(signPad.saveScreen(mSignPadView))
                 {
-                    Toast.makeText(getContext(),"Saved", Toast.LENGTH_SHORT).show();
+                    Intent resultIntent = new Intent();
+                    resultIntent.putExtra("SIGN_FILE_NAME",signPad.getSaveSignFileName());
+                    getActivity().setResult(Activity.RESULT_OK, resultIntent);
+                    getActivity().finish();
                 }
                 else
                 {
@@ -71,6 +76,6 @@ public class SignPadFragment extends Fragment
                 mSignPadView.clearScreen(mSignPadView);
                 break;
         }
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 }

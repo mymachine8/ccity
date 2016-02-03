@@ -158,8 +158,8 @@ public class EnterRouteFragment extends Fragment
                         }
                     }, uri);
             request.setRetryPolicy(new DefaultRetryPolicy(
-                    30000,
-                    3,
+                    Constants.SOCKET_TIMEOUT_MS,
+                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                     DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             CargoCity.getmInstance().getRequestQueue().add(request);
     }

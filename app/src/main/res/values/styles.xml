@@ -11,7 +11,9 @@
     <style name="Button" parent="Base.Widget.AppCompat.Button">
 
     </style>
-    <style name="Button.Branded" parent="Button"><item name="colorButtonNormal">#D50000</item>
+
+    <style name="Button.Branded" parent="Button">
+        <item name="colorButtonNormal">#D50000</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -24,7 +26,8 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="Theme.AppCompat.Translucent" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:background">#33000000</item> <!-- Or any color you need -->
+        <item name="android:background">#33000000</item>
+        <!-- Or any color you need -->
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:colorBackgroundCacheHint">@null</item>

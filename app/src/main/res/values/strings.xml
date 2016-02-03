@@ -24,4 +24,5 @@
     <string name="vehicle_number">Vehicle Number:</string>
     <string name="driver_name">Driver name:</string>
     <string name="no_of_orders">No Of Orders Assigned:</string>
+    <string name="title_activity_signature">Customer Signature</string>
 </resources>

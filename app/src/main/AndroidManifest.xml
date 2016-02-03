@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -68,17 +69,23 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAa_HArC674Ruuyw91n2jNvntSoaIPyZ64" />
-        <activity android:name=".Camera"></activity>
+
+        <activity android:name=".Camera" />
 
         <receiver android:name=".services.BatteryStatusReciever">
             <intent-filter>
-                <action android:name="android.intent.action.BATTERY_CHANGED"/>
+                <action android:name="android.intent.action.BATTERY_CHANGED" />
             </intent-filter>
         </receiver>
 
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="1fc5c71c890d22fa73b02d244bf23e967759333a" />
+
+        <activity
+            android:name=".SignatureActivity"
+            android:label="@string/title_activity_signature"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
