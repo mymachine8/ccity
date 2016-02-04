@@ -127,11 +127,12 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
                 {
                     if(mRouteSession.getmOrderList().get(position).getDeliveryStatus().equalsIgnoreCase(OrderStatus.DELIVERED)) {
                         holder.mStatusImage.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#03A9F4")));  //hex code for blue shade
-                        holder.mStatusImage.setPressed(true);
+                        holder.mStatusImage.setClickable(false);
                     }
-                    else {
+                    else
+                    {
                         holder.mStatusImage.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#4BAE50"))); //hex code for green shade
-                        holder.mStatusImage.setPressed(true);
+                        holder.mStatusImage.setClickable(false);
                     }
                 }
             }
