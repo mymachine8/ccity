@@ -338,11 +338,13 @@ public class OrdersListFragment extends Fragment
                 mExtraDetailsFragment.setArguments(mDataForExtraDetailsFragment);
                 mRouteSession.setPosition(position);
 
-                if(mRouteSession.getmOrderList().get(position).getCardStatus()==CARD_EXPANDED)
+                cardStatus=mRouteSession.getmOrderList().get(position).getCardStatus();
+
+                if(cardStatus==CARD_EXPANDED)
                 {
                     //slideDown(view);
                     Log.d("response","compact card");
-                    new AnimationHelper(view,cardStatus,context,thisActivity);
+                    new AnimationHelper(view,cardStatus,context,thisActivity,position);
                     mRouteSession.getmOrderList().get(position).setCardStatus(CARD_EXPANDED);
 
 
@@ -351,7 +353,7 @@ public class OrdersListFragment extends Fragment
                 {
                     //slideUp(view);
                     Log.d("response","compact expanded");
-                    new AnimationHelper(view,cardStatus,context,thisActivity);
+                    new AnimationHelper(view,cardStatus,context,thisActivity,position);
                     mRouteSession.getmOrderList().get(position).setCardStatus(CARD_COMPACT);
                 }
 

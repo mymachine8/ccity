@@ -22,6 +22,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.cargoexchange.cargocity.cargocity.CargoCity;
 import com.cargoexchange.cargocity.cargocity.R;
 import com.cargoexchange.cargocity.cargocity.constants.Constants;
+import com.cargoexchange.cargocity.cargocity.constants.RouteSession;
 import com.cargoexchange.cargocity.cargocity.fragments.OrdersListFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -58,15 +59,19 @@ public class AnimationHelper
     private List<List<HashMap<String, String>>> routes;
     final MarkerOptions markerA = new MarkerOptions();
     final MarkerOptions markerB = new MarkerOptions();
+    RouteSession mRouteSession;
+    private int position;
     ArrayList<LatLng> points;
     LatLng start;
     PolylineOptions lineOptions;
-    public AnimationHelper(View view,int cardStatus,OrdersListFragment context,Context Activitycontext)
+    public AnimationHelper(View view,int cardStatus,OrdersListFragment context,Context Activitycontext,int position)
     {
         this.view=view;
         this.cardStatus=cardStatus;
         this.context=context;
         this.Activitycontext=Activitycontext;
+        this.position=position;
+        mRouteSession=RouteSession.getInstance();
         parentCard = (CardView)view.findViewById(R.id.orderdetailscardview);
         childCard = (CardView)view.findViewById(R.id.extraorderdetailscardview);
         if(EXECUTION_COUNT==0) {
@@ -122,7 +127,7 @@ public class AnimationHelper
                 }
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    cardStatus = CARD_COMPACT;
+                    mRouteSession.getmOrderList().get(position).setCardStatus(CARD_COMPACT);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         childCard.setElevation(8);
                         childCard.setCardElevation(8);
@@ -210,7 +215,7 @@ public class AnimationHelper
 
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    cardStatus = CARD_EXPANDED;
+                    mRouteSession.getmOrderList().get(position).setCardStatus(CARD_EXPANDED);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         parentCard.setElevation(8);
                         childCard.setElevation(8);
