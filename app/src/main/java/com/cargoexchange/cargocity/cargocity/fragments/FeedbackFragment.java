@@ -315,6 +315,10 @@ public class FeedbackFragment extends Fragment
             @Override
             public void onClick(View v)
             {
+                if(!mAcceptGoods.isChecked()) {
+                    displayToastMessage("Check the Accept of Receipt");
+                    return;
+                }
                 submitFeedback();
             }
         });
@@ -495,16 +499,7 @@ public class FeedbackFragment extends Fragment
         }else {
             mRouteSession.getmOrderList().get(pos).setDeliveryStatus(OrderStatus.DELIVERY_FAILED);
         }
-
-        if(pos<mRouteSession.getmOrderList().size()-1)
-        {
             goToOrdersListFragment();
-        }
-        else //For last Order go to Maps
-        {
-            Intent OrdersIntent=new Intent(mActivityContext, MapActivity.class);
-            startActivity(OrdersIntent);
-        }
     }
 
     private void goToOrdersListFragment(){
@@ -570,8 +565,8 @@ public class FeedbackFragment extends Fragment
                             }
                         }, uri, feedbackJson);
                 request.setRetryPolicy(new DefaultRetryPolicy(
-                        30000,
-                        3,
+                        Constants.SOCKET_TIMEOUT_MS,
+                        DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                         DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
                 CargoCity.getmInstance().getRequestQueue().add(request);
         }catch (JSONException ex){
