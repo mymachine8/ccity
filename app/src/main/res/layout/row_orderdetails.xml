@@ -89,8 +89,7 @@
                     app:fabSize="mini"
                     app:backgroundTint="@android:color/holo_red_dark"
                     app:layout_anchor="@id/orderdetailscardview"
-                    app:elevation="0dp"
-                    android:clickable="false"
+                    app:elevation="8dp"
                     app:rippleColor="@android:color/holo_blue_dark"
                     android:visibility="visible"
 
@@ -271,7 +270,7 @@
                 app:fabSize="mini"
                 app:backgroundTint="#4bae50"
                 app:layout_anchor="@id/extraorderdetailscardview"
-                app:elevation="5dp"
+                app:elevation="8dp"
                 app:pressedTranslationZ="12dp"
                 android:clickable="true"
                 app:rippleColor="@android:color/holo_blue_dark"
@@ -293,8 +292,8 @@
                 app:fabSize="mini"
                 app:backgroundTint="@android:color/holo_red_dark"
                 app:layout_anchor="@id/extraorderdetailscardview"
-                app:elevation="5dp"
-                android:clickable="false"
+                app:elevation="8dp"
+                android:clickable="true"
                 app:rippleColor="@android:color/holo_blue_dark"
                 android:visibility="visible"
                 />
@@ -307,9 +306,11 @@
             android:layout_marginLeft="3dp"
             android:layout_marginTop="3dp"
             android:src="@drawable/ic_zoom_out"
-            app:fabSize="normal" app:backgroundTint="@color/blue"
+            app:fabSize="mini"
+            app:backgroundTint="@color/blue"
             app:rippleColor="@android:color/holo_blue_dark"
-            android:visibility="visible" app:elevation="8dp"
+            android:visibility="visible"
+            app:elevation="8dp"
             android:clickable="true"/>
 
         <LinearLayout

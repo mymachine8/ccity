@@ -25,7 +25,7 @@ public class NavigationInstructionFragment extends Fragment
 {
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
-    String url="https://maps.googleapis.com/maps/api/directions/json?key=AIzaSyAa_HArC674Ruuyw91n2jNvntSoaIPyZ64&origin=madhapur,hyderabad&destination=uppal,hyderabad&transit_mode=bus&departure_time=now&traffic_model=pessimistic";
+    //String url="https://maps.googleapis.com/maps/api/directions/json?key=AIzaSyAa_HArC674Ruuyw91n2jNvntSoaIPyZ64&origin=madhapur,hyderabad&destination=uppal,hyderabad&transit_mode=bus&departure_time=now&traffic_model=pessimistic";
     private ArrayList<NavigationInstructionModel> navigationList=new ArrayList<>();
     JSONObject object;
     @Nullable

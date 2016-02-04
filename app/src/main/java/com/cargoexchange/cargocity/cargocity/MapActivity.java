@@ -46,7 +46,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
+{
     private static final String MAP_KEY = "AIzaSyAa_HArC674Ruuyw91n2jNvntSoaIPyZ64";
     private static final String MAP_TRAFFICMODEL_PESSIMISTIC = "pessimistic";
     private static final String MAP_TRAFFICMODEL_OPTIMISTIC = "optimistic";
@@ -188,7 +189,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     routes = new ParseDirections(response).getRoutes();
                     //pass this bundle to extract the navigation instructions
                     sendToNavigationFragmentBundle = new Bundle();
-                    sendToNavigationFragmentBundle.putString("mapData", response.toString());
+                    sendToNavigationFragmentBundle.putString("mapData",response.toString());
                     mapFragment.getMapAsync(MapActivity.this);
 
                 }

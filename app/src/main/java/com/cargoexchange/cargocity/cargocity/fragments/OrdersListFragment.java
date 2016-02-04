@@ -394,9 +394,9 @@ public class OrdersListFragment extends Fragment
         startActivity(testintent);
     }
 
-    public void onClickCallExecutive(View v){
+    public void onClickCallExecutive(View v,int position){
         String phone="9000051535";
-        Intent intent = new Intent(Intent.ACTION_DIAL,Uri.parse("tel:"+phone));
+        Intent intent = new Intent(Intent.ACTION_DIAL,Uri.parse("tel:"+mRouteSession.getmOrderList().get(position).getPhones().get(0).getCountryCode()+mRouteSession.getmOrderList().get(position).getPhones().get(0).getNumber()));
         startActivity(intent);
     }
     public void onClickFullScreenMap(View v,int position)

@@ -3,10 +3,12 @@ package com.cargoexchange.cargocity.cargocity.adapters;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -111,14 +113,27 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         //holder.mAddressLandmark.setText(orderDetails.get(position).getAddress().getAddressLine2());
         //holder.mCity.setText(orderDetails.get(position).getAddress().getCity());
         if (mRouteSession.getmMatrixDownloadStatus() == 1) {
-            if (mRouteSession.getmOrderList().get(position).getDeliveryStatus().equalsIgnoreCase(OrderStatus.IN_TRANSIT)) {
+            if (mRouteSession.getmOrderList().get(position).getDeliveryStatus().equalsIgnoreCase(OrderStatus.IN_TRANSIT))
+            {
                 holder.mDistance.setText(mRouteSession.getmDistanceList().get(position));
                 holder.mTime.setText(mRouteSession.getmDurationList().get(position));
                 holder.mExtraDistance.setText(mRouteSession.getmDistanceList().get(position));
                 holder.mExtraTime.setText(mRouteSession.getmDurationList().get(position));
 
-            } else {
-                holder.mStatusImage.setImageResource(R.drawable.ic_tick);
+            }
+            else
+            {
+                if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP)
+                {
+                    if(mRouteSession.getmOrderList().get(position).getDeliveryStatus().equalsIgnoreCase(OrderStatus.DELIVERED)) {
+                        holder.mStatusImage.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#03A9F4")));  //hex code for blue shade
+                        holder.mStatusImage.setPressed(true);
+                    }
+                    else {
+                        holder.mStatusImage.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#4BAE50"))); //hex code for green shade
+                        holder.mStatusImage.setPressed(true);
+                    }
+                }
             }
 
         }
@@ -176,7 +191,13 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         holder.mCallCustomer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((OrdersListFragment) mFragmentInstance).onClickCallExecutive(v);
+                ((OrdersListFragment) mFragmentInstance).onClickCallExecutive(v, position);
+            }
+        });
+        holder.mExtraCallCustomer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((OrdersListFragment) mFragmentInstance).onClickCallExecutive(v, position);
             }
         });
         holder.mFullScreenMapFAB.setOnClickListener(new View.OnClickListener() {
@@ -258,6 +279,7 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         TextView mExtraTime;
         FloatingActionButton mCallCustomer;
         FloatingActionButton mFullScreenMapFAB;
+        FloatingActionButton mExtraCallCustomer;
 
         MapView mSmallMap;
 
@@ -280,6 +302,7 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
             mExtraTime = (TextView) itemView.findViewById(R.id.Extratimetextview);
             mFullScreenMapFAB = (FloatingActionButton) itemView.findViewById(R.id.mFullScreenMapFloatingActionButton);
             mCallCustomer = (FloatingActionButton) itemView.findViewById(R.id.CallActionFloatingActionButton);
+            mExtraCallCustomer=(FloatingActionButton)itemView.findViewById(R.id.ExtraCallActionFloatingActionButton);
             mExtraAddress=(TextView)itemView.findViewById(R.id.addresstextview);
 
             mSmallMap = (MapView) itemView.findViewById(R.id.mapfragment);
