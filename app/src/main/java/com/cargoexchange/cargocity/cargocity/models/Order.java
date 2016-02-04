@@ -13,11 +13,21 @@ public class Order implements Serializable{
     private Address address;
     private List<String> items;
     private String deliveryStatus;
+    private int cardStatus;
+
+    public int getCardStatus() {
+        return cardStatus;
+    }
+
+    public void setCardStatus(int cardStatus) {
+        this.cardStatus = cardStatus;
+    }
 
     public String getOrderId()
     {
         int length=_id.length();
         orderId=_id.substring(length-6,length-1);
+        setOrderId(orderId);
         return orderId;
     }
 

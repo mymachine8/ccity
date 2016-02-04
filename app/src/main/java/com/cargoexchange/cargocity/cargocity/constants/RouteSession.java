@@ -7,6 +7,7 @@ import java.util.Map;
 public class RouteSession
 {
     private Map<String, String> mOrderStatusList;
+    private String OrderId;
     private List<Order> mOrderList;
     private List<String> mDistanceList;
     private List<String> mDurationList;
@@ -25,6 +26,14 @@ public class RouteSession
             instance = new RouteSession();
         }
         return instance;
+    }
+
+    public String getOrderId() {
+        return OrderId;
+    }
+
+    public void setOrderId(String orderId) {
+        OrderId = orderId;
     }
 
     public Map<String, String> getmOrderStatusList() {

@@ -99,7 +99,7 @@ public class EnterRouteFragment extends Fragment
             mRouteIdText.setError("Please enter Route Id");
             return;
         }
-        mRouteSubmitBtn.setEnabled(false);
+        //mRouteSubmitBtn.setEnabled(true);
         mProgressDialog.show();
         getOrdersForRoute(routeId);
 

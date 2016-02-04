@@ -57,6 +57,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private static final String MAP_REPLYJSON = "json";
     private static final String MAP_REPLYXML = "xml";
     private static final String FRAGMENT_DIRECTIONS = "fragment_directions";
+    private static final int TRIP_STARTED=1;
+    private static final int TRIP_NOT_STARTED=0;
+    private static int TRIP_STATUS=TRIP_NOT_STARTED;
     private SupportMapFragment mapFragment;
     private boolean menuStatus = false;
     private FloatingActionButton mNavigationFloatingActionButton;
@@ -150,7 +153,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             else
             {
                 Intent viewIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                startActivityForResult(viewIntent,Constants.LOCATION_SETTINGS_ACTION);
+                startActivityForResult(viewIntent, Constants.LOCATION_SETTINGS_ACTION);
             }
         }
     }
@@ -293,6 +296,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     @Override
+    public void onBackPressed()
+    {
+        if(TRIP_STATUS==TRIP_NOT_STARTED)
+            super.onBackPressed();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.d("Item clicked", "clicked");
         int id = item.getItemId();
@@ -305,6 +315,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             case R.id.action_start_trip:
                 mNavigationFloatingActionButton.setVisibility(View.VISIBLE);
                 menuStatus = true;
+                TRIP_STATUS=TRIP_STARTED;
                 this.invalidateOptionsMenu();
                 break;
 

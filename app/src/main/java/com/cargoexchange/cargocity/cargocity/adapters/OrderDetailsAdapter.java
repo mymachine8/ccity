@@ -216,6 +216,13 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         else
             holder.mStatusImage.setClickable(false);
 
+        holder.mExtraStatusImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((OrdersListFragment) mFragmentInstance).onClickOrderStatus(v);
+            }
+        });
+
         if(mRouteSession.getmOrderList().get(position).getDeliveryStatus().equalsIgnoreCase(OrderStatus.IN_TRANSIT)) {
             holder.mCallCustomer.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -226,6 +233,7 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         }
         else
             holder.mCallCustomer.setClickable(false);
+
 
         holder.mExtraCallCustomer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -253,8 +261,7 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        /*GoogleMapOptions options=new GoogleMapOptions();
-        options.liteMode(true);*/
+
         //MapsInitializer.initialize(null);
         for (int i = 0; i < routes.size(); i++) {
             points = new ArrayList<LatLng>();
@@ -291,7 +298,14 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         }
         // Drawing polyline in the Google Map for the i-th route
         googleMap.addPolyline(lineOptions);
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(start ,12.0f));
+        //googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(start ,12.0f));
+        CameraPosition currentPlace = new CameraPosition.Builder()
+                .target(start)
+                .bearing(-120)
+                .tilt(85.5f)
+                .zoom(12.0f)
+                .build();
+        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace));
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -318,6 +332,7 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         FloatingActionButton mFullScreenMapFAB;
         FloatingActionButton mExtraCallCustomer;
         FloatingActionButton mStatusImage;
+        FloatingActionButton mExtraStatusImage;
 
         MapView mSmallMap;
 
@@ -343,6 +358,7 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
             mExtraAddress=(TextView)itemView.findViewById(R.id.Extraaddresstextview);
             mExtraProducts=(TextView)itemView.findViewById(R.id.Extraproductstextview);
             mExtraOrderno=(TextView)itemView.findViewById(R.id.Extraordernotextview);
+            mExtraStatusImage=(FloatingActionButton)itemView.findViewById(R.id.Extraorderstatusimage);
 
             mSmallMap = (MapView) itemView.findViewById(R.id.mapfragment);
             mSmallMap.onCreate(null);

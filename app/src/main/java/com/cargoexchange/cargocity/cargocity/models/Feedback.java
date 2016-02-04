@@ -5,6 +5,18 @@ import java.util.List;
 
 public class Feedback implements Serializable{
     private boolean isOrderDelivered;
+    private String orderId;
+
+    public String getOrderId()
+    {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId)
+    {
+        this.orderId = orderId;
+    }
+
     private boolean inGoodCondition;
     private String additionalComments;
     private List<String> documentImageList;

@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.cargoexchange.cargocity.cargocity.fragments.SignPadFragment">
 
-    <item
+    <!--<item
         android:id="@+id/action_clear"
         android:orderInCategory="100"
         android:title="Clear"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom" />-->
 
-    <item
+   <item
         android:id="@+id/action_save"
         android:orderInCategory="200"
         android:title="Save"

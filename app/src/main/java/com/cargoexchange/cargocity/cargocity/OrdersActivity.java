@@ -43,7 +43,7 @@ public class OrdersActivity extends AppCompatActivity {
         }
         else {
             Fragment enterRouteFragment = new EnterRouteFragment();
-            getSupportFragmentManager().beginTransaction().add(R.id.orders_container, enterRouteFragment).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.orders_container, enterRouteFragment).commitAllowingStateLoss();
         }
     }
 
@@ -96,7 +96,7 @@ public class OrdersActivity extends AppCompatActivity {
         int accessFineLocationPermissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
         int accessCoarseLocationPermissionCheck=ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
         if(accessFineLocationPermissionCheck!= PackageManager.PERMISSION_GRANTED && accessCoarseLocationPermissionCheck!=PackageManager.PERMISSION_GRANTED){
-            goToHomeScreen();
+            grantLocationPermissions();
         }
     }
 
@@ -107,5 +107,10 @@ public class OrdersActivity extends AppCompatActivity {
         startMain.addCategory(Intent.CATEGORY_HOME);
         startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(startMain);
+    }
+
+    @Override
+    public void onBackPressed() {
+
     }
 }

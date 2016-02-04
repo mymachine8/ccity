@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -240,6 +241,7 @@ public class FeedbackFragment extends Fragment
                 mImagePopUpDialog.setContentView(layout);
                 mPopUpImageView=(ImageView)layout.findViewById(R.id.ProofImageView);
                 Button mDiscardImageButton=(Button)layout.findViewById(R.id.CancelImagePopUpButton);
+                Button mOkImageButton=(Button)layout.findViewById(R.id.OkImageButton);
                 mPopUpImageView.setImageBitmap(UploadImage1);
                 mDiscardImageButton.setClickable(true);
                 mImagePopUpDialog.show();
@@ -256,6 +258,12 @@ public class FeedbackFragment extends Fragment
                         mImagePopUpDialog.cancel();
                     }
                 });
+                mOkImageButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        DismissPopUp(v);
+                    }
+                });
 
             }
         });
@@ -269,6 +277,7 @@ public class FeedbackFragment extends Fragment
                 mImagePopUpDialog.setContentView(layout);
                 mPopUpImageView = (ImageView) layout.findViewById(R.id.ProofImageView);
                 Button mDiscardImageButton = (Button) layout.findViewById(R.id.CancelImagePopUpButton);
+                Button mOkImageButton=(Button)layout.findViewById(R.id.OkImageButton);
                 mPopUpImageView.setImageBitmap(UploadImage2);
                 mDiscardImageButton.setClickable(true);
                 mImagePopUpDialog.show();
@@ -284,6 +293,12 @@ public class FeedbackFragment extends Fragment
                         mImagePopUpDialog.cancel();
                     }
                 });
+                mOkImageButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        DismissPopUp(v);
+                    }
+                });
             }
         });
         mProofUploadImageView3.setOnClickListener(new View.OnClickListener() {
@@ -296,6 +311,7 @@ public class FeedbackFragment extends Fragment
                 mImagePopUpDialog.setContentView(layout);
                 mPopUpImageView = (ImageView) layout.findViewById(R.id.ProofImageView);
                 Button mDiscardImageButton = (Button) layout.findViewById(R.id.CancelImagePopUpButton);
+                Button mOkImageButton=(Button)layout.findViewById(R.id.OkImageButton);
                 mPopUpImageView.setImageBitmap(UploadImage3);
                 mDiscardImageButton.setClickable(true);
                 mImagePopUpDialog.show();
@@ -306,6 +322,12 @@ public class FeedbackFragment extends Fragment
                         mProofUploadImageView3.setImageResource(R.drawable.ic_imagedefault2);
                         count = (count - 1) % 3;
                         mImagePopUpDialog.cancel();
+                    }
+                });
+                mOkImageButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        DismissPopUp(v);
                     }
                 });
             }
@@ -398,7 +420,6 @@ public class FeedbackFragment extends Fragment
             {
                 Bitmap bitmap=BitmapFactory.decodeFile(fileName);
                 mSignatureImage.setImageBitmap(bitmap);
-                mProofUploadImageView1.setImageBitmap(Bitmap.createScaledBitmap(bitmap,100,100,true));
             }else {
                 Log.d("ss","sfdsfs");
             }
@@ -467,6 +488,7 @@ public class FeedbackFragment extends Fragment
 
     private Feedback createFeedbackObject(){
         Feedback feedback = new Feedback();
+        feedback.setOrderId(mOrderNo);
         feedback.setIsOrderDelivered(isCustomerPresent.isChecked());
         if(!feedback.isOrderDelivered()){
             feedback.setDeliveryFailedImage(mMissedtagBase64Image);

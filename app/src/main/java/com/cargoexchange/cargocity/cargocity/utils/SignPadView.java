@@ -148,12 +148,12 @@ public class SignPadView extends View
         if(canvas!=null)
         {
              view.setDrawingCacheEnabled(false);
-            //Paint backPaint=new Paint();
-            //backPaint.setColor(Color.WHITE);
-            //canvas.drawRect(new Rect(0, 0, width, height), backPaint);
-            //cacheCanvas.drawRect(new Rect(0,0,width,height),backPaint);
-            canvas.drawColor(Color.WHITE);
-            cacheCanvas.drawColor(Color.WHITE);
+            Paint backPaint=new Paint();
+            backPaint.setColor(Color.WHITE);
+            canvas.drawRect(new Rect(0, 0, width, height), backPaint);
+            cacheCanvas.drawRect(new Rect(0,0,width,height),backPaint);
+            //canvas.drawColor(Color.WHITE);
+            //cacheCanvas.drawColor(Color.WHITE);
             //view.refreshDrawableState();
         }
         invalidate();

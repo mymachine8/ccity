@@ -181,6 +181,8 @@ public class OrdersListFragment extends Fragment
         return view;
     }
 
+
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -336,12 +338,13 @@ public class OrdersListFragment extends Fragment
                 mExtraDetailsFragment.setArguments(mDataForExtraDetailsFragment);
                 mRouteSession.setPosition(position);
 
-                if(cardStatus==CARD_COMPACT)
+                if(mRouteSession.getmOrderList().get(position).getCardStatus()==CARD_EXPANDED)
                 {
                     //slideDown(view);
                     Log.d("response","compact card");
                     new AnimationHelper(view,cardStatus,context,thisActivity);
-                    cardStatus=CARD_EXPANDED;
+                    mRouteSession.getmOrderList().get(position).setCardStatus(CARD_EXPANDED);
+
 
                 }
                 else
@@ -349,7 +352,7 @@ public class OrdersListFragment extends Fragment
                     //slideUp(view);
                     Log.d("response","compact expanded");
                     new AnimationHelper(view,cardStatus,context,thisActivity);
-                    cardStatus=CARD_COMPACT;
+                    mRouteSession.getmOrderList().get(position).setCardStatus(CARD_COMPACT);
                 }
 
                 /*thisActivity
@@ -446,5 +449,6 @@ public class OrdersListFragment extends Fragment
         else
             Toast.makeText(thisActivity,"Network Unavailable",Toast.LENGTH_SHORT).show();
     }
+
 }
 

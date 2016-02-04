@@ -72,9 +72,9 @@ public class SignatureFragment extends Fragment
                 }
                 break;
 
-            case R.id.action_clear:
+            /*case R.id.action_clear:
                 mSignPadView.clearScreen(mSignPadView);
-                break;
+                break;*/
         }
         return true;
     }

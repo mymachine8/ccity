@@ -42,4 +42,9 @@ public class DeliveryFeedbackActivity extends AppCompatActivity
             ft.addToBackStack(FragmentTag.Feedback);
             ft.commit();
     }
+
+    @Override
+    public void onBackPressed() {
+
+    }
 }
