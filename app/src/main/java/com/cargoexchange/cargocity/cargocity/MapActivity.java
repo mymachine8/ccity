@@ -262,7 +262,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     }
                     points.add(position);
                 }
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(start, 14));
+                //googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(start, 14));
                 googleMap.addMarker(markerA);
                 lineOptions.addAll(points);
                 googleMap.addMarker(markerB);
@@ -271,6 +271,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             googleMap.addPolyline(lineOptions);
             TYPE = 1;
             mapDataProgress.cancel();
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(start, 14.0f));
         } else {
             googleMap.clear();
             //googleMap.addMarker(markerA);
@@ -280,6 +281,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             markerCurrent.position(current);
             markerCurrent.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_truck));
             googleMap.addMarker(markerCurrent);
+
         }
 
     }

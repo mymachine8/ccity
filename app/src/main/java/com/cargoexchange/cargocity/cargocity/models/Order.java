@@ -5,6 +5,7 @@ import java.util.List;
 
 public class Order implements Serializable{
     private String orderId;
+    private String _id;
     private String name;
     private String customerId;
     private List<Phone> phones;
@@ -13,7 +14,10 @@ public class Order implements Serializable{
     private List<String> items;
     private String deliveryStatus;
 
-    public String getOrderId() {
+    public String getOrderId()
+    {
+        int length=_id.length();
+        orderId=_id.substring(length-6,length-1);
         return orderId;
     }
 

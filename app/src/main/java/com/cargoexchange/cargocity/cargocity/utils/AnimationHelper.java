@@ -71,7 +71,7 @@ public class AnimationHelper
         childCard = (CardView)view.findViewById(R.id.extraorderdetailscardview);
         if(EXECUTION_COUNT==0) {
             parentInitialHeight = parentCard.getHeight();
-            childInitialHeight = (parentInitialHeight*2)+20;
+            childInitialHeight = (parentInitialHeight*3)+20;
             EXECUTION_COUNT++;
         }
         childCard.setVisibility(View.GONE);

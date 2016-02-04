@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
     android:id="@+id/animationLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -370,7 +371,7 @@
                             />
 
                         <TextView
-                            android:id="@+id/ordernotextview"
+                            android:id="@+id/Extraordernotextview"
                             android:layout_marginLeft="5dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -414,7 +415,7 @@
                 android:clipToPadding="false"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="3dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -423,9 +424,9 @@
                     android:text="Products:"
                     />
                 <TextView
-                    android:id="@+id/itemlistlistview"
+                    android:id="@+id/Extraproductstextview"
                     android:layout_marginLeft="5dp"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                 </TextView>
 
@@ -437,7 +438,7 @@
                 android:clipToPadding="false"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="3dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -458,7 +459,7 @@
                 android:clipToPadding="false"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="3dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -489,7 +490,7 @@
                     />
                 <TextView
                     android:layout_marginLeft="5dp"
-                    android:id="@+id/addresstextview"
+                    android:id="@+id/Extraaddresstextview"
                     android:maxLines="2"
                     android:width="100dp"
                     android:layout_width="match_parent"

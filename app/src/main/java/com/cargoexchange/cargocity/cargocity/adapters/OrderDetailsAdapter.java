@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -36,10 +37,12 @@ import com.cargoexchange.cargocity.cargocity.utils.ParseAddress;
 import com.cargoexchange.cargocity.cargocity.utils.ParseDirections;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -94,9 +97,9 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
+        String productsCSV=new String();
         mRouteSession = RouteSession.getInstance();
 
-        //holder.mOrderno.setText(orderDetails.get(position).getOrderId());
         holder.mName.setText(orderDetails.get(position).getName());
         holder.mItems1.setText(orderDetails.get(position).getItems().get(0));
         holder.mItems2.setText(orderDetails.get(position).getItems().get(1));
@@ -106,6 +109,25 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         holder.mExtraOrderno.setText(orderDetails.get(position).getOrderId());
         holder.mExtraPhone.setText(orderDetails.get(position).getPhones().get(0).getNumber());
         holder.mExtraEmail.setText(orderDetails.get(position).getMailId());
+        holder.mExtraOrderno.setText(orderDetails.get(position).getOrderId());
+        for(int i=0;i<orderDetails.get(position).getItems().size();i++)
+        {
+            productsCSV=productsCSV+(orderDetails.get(position).getItems().get(i))+",";
+        }
+        productsCSV=productsCSV.substring(0,productsCSV.length()-1);
+        holder.mExtraProducts.setText(productsCSV);
+
+
+            if(mRouteSession.getmOrderList().get(position).getDeliveryStatus().equalsIgnoreCase(OrderStatus.DELIVERED)) {
+                holder.mStatusImage.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#03A9F4"))); //hex code for blue shade
+                holder.mStatusImage.setClickable(false);
+            }
+            else if(mRouteSession.getmOrderList().get(position).getDeliveryStatus().equalsIgnoreCase(OrderStatus.DELIVERY_FAILED))
+            {
+                holder.mStatusImage.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#4BAE50"))); //hex code for green shade
+                holder.mStatusImage.setClickable(false);
+
+            }
 
 
         //holder.mAddressLine1.setText(orderDetails.get(position).getAddress().getHouseNumber());
@@ -183,24 +205,35 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         //getLocation();
 
         holder.itemView.setOnClickListener(holder);
-        holder.mStatusImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((OrdersListFragment) mFragmentInstance).onClickOrderStatus(v);
-            }
-        });
-        holder.mCallCustomer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((OrdersListFragment) mFragmentInstance).onClickCallExecutive(v, position);
-            }
-        });
+        if(mRouteSession.getmOrderList().get(position).getDeliveryStatus().equalsIgnoreCase(OrderStatus.IN_TRANSIT)) {
+            holder.mStatusImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((OrdersListFragment) mFragmentInstance).onClickOrderStatus(v);
+                }
+            });
+        }
+        else
+            holder.mStatusImage.setClickable(false);
+
+        if(mRouteSession.getmOrderList().get(position).getDeliveryStatus().equalsIgnoreCase(OrderStatus.IN_TRANSIT)) {
+            holder.mCallCustomer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((OrdersListFragment) mFragmentInstance).onClickCallExecutive(v, position);
+                }
+            });
+        }
+        else
+            holder.mCallCustomer.setClickable(false);
+
         holder.mExtraCallCustomer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((OrdersListFragment) mFragmentInstance).onClickCallExecutive(v, position);
             }
         });
+
         holder.mFullScreenMapFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -220,6 +253,8 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        /*GoogleMapOptions options=new GoogleMapOptions();
+        options.liteMode(true);*/
         //MapsInitializer.initialize(null);
         for (int i = 0; i < routes.size(); i++) {
             points = new ArrayList<LatLng>();
@@ -249,13 +284,14 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
                 }
                 points.add(position);
             }
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(start, 14));
+            //googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(start, 14));
             googleMap.addMarker(markerA);
             lineOptions.addAll(points);
             googleMap.addMarker(markerB);
         }
         // Drawing polyline in the Google Map for the i-th route
         googleMap.addPolyline(lineOptions);
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(start ,12.0f));
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -266,7 +302,7 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         TextView mAddressLandmark;
         TextView mCity;
         TextView mItems1, mItems2;
-        ImageView mStatusImage, mCallImage;
+        ImageView mCallImage;
         TextView mDistance;
         TextView mTime;
         TextView mExtraName;
@@ -281,6 +317,7 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         FloatingActionButton mCallCustomer;
         FloatingActionButton mFullScreenMapFAB;
         FloatingActionButton mExtraCallCustomer;
+        FloatingActionButton mStatusImage;
 
         MapView mSmallMap;
 
@@ -293,9 +330,8 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
             mItems2 = (TextView) itemView.findViewById(R.id.itemedittext2);
             mDistance = (TextView) itemView.findViewById(R.id.distancetextview);
             mTime = (TextView) itemView.findViewById(R.id.timetextview);
-            mStatusImage = (ImageView) itemView.findViewById(R.id.orderstatusimage);
+            mStatusImage = (FloatingActionButton) itemView.findViewById(R.id.orderstatusimage);
             mExtraName = (TextView) itemView.findViewById(R.id.nametextview);
-            mExtraOrderno = (TextView) itemView.findViewById(R.id.ordernotextview);
             mExtraExpectedTime = (TextView) itemView.findViewById(R.id.expectedtimetextview);
             mExtraPhone = (TextView) itemView.findViewById(R.id.phonetextview);
             mExtraEmail = (TextView) itemView.findViewById(R.id.emailtextview);
@@ -304,7 +340,9 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
             mFullScreenMapFAB = (FloatingActionButton) itemView.findViewById(R.id.mFullScreenMapFloatingActionButton);
             mCallCustomer = (FloatingActionButton) itemView.findViewById(R.id.CallActionFloatingActionButton);
             mExtraCallCustomer=(FloatingActionButton)itemView.findViewById(R.id.ExtraCallActionFloatingActionButton);
-            mExtraAddress=(TextView)itemView.findViewById(R.id.addresstextview);
+            mExtraAddress=(TextView)itemView.findViewById(R.id.Extraaddresstextview);
+            mExtraProducts=(TextView)itemView.findViewById(R.id.Extraproductstextview);
+            mExtraOrderno=(TextView)itemView.findViewById(R.id.Extraordernotextview);
 
             mSmallMap = (MapView) itemView.findViewById(R.id.mapfragment);
             mSmallMap.onCreate(null);
