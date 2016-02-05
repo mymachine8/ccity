@@ -49,7 +49,7 @@ public class LocationService extends IntentService
     public LocationService()
     {
         super("com.cargoexchange.cargocity.cargocity.LocationService");
-        //mPubnub = new Pubnub("pub-c-1a772f6d-629d-415b-bedc-1f5addf4fcbc", "sub-c-e07d3d66-be1c-11e5-bcee-0619f8945a4f");
+        mPubnub = new Pubnub("pub-c-1a772f6d-629d-415b-bedc-1f5addf4fcbc", "sub-c-e07d3d66-be1c-11e5-bcee-0619f8945a4f");
         //count=0;
         //initfile();
     }
@@ -92,8 +92,8 @@ public class LocationService extends IntentService
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-               //mPubnub.publish("delivery_tracking", data, new Callback() {
-               // });
+               mPubnub.publish("del_tracking", data, new Callback() {
+               });
 
             }
 
