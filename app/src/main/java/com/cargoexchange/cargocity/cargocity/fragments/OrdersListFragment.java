@@ -451,6 +451,5 @@ public class OrdersListFragment extends Fragment
         else
             Toast.makeText(thisActivity,"Network Unavailable",Toast.LENGTH_SHORT).show();
     }
-
 }
 
