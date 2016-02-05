@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
@@ -77,7 +78,9 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
     public OrderDetailsAdapter(List<Order> orderDetails, Fragment fragment) {
         mFragmentInstance = fragment;
         this.orderDetails = orderDetails;
-        mLocationManager = (LocationManager) ((OrdersListFragment) mFragmentInstance).getActivity().getSystemService(Context.LOCATION_SERVICE);
+        mLocationManager = (LocationManager) ((OrdersListFragment) mFragmentInstance)
+                .getActivity()
+                .getSystemService(Context.LOCATION_SERVICE);
     }
 
     public void setOnItemClickListener(OrderItemClickListener careClickListener) {
@@ -118,22 +121,39 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         productsCSV=productsCSV.substring(0,productsCSV.length()-1);
         holder.mExtraProducts.setText(productsCSV);
 
-
-        if(mRouteSession.getmOrderList().get(position).getDeliveryStatus().equalsIgnoreCase(OrderStatus.DELIVERED)) {
-            holder.mStatusImage.setBackground(((OrdersListFragment) mFragmentInstance).getResources().getDrawable(R.drawable.circular_button_truck_delivered));
-            holder.mStatusImage.setClickable(false);
-        }
-        else
+        if(mRouteSession.getmOrderList().get(position).getDeliveryStatus().equalsIgnoreCase(OrderStatus.DELIVERED))
         {
-            holder.mStatusImage.setBackground(((OrdersListFragment) mFragmentInstance).getResources().getDrawable(R.drawable.circular_button_truck_returned));
-            holder.mStatusImage.setClickable(false);
+            if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.LOLLIPOP) {
+                holder.mStatusImage.setBackground(((OrdersListFragment) mFragmentInstance)
+                        .getResources()
+                        .getDrawable(R.drawable.circular_button_truck_delivered,null));
+                holder.mStatusImage.setClickable(false);
+            }
+            else
+            {
+                holder.mStatusImage.setBackground(((OrdersListFragment) mFragmentInstance)
+                        .getResources()
+                        .getDrawable(R.drawable.circular_button_truck_delivered));
+                holder.mStatusImage.setClickable(false);
+            }
+        }
+        else if(mRouteSession.getmOrderList().get(position).getDeliveryStatus().equalsIgnoreCase(OrderStatus.DELIVERY_FAILED))
+        {
+            if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.LOLLIPOP) {
+                holder.mStatusImage.setBackground(((OrdersListFragment) mFragmentInstance)
+                        .getResources()
+                        .getDrawable(R.drawable.circular_button_truck_returned,null));
+                holder.mStatusImage.setClickable(false);
+            }
+            else
+            {
+                holder.mStatusImage.setBackground(((OrdersListFragment) mFragmentInstance)
+                        .getResources()
+                        .getDrawable(R.drawable.circular_button_truck_returned));
+                holder.mStatusImage.setClickable(false);
+            }
         }
 
-
-        //holder.mAddressLine1.setText(orderDetails.get(position).getAddress().getHouseNumber());
-        //holder.mAddressLocality.setText(orderDetails.get(position).getAddress().getAddressLine1());
-        //holder.mAddressLandmark.setText(orderDetails.get(position).getAddress().getAddressLine2());
-        //holder.mCity.setText(orderDetails.get(position).getAddress().getCity());
         if (mRouteSession.getmMatrixDownloadStatus() == 1) {
             if (mRouteSession.getmOrderList().get(position).getDeliveryStatus().equalsIgnoreCase(OrderStatus.IN_TRANSIT))
             {
@@ -146,12 +166,35 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
             else
             {
                     if(mRouteSession.getmOrderList().get(position).getDeliveryStatus().equalsIgnoreCase(OrderStatus.DELIVERED)) {
-                        holder.mStatusImage.setBackground(((OrdersListFragment) mFragmentInstance).getResources().getDrawable(R.drawable.circular_button_truck_delivered));
-                        holder.mStatusImage.setClickable(false);
+                        if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.LOLLIPOP) {
+                            holder.mStatusImage.setBackground(((OrdersListFragment) mFragmentInstance)
+                                    .getResources()
+                                    .getDrawable(R.drawable.circular_button_truck_delivered,null));
+                            holder.mStatusImage.setClickable(false);
+                        }
+                        else
+                        {
+                            holder.mStatusImage.setBackground(((OrdersListFragment) mFragmentInstance)
+                                    .getResources()
+                                    .getDrawable(R.drawable.circular_button_truck_delivered));
+                            holder.mStatusImage.setClickable(false);
+                        }
                     }
-                    else {
-                        holder.mStatusImage.setBackground(((OrdersListFragment) mFragmentInstance).getResources().getDrawable(R.drawable.circular_button_truck_returned));
-                        holder.mStatusImage.setClickable(false);
+                    else
+                    {
+                        if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.LOLLIPOP) {
+                            holder.mStatusImage.setBackground(((OrdersListFragment) mFragmentInstance)
+                                    .getResources()
+                                    .getDrawable(R.drawable.circular_button_truck_returned,null));
+                            holder.mStatusImage.setClickable(false);
+                        }
+                        else
+                        {
+                            holder.mStatusImage.setBackground(((OrdersListFragment) mFragmentInstance)
+                                    .getResources()
+                                    .getDrawable(R.drawable.circular_button_truck_returned));
+                            holder.mStatusImage.setClickable(false);
+                        }
                     }
             }
 
@@ -162,7 +205,11 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
                 +orderDetails.get(position).getAddress().getCity()+" , "
                 +orderDetails.get(position).getAddress().getState());
 
-        if (ActivityCompat.checkSelfPermission(((OrdersListFragment)mFragmentInstance).getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(((OrdersListFragment)mFragmentInstance).getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(((OrdersListFragment)mFragmentInstance).getActivity()
+                , Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(((OrdersListFragment)mFragmentInstance)
+                        .getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) !=
+                        PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -176,7 +223,8 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         if(location!=null)
             fetchMapData(holder,location);
         else
-            mLocationManager.requestSingleUpdate(Constants.LOCATION_PROVIDER, new LocationListener() {
+            mLocationManager.requestSingleUpdate(Constants.LOCATION_PROVIDER, new LocationListener()
+            {
                 @Override
                 public void onLocationChanged(Location location) {
                     fetchMapData(holder, location);
@@ -200,11 +248,13 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         //getLocation();
 
         holder.itemView.setOnClickListener(holder);
-        if(mRouteSession.getmOrderList().get(position).getDeliveryStatus().equalsIgnoreCase(OrderStatus.IN_TRANSIT)) {
+
+        if(mRouteSession.getmOrderList().get(position).getDeliveryStatus()
+                .equalsIgnoreCase(OrderStatus.IN_TRANSIT)) {
             holder.mStatusImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ((OrdersListFragment) mFragmentInstance).onClickOrderStatus(v);
+                    ((OrdersListFragment) mFragmentInstance).onClickOrderStatus(v,position);
                 }
             });
         }
@@ -218,7 +268,8 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
             }
         });
 
-        if(mRouteSession.getmOrderList().get(position).getDeliveryStatus().equalsIgnoreCase(OrderStatus.IN_TRANSIT)) {
+        if(mRouteSession.getmOrderList().get(position).getDeliveryStatus().equalsIgnoreCase(
+                OrderStatus.IN_TRANSIT)) {
             holder.mCallCustomer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -228,7 +279,6 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         }
         else
             holder.mCallCustomer.setClickable(false);
-
 
         holder.mExtraCallCustomer.setOnClickListener(new View.OnClickListener() {
             @Override

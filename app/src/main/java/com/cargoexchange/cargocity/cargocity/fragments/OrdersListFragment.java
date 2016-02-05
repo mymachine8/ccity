@@ -11,13 +11,11 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -43,16 +41,7 @@ import com.cargoexchange.cargocity.cargocity.utils.AnimationHelper;
 import com.cargoexchange.cargocity.cargocity.utils.GenerateUrl;
 import com.cargoexchange.cargocity.cargocity.utils.NetworkAvailability;
 import com.cargoexchange.cargocity.cargocity.utils.ParseDistanceMatrix;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
-
 import org.json.JSONObject;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -370,8 +359,6 @@ public class OrdersListFragment extends Fragment
 
                 mExtraDetailsFragment.setArguments(mDataForExtraDetailsFragment);
 
-                mRouteSession.setPosition(position);
-
                 cardStatus=mRouteSession.getmOrderList().get(position).getCardStatus();
 
                 if(cardStatus==CARD_EXPANDED)
@@ -418,9 +405,11 @@ public class OrdersListFragment extends Fragment
         });
     }
 
-    public void onClickOrderStatus(View v) {
+    public void onClickOrderStatus(View v,int position) {
 
         Log.d("Order_Click", "Clicked on the order status");
+
+        mRouteSession.setPosition(position);
 
         Intent testintent=new Intent(getActivity(),DeliveryFeedbackActivity.class);
 
@@ -435,6 +424,8 @@ public class OrdersListFragment extends Fragment
     }
     public void onClickFullScreenMap(View v,int position)
     {
+        mRouteSession.setPosition(position);
+
         Intent MapIntent = new Intent(thisActivity, MapActivity.class);
 
         MapIntent.putExtra("position",position);

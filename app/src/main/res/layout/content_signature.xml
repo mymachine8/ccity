@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     tools:context="com.cargoexchange.cargocity.cargocity.fragments.SignatureActivityFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <com.cargoexchange.cargocity.cargocity.utils.SignPadView
         android:id="@+id/signdrawPadView"
         android:layout_width="match_parent"
