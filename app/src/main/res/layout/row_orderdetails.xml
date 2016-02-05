@@ -69,31 +69,15 @@
                         android:text="LG 42 FSD 2D SMART LED - 1"
                         />
                 </LinearLayout>
-                <!--<ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ImageButton
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:id="@+id/orderstatusimage"
-                    android:elevation="5dp"
-                    android:src="@drawable/ic_truck1"
+                    android:background="@drawable/circular_button_truck"
+                    android:backgroundTint="@android:color/holo_red_dark"
+                    android:src="@drawable/truck"
                     android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"/>-->
-                <android.support.design.widget.FloatingActionButton
-                    android:clipChildren="false"
-                    android:clipToPadding="false"
                     android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="5dp"
-                    android:id="@+id/orderstatusimage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_cargo"
-                    app:fabSize="mini"
-                    app:backgroundTint="@android:color/holo_red_dark"
-                    app:layout_anchor="@id/orderdetailscardview"
-                    app:elevation="8dp"
-                    app:rippleColor="@android:color/holo_blue_dark"
-                    android:visibility="visible"
-
                     />
             </RelativeLayout>
 
@@ -122,34 +106,16 @@
                         android:text="Secunderabad,500020"
                         />
                 </LinearLayout>
-                <!--<ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/callimage"
-                    android:layout_marginTop="10dp"
-                    android:elevation="5dp"
-                    android:src="@drawable/ic_call"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"/>-->
-                <android.support.design.widget.FloatingActionButton
-                    android:clipChildren="false"
-                    android:clipToPadding="false"
+                <ImageButton
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:id="@+id/CallActionFloatingActionButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="5dp"
+                    android:background="@drawable/circular_button_call"
                     android:src="@drawable/phone"
-                    app:fabSize="mini"
-                    app:backgroundTint="@android:color/holo_green_light"
-                    app:layout_anchor="@id/orderdetailscardview"
-                    app:elevation="8dp"
-                    app:pressedTranslationZ="0dp"
-                    android:clickable="true"
-                    app:rippleColor="@android:color/holo_blue_dark"
-                    android:visibility="visible"
-                    android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     />
+
             </RelativeLayout>
 
             <LinearLayout
@@ -233,8 +199,8 @@
         android:layout_height="wrap_content"
         android:background="@android:color/darker_gray"
         app:cardCornerRadius="6dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="3dp"
         app:contentPadding="10dp"
@@ -259,7 +225,7 @@
             android:layout_height="wrap_content">
 
 
-            <android.support.design.widget.FloatingActionButton
+            <!--<android.support.design.widget.FloatingActionButton
                 android:clipChildren="false"
                 android:clipToPadding="false"
                 android:id="@+id/ExtraCallActionFloatingActionButton"
@@ -278,9 +244,36 @@
                 android:visibility="visible"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
+                />-->
+
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:id="@+id/ExtraCallActionFloatingActionButton"
+                android:background="@drawable/circular_button_call"
+                android:src="@drawable/phone"
+                android:layout_marginTop="210dp"
+                android:layout_marginRight="0dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 />
 
-            <android.support.design.widget.FloatingActionButton
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:id="@+id/Extraorderstatusimage"
+                android:background="@drawable/circular_button_truck"
+                android:backgroundTint="@android:color/holo_red_dark"
+                android:layout_toLeftOf="@id/ExtraCallActionFloatingActionButton"
+                android:src="@drawable/truck"
+                android:layout_marginTop="210dp"
+                android:layout_marginRight="5dp"
+                />
+
+
+                />
+
+            <!--<android.support.design.widget.FloatingActionButton
                 android:clipChildren="false"
                 android:clipToPadding="false"
                 android:id="@+id/Extraorderstatusimage"
@@ -297,10 +290,10 @@
                 android:clickable="true"
                 app:rippleColor="@android:color/holo_blue_dark"
                 android:visibility="visible"
-                />
+                />-->
         </RelativeLayout>
 
-        <android.support.design.widget.FloatingActionButton
+        <!--<android.support.design.widget.FloatingActionButton
             android:id="@+id/mFullScreenMapFloatingActionButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -313,7 +306,7 @@
             android:visibility="visible"
             app:elevation="8dp"
             android:clickable="true"/>
-
+-->
         <LinearLayout
             android:clipChildren="false"
             android:clipToPadding="false"

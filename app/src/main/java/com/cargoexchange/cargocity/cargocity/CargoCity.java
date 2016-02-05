@@ -5,6 +5,7 @@ package com.cargoexchange.cargocity.cargocity;
  */
 
 import android.app.Application;
+import android.content.Context;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.RequestQueue;
@@ -29,6 +30,7 @@ public class CargoCity extends Application
         super.onCreate();
         mRequestQueue= Volley.newRequestQueue(this);
         mInstance=this;
+
     }
 
     public static synchronized CargoCity getmInstance()

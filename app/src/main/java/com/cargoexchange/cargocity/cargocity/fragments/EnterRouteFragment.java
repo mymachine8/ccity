@@ -27,30 +27,19 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonRequest;
 import com.cargoexchange.cargocity.cargocity.CargoCity;
-import com.cargoexchange.cargocity.cargocity.OrdersActivity;
 import com.cargoexchange.cargocity.cargocity.R;
-import com.cargoexchange.cargocity.cargocity.constants.CargoSharedPreferences;
-import com.cargoexchange.cargocity.cargocity.constants.IntentConstants;
 import com.cargoexchange.cargocity.cargocity.constants.RouteSession;
 import com.cargoexchange.cargocity.cargocity.constants.Constants;
-import com.cargoexchange.cargocity.cargocity.models.Order;
 import com.cargoexchange.cargocity.cargocity.models.Route;
-import com.cargoexchange.cargocity.cargocity.services.FetchLocationService;
 import com.cargoexchange.cargocity.cargocity.services.LocationService;
-import com.cargoexchange.cargocity.cargocity.utils.GenerateRequest;
 import com.cargoexchange.cargocity.cargocity.utils.NetworkAvailability;
 import com.cargoexchange.cargocity.cargocity.utils.ParseJSON;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
-import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 
 public class EnterRouteFragment extends Fragment
 {

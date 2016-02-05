@@ -1,14 +1,10 @@
 package com.cargoexchange.cargocity.cargocity;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.os.BatteryManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -16,9 +12,7 @@ import android.util.Log;
 
 import com.cargoexchange.cargocity.cargocity.constants.Constants;
 import com.cargoexchange.cargocity.cargocity.fragments.EnterRouteFragment;
-import com.cargoexchange.cargocity.cargocity.fragments.LoginFragment;
 import com.cargoexchange.cargocity.cargocity.fragments.OrdersListFragment;
-import com.cargoexchange.cargocity.cargocity.services.BatteryStatusReciever;
 
 public class OrdersActivity extends AppCompatActivity {
 
@@ -93,9 +87,12 @@ public class OrdersActivity extends AppCompatActivity {
     protected void onRestart()
     {
         super.onRestart();
-        int accessFineLocationPermissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
-        int accessCoarseLocationPermissionCheck=ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
-        if(accessFineLocationPermissionCheck!= PackageManager.PERMISSION_GRANTED && accessCoarseLocationPermissionCheck!=PackageManager.PERMISSION_GRANTED){
+        int accessFineLocationPermissionCheck = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION);
+        int accessCoarseLocationPermissionCheck=ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION);
+        if(accessFineLocationPermissionCheck!= PackageManager.PERMISSION_GRANTED &&
+                accessCoarseLocationPermissionCheck!=PackageManager.PERMISSION_GRANTED){
             grantLocationPermissions();
         }
     }
