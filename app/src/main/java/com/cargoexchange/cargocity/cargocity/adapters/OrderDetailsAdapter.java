@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
@@ -118,16 +119,33 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         productsCSV=productsCSV.substring(0,productsCSV.length()-1);
         holder.mExtraProducts.setText(productsCSV);
 
-
-        if(mRouteSession.getmOrderList().get(position).getDeliveryStatus().equalsIgnoreCase(OrderStatus.DELIVERED)) {
-            holder.mStatusImage.setBackground(((OrdersListFragment) mFragmentInstance).getResources().getDrawable(R.drawable.circular_button_truck_delivered));
-            holder.mStatusImage.setClickable(false);
-        }
-        else
+        if(mRouteSession.getmOrderList().get(position).getDeliveryStatus().equalsIgnoreCase(OrderStatus.DELIVERED))
         {
-            holder.mStatusImage.setBackground(((OrdersListFragment) mFragmentInstance).getResources().getDrawable(R.drawable.circular_button_truck_returned));
-            holder.mStatusImage.setClickable(false);
+            if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.LOLLIPOP) {
+                holder.mStatusImage.setBackground(((OrdersListFragment) mFragmentInstance).getResources().getDrawable(R.drawable.circular_button_truck_delivered,null));
+                holder.mStatusImage.setClickable(false);
+            }
+            else
+            {
+                holder.mStatusImage.setBackground(((OrdersListFragment) mFragmentInstance).getResources().getDrawable(R.drawable.circular_button_truck_delivered));
+                holder.mStatusImage.setClickable(false);
+            }
         }
+        else if(mRouteSession.getmOrderList().get(position).getDeliveryStatus().equalsIgnoreCase(OrderStatus.DELIVERY_FAILED))
+        {
+            if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.LOLLIPOP) {
+                holder.mStatusImage.setBackground(((OrdersListFragment) mFragmentInstance).getResources().getDrawable(R.drawable.circular_button_truck_returned,null));
+                holder.mStatusImage.setClickable(false);
+            }
+            else
+            {
+                holder.mStatusImage.setBackground(((OrdersListFragment) mFragmentInstance).getResources().getDrawable(R.drawable.circular_button_truck_returned));
+                holder.mStatusImage.setClickable(false);
+            }
+        }
+
+
+
 
 
         //holder.mAddressLine1.setText(orderDetails.get(position).getAddress().getHouseNumber());
@@ -146,12 +164,27 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
             else
             {
                     if(mRouteSession.getmOrderList().get(position).getDeliveryStatus().equalsIgnoreCase(OrderStatus.DELIVERED)) {
-                        holder.mStatusImage.setBackground(((OrdersListFragment) mFragmentInstance).getResources().getDrawable(R.drawable.circular_button_truck_delivered));
-                        holder.mStatusImage.setClickable(false);
+                        if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.LOLLIPOP) {
+                            holder.mStatusImage.setBackground(((OrdersListFragment) mFragmentInstance).getResources().getDrawable(R.drawable.circular_button_truck_delivered,null));
+                            holder.mStatusImage.setClickable(false);
+                        }
+                        else
+                        {
+                            holder.mStatusImage.setBackground(((OrdersListFragment) mFragmentInstance).getResources().getDrawable(R.drawable.circular_button_truck_delivered));
+                            holder.mStatusImage.setClickable(false);
+                        }
                     }
-                    else {
-                        holder.mStatusImage.setBackground(((OrdersListFragment) mFragmentInstance).getResources().getDrawable(R.drawable.circular_button_truck_returned));
-                        holder.mStatusImage.setClickable(false);
+                    else
+                    {
+                        if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.LOLLIPOP) {
+                            holder.mStatusImage.setBackground(((OrdersListFragment) mFragmentInstance).getResources().getDrawable(R.drawable.circular_button_truck_returned,null));
+                            holder.mStatusImage.setClickable(false);
+                        }
+                        else
+                        {
+                            holder.mStatusImage.setBackground(((OrdersListFragment) mFragmentInstance).getResources().getDrawable(R.drawable.circular_button_truck_returned));
+                            holder.mStatusImage.setClickable(false);
+                        }
                     }
             }
 
@@ -228,7 +261,6 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         }
         else
             holder.mCallCustomer.setClickable(false);
-
 
         holder.mExtraCallCustomer.setOnClickListener(new View.OnClickListener() {
             @Override
