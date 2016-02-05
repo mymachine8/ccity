@@ -97,18 +97,6 @@ public class FeedbackFragment extends Fragment
 
     private TextView mTextView;
 
-    private TextView mItemRecievedLabel;
-
-    private TextView mCommentLabel;
-
-    private TextView mDeliveryProofLabel;
-
-    private TextView mRatingLabel;
-
-    private TextView mRatingValueLabel;
-
-    private TextView mFeedBackLabel;
-
     private EditText mAdditionalCommentsEditText,mCommentEditText;
 
     private Button mSubmitButton;
@@ -134,8 +122,6 @@ public class FeedbackFragment extends Fragment
     private Bitmap UploadImage3;
 
     private Resources mResource;
-
-    private ProgressDialog mProgressDialog;
 
     private String base64Images[] = new String[3];
 
@@ -189,161 +175,19 @@ public class FeedbackFragment extends Fragment
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         mActivityContext = getActivity();
-        mActivityContext.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        bindViewVariables(view);
-        bindListeners();
+
         mResource=this.getResources();
 
-        InitializeDialog();
+        mActivityContext.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+        bindViewVariables(view);
+
+        bindListeners();
 
         mTextView.setText("Excellent");
-        mRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-            @Override
-            public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
-                if (v < 1)
-                    mRatingBar.setRating(1);
-                if (v <= 1)
-                    mTextView.setText("Poor");
-                else if (v > 1 && v <= 3)
-                    mTextView.setText("Good");
-                else if (v > 3 && v <= 4)
-                    mTextView.setText("Very Good");
-                else
-                    mTextView.setText("Excellent");
-            }
-        });
 
-        try {
-            mCameraImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int preference = ScanConstants.OPEN_CAMERA;
-                    Intent intent = new Intent(getActivity(), ScanActivity.class);
-                    intent.putExtra(ScanConstants.OPEN_INTENT_PREFERENCE, preference);
-                    startActivityForResult(intent, SCAN_REQUEST_CODE);
-                }
-            });
-        } catch(Exception ex) {
-            Log.e("DELIVERY_FEEDBACK", ex.getMessage());
-        }
-
-
-        mProofUploadImageView1.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                mImagePopUpDialog=new Dialog(mActivityContext);
-                mImagePopUpDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-                LayoutInflater mInflater=mActivityContext.getLayoutInflater();
-                View layout=mInflater.inflate(R.layout.activity_show_image, (ViewGroup) v.findViewById(R.id.ShowImageRoot));
-                mImagePopUpDialog.setContentView(layout);
-                mPopUpImageView=(ImageView)layout.findViewById(R.id.ProofImageView);
-                Button mDiscardImageButton=(Button)layout.findViewById(R.id.CancelImagePopUpButton);
-                Button mOkImageButton=(Button)layout.findViewById(R.id.OkImageButton);
-                mPopUpImageView.setImageBitmap(UploadImage1);
-                mDiscardImageButton.setClickable(true);
-                mImagePopUpDialog.show();
-                mDiscardImageButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mProofUploadImageView1.setImageBitmap(UploadImage2);
-                        mProofUploadImageView2.setImageBitmap(UploadImage3);
-                        UploadImage1 = UploadImage2;
-                        UploadImage2 = UploadImage3;
-                        UploadImage3 = BitmapFactory.decodeResource(mResource, R.drawable.ic_imagedefault2);
-                        mProofUploadImageView3.setImageResource(R.drawable.ic_imagedefault2);
-                        count = (count - 1) % 3;
-                        mImagePopUpDialog.cancel();
-                    }
-                });
-                mOkImageButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        DismissPopUp(v);
-                    }
-                });
-
-            }
-        });
-        mProofUploadImageView2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mImagePopUpDialog = new Dialog(mActivityContext);
-                mImagePopUpDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-                LayoutInflater mInflater = mActivityContext.getLayoutInflater();
-                View layout = mInflater.inflate(R.layout.activity_show_image, (ViewGroup) v.findViewById(R.id.ShowImageRoot));
-                mImagePopUpDialog.setContentView(layout);
-                mPopUpImageView = (ImageView) layout.findViewById(R.id.ProofImageView);
-                Button mDiscardImageButton = (Button) layout.findViewById(R.id.CancelImagePopUpButton);
-                Button mOkImageButton=(Button)layout.findViewById(R.id.OkImageButton);
-                mPopUpImageView.setImageBitmap(UploadImage2);
-                mDiscardImageButton.setClickable(true);
-                mImagePopUpDialog.show();
-                mDiscardImageButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mProofUploadImageView2.setImageBitmap(UploadImage3);
-                        UploadImage2 = UploadImage3;
-                        UploadImage3 = BitmapFactory.decodeResource(mResource, R.drawable.ic_imagedefault2);
-                        ;
-                        mProofUploadImageView3.setImageResource(R.drawable.ic_imagedefault2);
-                        count = (count - 1) % 3;
-                        mImagePopUpDialog.cancel();
-                    }
-                });
-                mOkImageButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        DismissPopUp(v);
-                    }
-                });
-            }
-        });
-        mProofUploadImageView3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mImagePopUpDialog = new Dialog(mActivityContext);
-                mImagePopUpDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-                LayoutInflater mInflater = mActivityContext.getLayoutInflater();
-                View layout = mInflater.inflate(R.layout.activity_show_image, (ViewGroup) v.findViewById(R.id.ShowImageRoot));
-                mImagePopUpDialog.setContentView(layout);
-                mPopUpImageView = (ImageView) layout.findViewById(R.id.ProofImageView);
-                Button mDiscardImageButton = (Button) layout.findViewById(R.id.CancelImagePopUpButton);
-                Button mOkImageButton=(Button)layout.findViewById(R.id.OkImageButton);
-                mPopUpImageView.setImageBitmap(UploadImage3);
-                mDiscardImageButton.setClickable(true);
-                mImagePopUpDialog.show();
-                mDiscardImageButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        UploadImage3 = BitmapFactory.decodeResource(mResource, R.drawable.ic_imagedefault2);
-                        mProofUploadImageView3.setImageResource(R.drawable.ic_imagedefault2);
-                        count = (count - 1) % 3;
-                        mImagePopUpDialog.cancel();
-                    }
-                });
-                mOkImageButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        DismissPopUp(v);
-                    }
-                });
-            }
-        });
-        mSubmitButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if(!mAcceptGoods.isChecked()) {
-                    displayToastMessage("Check the Accept of Receipt");
-                    return;
-                }
-                submitFeedback();
-            }
-        });
     }
 
     public void bindViewVariables(View view)
@@ -351,14 +195,6 @@ public class FeedbackFragment extends Fragment
         mRatingBar=(RatingBar)view.findViewById(R.id.FeedbackRatingBar);
 
         mTextView=(TextView)view.findViewById(R.id.RatingValueLabel);
-
-        mItemRecievedLabel=(TextView)view.findViewById(R.id.ItemRecievedLabel);
-
-        mCommentLabel=(TextView)view.findViewById(R.id.CommentsLabel);
-
-        mDeliveryProofLabel=(TextView)view.findViewById(R.id.DeliveryProofLabel);
-
-        mFeedBackLabel=(TextView)view.findViewById(R.id.FeedBackLabel);
 
         mSubmitButton=(Button)view.findViewById(R.id.SubmitButton);
 
@@ -375,8 +211,6 @@ public class FeedbackFragment extends Fragment
         mAdditionalCommentsEditText=(EditText)view.findViewById(R.id.FeedBackEditText);
 
         mCommentEditText=(EditText)view.findViewById(R.id.CommentsEditText);
-
-        mRatingLabel=(TextView)view.findViewById(R.id.RatingLabel);
 
         UploadImage1= BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_imagedefault2);
 
@@ -407,9 +241,24 @@ public class FeedbackFragment extends Fragment
     private void bindListeners()
     {
         isCustomerPresent.setOnCheckedChangeListener(new isCustomerPresentListener());
+
         mSubmitMissedTagButton.setOnClickListener(new submitMissedTagButtonListener());
+
         mUploadMissedTagFAB.setOnClickListener(new uploadMissedTagFABListener());
+
         mUploadSignatureButton.setOnClickListener(new uploadSignatureButtonListener());
+
+        mProofUploadImageView1.setOnClickListener(new UploadImageView1Listener());
+
+        mProofUploadImageView2.setOnClickListener(new UploadImageView2Listener());
+
+        mProofUploadImageView3.setOnClickListener(new UploadImageView3Listener());
+
+        mSubmitButton.setOnClickListener(new SubmitFeedBackListener());
+
+        mRatingBar.setOnRatingBarChangeListener(new RatingChangedListener());
+
+        mCameraImage.setOnClickListener(new CameraImageClickListener());
 
     }
 
@@ -423,68 +272,8 @@ public class FeedbackFragment extends Fragment
             }else {
                 Log.d("ss","sfdsfs");
             }
-            /*Uri uri= Uri.fromFile(image);
-            try {
-                Bitmap bitmap=MediaStore.Images.Media.getBitmap(mActivityContext.getContentResolver(),uri);
-                mSignatureImage.setImageBitmap(bitmap);
-                mProofUploadImageView1.setImageBitmap(Bitmap.createScaledBitmap(bitmap,100,100,true));
-            } catch (IOException e) {
-                Log.e("IO_EXCEPTION",e.getMessage());
-            }*/
         }
     }
-    private class isCustomerPresentListener implements CompoundButton.OnCheckedChangeListener
-    {
-
-        @Override
-        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
-        {
-          if(!isChecked) {
-              mDeliveredLayout.setVisibility(View.GONE);
-              mMissedLayout.setVisibility(View.VISIBLE);
-          }
-            else
-          {
-              mMissedLayout.setVisibility(View.GONE);
-              mDeliveredLayout.setVisibility(View.VISIBLE);
-          }
-        }
-    }
-
-    private class submitMissedTagButtonListener implements View.OnClickListener
-    {
-        @Override
-        public void onClick(View v)
-        {
-            submitFeedback();
-
-        }
-    }
-
-    private class uploadMissedTagFABListener implements View.OnClickListener
-    {
-        @Override
-        public void onClick(View v)
-        {
-            //TODO:Open the camera for taking picture
-            int preference = ScanConstants.OPEN_CAMERA;
-            Intent intent = new Intent(getActivity(), ScanActivity.class);
-            intent.putExtra(ScanConstants.OPEN_INTENT_PREFERENCE, preference);
-            startActivityForResult(intent,SCAN_MISSED_TAG);
-        }
-    }
-
-    private class uploadSignatureButtonListener implements View.OnClickListener
-    {
-        @Override
-        public void onClick(View v)
-        {
-            //TODO:Open the Signature Pad
-            checkForReadWritePermission();
-
-        }
-    }
-
 
     private Feedback createFeedbackObject(){
         Feedback feedback = new Feedback();
@@ -531,16 +320,8 @@ public class FeedbackFragment extends Fragment
         startActivity(MapInent);
     }
 
-    private void InitializeDialog(){
-        mProgressDialog = new ProgressDialog(mActivityContext,
-                R.style.AppTheme);
-        mProgressDialog.setIndeterminate(true);
-        mProgressDialog.setMessage("Submitting Feedback...");
-    }
-
     private void submitFeedback(){
         Feedback feedback = createFeedbackObject();
-        mProgressDialog.show();
         String uri = Constants.CARGO_API_BASE_URL + "orderdetail/feedback";
         Gson gson = new Gson();
         try {
@@ -550,7 +331,6 @@ public class FeedbackFragment extends Fragment
                             @Override
                             public void onResponse(JSONObject response) {
                                 String status;
-                                mProgressDialog.hide();
                                 try {
                                     status = response.getString("status");
                                     if (status.equalsIgnoreCase("success")) {
@@ -569,9 +349,7 @@ public class FeedbackFragment extends Fragment
                         }, new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                mProgressDialog.hide();
-                                String json = null;
-
+                                String json;
                                 NetworkResponse response = error.networkResponse;
                                 if (response != null && response.data != null) {
                                     switch (response.statusCode) {
@@ -582,7 +360,6 @@ public class FeedbackFragment extends Fragment
                                             if (json != null) displayToastMessage(json);
                                             break;
                                     }
-                                    //Additional cases
                                 }
                             }
                         }, uri, feedbackJson);
@@ -606,7 +383,7 @@ public class FeedbackFragment extends Fragment
         mImagePopUpDialog.cancel();
     }
 
-    private void checkForReadWritePermission(){
+    private void checkPermissionAndCallSignature(){
         int accessWritePermissionCheck = ContextCompat.checkSelfPermission(mActivityContext, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         int accessReadPermissionCheck=ContextCompat.checkSelfPermission(mActivityContext, Manifest.permission.READ_EXTERNAL_STORAGE);
         if(accessWritePermissionCheck!= PackageManager.PERMISSION_GRANTED && accessReadPermissionCheck!=PackageManager.PERMISSION_GRANTED)
@@ -634,13 +411,7 @@ public class FeedbackFragment extends Fragment
                 }
                 else
                 {
-                    Log.d("outgoing", "hello");
-                    System.runFinalization();
-                    Intent startMain = new Intent(Intent.ACTION_MAIN);
-                    startMain.addCategory(Intent.CATEGORY_HOME);
-                    startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(startMain);
-                    //TODO:Why we cannot hide the activity here
+                    return;
                 }
                 break;
             }
@@ -705,6 +476,213 @@ public class FeedbackFragment extends Fragment
         }
         else if(requestCode == SIGNATURE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             setSignature(data.getExtras().getString("SIGN_FILE_NAME"));
+        }
+    }
+
+
+    //LISTENER CLASSES
+
+    private class isCustomerPresentListener implements CompoundButton.OnCheckedChangeListener
+    {
+
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+        {
+            if(!isChecked) {
+                mDeliveredLayout.setVisibility(View.GONE);
+                mMissedLayout.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                mMissedLayout.setVisibility(View.GONE);
+                mDeliveredLayout.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    private class submitMissedTagButtonListener implements View.OnClickListener
+    {
+        @Override
+        public void onClick(View v)
+        {
+            submitFeedback();
+
+        }
+    }
+
+    private class uploadMissedTagFABListener implements View.OnClickListener
+    {
+        @Override
+        public void onClick(View v)
+        {
+            //TODO:Open the camera for taking picture
+            int preference = ScanConstants.OPEN_CAMERA;
+            Intent intent = new Intent(getActivity(), ScanActivity.class);
+            intent.putExtra(ScanConstants.OPEN_INTENT_PREFERENCE, preference);
+            startActivityForResult(intent,SCAN_MISSED_TAG);
+        }
+    }
+
+    private class uploadSignatureButtonListener implements View.OnClickListener
+    {
+        @Override
+        public void onClick(View v)
+        {
+            checkPermissionAndCallSignature();
+
+        }
+    }
+
+    private class UploadImageView1Listener implements View.OnClickListener{
+        @Override
+        public void onClick(View v)
+        {
+
+            mImagePopUpDialog=new Dialog(mActivityContext);
+            mImagePopUpDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+            LayoutInflater mInflater=mActivityContext.getLayoutInflater();
+            View layout=mInflater.inflate(R.layout.activity_show_image, (ViewGroup) v.findViewById(R.id.ShowImageRoot));
+            mImagePopUpDialog.setContentView(layout);
+            mPopUpImageView=(ImageView)layout.findViewById(R.id.ProofImageView);
+            Button mDiscardImageButton=(Button)layout.findViewById(R.id.CancelImagePopUpButton);
+            Button mOkImageButton=(Button)layout.findViewById(R.id.OkImageButton);
+            mPopUpImageView.setImageBitmap(UploadImage1);
+            mDiscardImageButton.setClickable(true);
+            mImagePopUpDialog.show();
+            mDiscardImageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mProofUploadImageView1.setImageBitmap(UploadImage2);
+                    mProofUploadImageView2.setImageBitmap(UploadImage3);
+                    UploadImage1 = UploadImage2;
+                    UploadImage2 = UploadImage3;
+                    UploadImage3 = BitmapFactory.decodeResource(mResource, R.drawable.ic_imagedefault2);
+                    mProofUploadImageView3.setImageResource(R.drawable.ic_imagedefault2);
+                    count = (count - 1) % 3;
+                    mImagePopUpDialog.cancel();
+                }
+            });
+            mOkImageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DismissPopUp(v);
+                }
+            });
+
+        }
+    }
+
+    private class UploadImageView2Listener implements View.OnClickListener{
+        @Override
+        public void onClick(View v)
+        {
+
+            mImagePopUpDialog = new Dialog(mActivityContext);
+            mImagePopUpDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+            LayoutInflater mInflater = mActivityContext.getLayoutInflater();
+            View layout = mInflater.inflate(R.layout.activity_show_image, (ViewGroup) v.findViewById(R.id.ShowImageRoot));
+            mImagePopUpDialog.setContentView(layout);
+            mPopUpImageView = (ImageView) layout.findViewById(R.id.ProofImageView);
+            Button mDiscardImageButton = (Button) layout.findViewById(R.id.CancelImagePopUpButton);
+            Button mOkImageButton=(Button)layout.findViewById(R.id.OkImageButton);
+            mPopUpImageView.setImageBitmap(UploadImage2);
+            mDiscardImageButton.setClickable(true);
+            mImagePopUpDialog.show();
+            mDiscardImageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mProofUploadImageView2.setImageBitmap(UploadImage3);
+                    UploadImage2 = UploadImage3;
+                    UploadImage3 = BitmapFactory.decodeResource(mResource, R.drawable.ic_imagedefault2);
+                    ;
+                    mProofUploadImageView3.setImageResource(R.drawable.ic_imagedefault2);
+                    count = (count - 1) % 3;
+                    mImagePopUpDialog.cancel();
+                }
+            });
+            mOkImageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DismissPopUp(v);
+                }
+            });
+
+        }
+    }
+
+    private class UploadImageView3Listener implements View.OnClickListener{
+        @Override
+        public void onClick(View v) {
+
+            mImagePopUpDialog = new Dialog(mActivityContext);
+            mImagePopUpDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+            LayoutInflater mInflater = mActivityContext.getLayoutInflater();
+            View layout = mInflater.inflate(R.layout.activity_show_image, (ViewGroup) v.findViewById(R.id.ShowImageRoot));
+            mImagePopUpDialog.setContentView(layout);
+            mPopUpImageView = (ImageView) layout.findViewById(R.id.ProofImageView);
+            Button mDiscardImageButton = (Button) layout.findViewById(R.id.CancelImagePopUpButton);
+            Button mOkImageButton=(Button)layout.findViewById(R.id.OkImageButton);
+            mPopUpImageView.setImageBitmap(UploadImage3);
+            mDiscardImageButton.setClickable(true);
+            mImagePopUpDialog.show();
+            mDiscardImageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    UploadImage3 = BitmapFactory.decodeResource(mResource, R.drawable.ic_imagedefault2);
+                    mProofUploadImageView3.setImageResource(R.drawable.ic_imagedefault2);
+                    count = (count - 1) % 3;
+                    mImagePopUpDialog.cancel();
+                }
+            });
+            mOkImageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DismissPopUp(v);
+                }
+            });
+
+        }
+    }
+
+    private class SubmitFeedBackListener implements View.OnClickListener{
+        @Override
+        public void onClick(View v) {
+
+            if(!mAcceptGoods.isChecked()) {
+                displayToastMessage("Check the Accept of Receipt");
+                return;
+            }
+            submitFeedback();
+
+        }
+    }
+
+    private class RatingChangedListener implements RatingBar.OnRatingBarChangeListener{
+        @Override
+        public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+
+            if (rating < 1)
+                mRatingBar.setRating(1);
+            if (rating <= 1)
+                mTextView.setText("Poor");
+            else if (rating > 1 && rating <= 3)
+                mTextView.setText("Good");
+            else if (rating > 3 && rating <= 4)
+                mTextView.setText("Very Good");
+            else
+                mTextView.setText("Excellent");
+
+        }
+    }
+
+    private class CameraImageClickListener implements View.OnClickListener{
+        @Override
+        public void onClick(View v) {
+
+            int preference = ScanConstants.OPEN_CAMERA;
+            Intent intent = new Intent(getActivity(), ScanActivity.class);
+            intent.putExtra(ScanConstants.OPEN_INTENT_PREFERENCE, preference);
+            startActivityForResult(intent, SCAN_REQUEST_CODE);
         }
     }
 

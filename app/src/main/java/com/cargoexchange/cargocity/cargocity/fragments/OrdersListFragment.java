@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -16,22 +15,15 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
@@ -40,31 +32,20 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.cargoexchange.cargocity.cargocity.CargoCity;
 import com.cargoexchange.cargocity.cargocity.DeliveryFeedbackActivity;
 import com.cargoexchange.cargocity.cargocity.MapActivity;
-import com.cargoexchange.cargocity.cargocity.OrdersActivity;
 import com.cargoexchange.cargocity.cargocity.R;
 import com.cargoexchange.cargocity.cargocity.adapters.OrderDetailsAdapter;
 import com.cargoexchange.cargocity.cargocity.constants.Constants;
 import com.cargoexchange.cargocity.cargocity.constants.OrderStatus;
 import com.cargoexchange.cargocity.cargocity.constants.RouteSession;
-import com.cargoexchange.cargocity.cargocity.models.Address;
-import com.cargoexchange.cargocity.cargocity.models.Customer;
-import com.cargoexchange.cargocity.cargocity.models.Feedback;
 import com.cargoexchange.cargocity.cargocity.models.Order;
 import com.cargoexchange.cargocity.cargocity.models.Route;
 import com.cargoexchange.cargocity.cargocity.utils.AnimationHelper;
 import com.cargoexchange.cargocity.cargocity.utils.GenerateUrl;
 import com.cargoexchange.cargocity.cargocity.utils.NetworkAvailability;
-import com.cargoexchange.cargocity.cargocity.utils.ParseDirections;
 import com.cargoexchange.cargocity.cargocity.utils.ParseDistanceMatrix;
-import com.cargoexchange.cargocity.cargocity.utils.RecyclerItemClickListener;
-import com.cargoexchange.cargocity.cargocity.models.OrderItem;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -80,62 +61,81 @@ import java.util.Map;
 public class OrdersListFragment extends Fragment
 {
     private static String ORDERS_LIST_KEY = "orders_list_key";
+
     private RecyclerView mOrdersListFragmentRecycler;
+
     private RecyclerView.LayoutManager mOrdersListLayoutManager;
+
     private LocationManager mLocationManager;
-    private Location mLocation;
+
     private List<Order> mOrdersList;
+
     private Route mRoute;
+
     private OrderDetailsAdapter mOrderDetailsAdapter;
+
     private RouteSession mRouteSession;
-    private CardView mOrderDetailsCard;
-    private FloatingActionButton mCallCustomer;
+
     private ProgressDialog processData;
+
     private Location mLastKnownLocation;
+
     List<String> mDistanceList;
+
     List<String> mDurationList;
+
     private final int CARD_EXPANDED=1;
+
     private final int CARD_COMPACT=0;
+
     private int cardStatus=0;
+
     private Fragment thisFragment;
+
     private FragmentActivity thisActivity;
-    private GoogleMap mSmallMap;
-    private SupportMapFragment mSmallMapFragment;
-    private List<List<HashMap<String, String>>> routes;
-    final MarkerOptions markerA = new MarkerOptions();
-    final MarkerOptions markerB = new MarkerOptions();
-    ArrayList<LatLng> points;
-    LatLng start;
-    PolylineOptions lineOptions;
+
     private OrdersListFragment context;
-    private MapView mSmallMapView;
 
     public OrdersListFragment() {
         // Required empty public constructor
     }
 
     public static Fragment newInstance(Route route) {
+
         OrdersListFragment fragment = new OrdersListFragment();
+
         Bundle bundle = new Bundle();
+
         bundle.putSerializable(ORDERS_LIST_KEY, route);
+
         fragment.setArguments(bundle);
+
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         mRouteSession = RouteSession.getInstance();
+
         mOrdersList = mRouteSession.getmOrderList();
+
         thisFragment = this;
+
         context=this;
-        if (mOrdersList == null || mOrdersList.size() == 0) {
+
+        if (mOrdersList == null || mOrdersList.size() == 0)
+        {
             mRoute = (Route) getArguments().getSerializable(ORDERS_LIST_KEY);
+
             mOrdersList = mRoute.getOrderList();
+
             Map<String, String> orderStatusList = new HashMap<String, String>();
+
             for (Order order : mOrdersList) {
                 orderStatusList.put(order.getOrderId(), OrderStatus.IN_TRANSIT);
             }
             mRouteSession.setmOrderStatusList(orderStatusList);
+
             mRouteSession.setmOrderList(mOrdersList);
         }
         super.onCreate(savedInstanceState);
@@ -146,27 +146,39 @@ public class OrdersListFragment extends Fragment
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_orders_list, container, false);
+
         thisActivity = getActivity();
+
         mLocationManager = (LocationManager) thisActivity.getSystemService(Context.LOCATION_SERVICE);
+
         mOrdersListFragmentRecycler = (RecyclerView) view.findViewById(R.id.recylerview);
+
         mOrdersListLayoutManager = new LinearLayoutManager(thisActivity, LinearLayoutManager.VERTICAL, false);
+
         mOrdersListFragmentRecycler.setLayoutManager(mOrdersListLayoutManager);
-        mOrderDetailsCard=(CardView)view.findViewById(R.id.orderdetailscardview);
+
+        //mOrderDetailsCard=(CardView)view.findViewById(R.id.orderdetailscardview);
+
         processData=new ProgressDialog(getActivity());
+
         processData.setMessage("Loading data");
+
         processData.setTitle("Orders");
 
-
         mOrderDetailsAdapter = new OrderDetailsAdapter(mOrdersList, thisFragment);
+
         mOrdersListFragmentRecycler.setAdapter(mOrderDetailsAdapter);
 
         registerClickEvents();
 
         int hasLocationfinePermission = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION);
+
         int hasLocationCoarsePermission=ContextCompat.checkSelfPermission(getActivity(),Manifest.permission.ACCESS_COARSE_LOCATION);
+
         if (hasLocationfinePermission == PackageManager.PERMISSION_GRANTED && hasLocationCoarsePermission==PackageManager.PERMISSION_GRANTED)
         {
             if(mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+
                 setData();
             }
             else
@@ -211,7 +223,9 @@ public class OrdersListFragment extends Fragment
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
                 {
                     int hasLocationfinePermission = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION);
+
                     int hasLocationCoarsePermission=ContextCompat.checkSelfPermission(getActivity(),Manifest.permission.ACCESS_COARSE_LOCATION);
+
                     if (hasLocationfinePermission == PackageManager.PERMISSION_GRANTED && hasLocationCoarsePermission==PackageManager.PERMISSION_GRANTED)
                     {
                         if(mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
@@ -227,10 +241,15 @@ public class OrdersListFragment extends Fragment
                 else
                 {
                     Log.d("outgoing","hello");
+
                     System.runFinalization();
+
                     Intent startMain = new Intent(Intent.ACTION_MAIN);
+
                     startMain.addCategory(Intent.CATEGORY_HOME);
+
                     startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
                     startActivity(startMain);
 
                 }
@@ -268,6 +287,7 @@ public class OrdersListFragment extends Fragment
     public void setData()
     {
         Location location=mLocationManager.getLastKnownLocation(Constants.NETWORK_LOCATION_PROVIDER);
+
         if(location!=null)
         {
             if (mLastKnownLocation != null) {
@@ -291,6 +311,7 @@ public class OrdersListFragment extends Fragment
             setOldData();
         }
         int haslocationfinePermission = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION);
+
         if (haslocationfinePermission == PackageManager.PERMISSION_GRANTED)
         {
             mLocationManager.requestSingleUpdate(Constants.LOCATION_PROVIDER, new mLocationListener(), null);
@@ -305,23 +326,32 @@ public class OrdersListFragment extends Fragment
     public void setOldData()
     {
         mOrderDetailsAdapter = new OrderDetailsAdapter(mOrdersList, thisFragment);
+
         mOrdersListFragmentRecycler.setAdapter(mOrderDetailsAdapter);
+
         registerClickEvents();
     }
 
     public void showEnableGPSDialog()
     {
         AlertDialog.Builder enableGPS;enableGPS=new AlertDialog.Builder(thisActivity);
+
         enableGPS.setMessage("Please Enable Location");
+
         enableGPS.setTitle("Location Alert");
+
         enableGPS.setPositiveButton("ENABLE", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+
                 Intent viewIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+
                 startActivityForResult(viewIntent, Constants.LOCATION_SETTINGS_ACTION);
             }
         });
+
         enableGPS.create();
+
         enableGPS.show();
     }
     public void onCardClickAction(View view,int position)
@@ -333,9 +363,13 @@ public class OrdersListFragment extends Fragment
                 //Intent mapIntent = new Intent(thisActivity, DeliveryFeedbackActivity.class);
 
                 Fragment mExtraDetailsFragment = new ExtraOrderDetailsFragment();
+
                 Bundle mDataForExtraDetailsFragment = new Bundle();
+
                 mDataForExtraDetailsFragment.putInt("position", position);
+
                 mExtraDetailsFragment.setArguments(mDataForExtraDetailsFragment);
+
                 mRouteSession.setPosition(position);
 
                 cardStatus=mRouteSession.getmOrderList().get(position).getCardStatus();
@@ -345,6 +379,7 @@ public class OrdersListFragment extends Fragment
                     //slideDown(view);
                     Log.d("response","compact card");
                     new AnimationHelper(view,cardStatus,context,thisActivity,position);
+
                     mRouteSession.getmOrderList().get(position).setCardStatus(CARD_EXPANDED);
 
 
@@ -353,23 +388,11 @@ public class OrdersListFragment extends Fragment
                 {
                     //slideUp(view);
                     Log.d("response","compact expanded");
+
                     new AnimationHelper(view,cardStatus,context,thisActivity,position);
+
                     mRouteSession.getmOrderList().get(position).setCardStatus(CARD_COMPACT);
                 }
-
-                /*thisActivity
-                        .getSupportFragmentManager()
-                        .beginTransaction()
-                        .setCustomAnimations(
-                                R.anim.card_flip_right_in,
-                                R.anim.card_flip_right_out,
-                                R.anim.card_flip_left_in,
-                                R.anim.card_flip_left_out)
-                        .replace(R.id.orders_container, mExtraDetailsFragment)
-                        .addToBackStack("OrdersState")
-                        .commit();*/
-                //mRouteSession.setPosition(position);
-                //startActivity(mapIntent);
                 //TODO:use a singleton class to keep track of the orders completed and according disable intents to next activity
             }
             else
@@ -385,51 +408,70 @@ public class OrdersListFragment extends Fragment
 
 
     public void registerClickEvents(){
+
         mOrderDetailsAdapter.setOnItemClickListener(new OrderDetailsAdapter.OrderItemClickListener() {
             @Override
             public void onItemClick(int position, View v) {
+
                 onCardClickAction(v, position);
             }
         });
     }
 
     public void onClickOrderStatus(View v) {
+
         Log.d("Order_Click", "Clicked on the order status");
+
         Intent testintent=new Intent(getActivity(),DeliveryFeedbackActivity.class);
+
         startActivity(testintent);
     }
 
     public void onClickCallExecutive(View v,int position){
-        String phone="9000051535";
+
         Intent intent = new Intent(Intent.ACTION_DIAL,Uri.parse("tel:"+mRouteSession.getmOrderList().get(position).getPhones().get(0).getCountryCode()+mRouteSession.getmOrderList().get(position).getPhones().get(0).getNumber()));
+
         startActivity(intent);
     }
     public void onClickFullScreenMap(View v,int position)
     {
-        //int position=(int)v.getTag();
-       // Log.d("finalposition",position+"");
         Intent MapIntent = new Intent(thisActivity, MapActivity.class);
+
         MapIntent.putExtra("position",position);
+
         startActivity(MapIntent);
     }
 
     public void download(Location location)
     {
         NetworkAvailability mNetworkAvailability=new NetworkAvailability(thisActivity);
+
         processData.show();
+
         String url=new GenerateUrl(location).getMurl();
+
         JsonObjectRequest request= CargoCity.getmInstance().getGeneralRequest(new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+
                 Log.d("response", response.toString());
+
                 processData.dismiss();
+
                 processData.cancel();
+
                 mRouteSession.setmMatrixDownloadStatus(1);
+
                 ParseDistanceMatrix mParseDistanceMatrix = new ParseDistanceMatrix(response);
+
                 mDistanceList = mParseDistanceMatrix.getDistanceList();
+
                 mDurationList = mParseDistanceMatrix.getDurationList();
+
                 mRouteSession.setmDistanceList(mDistanceList);
+
                 mRouteSession.setmDurationList(mDurationList);
+
                 mOrdersListFragmentRecycler.setAdapter(mOrderDetailsAdapter);
 
             }
@@ -437,16 +479,24 @@ public class OrdersListFragment extends Fragment
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("response", "error");
+
                 mRouteSession.setmMatrixDownloadStatus(0);
+
                 mOrderDetailsAdapter = new OrderDetailsAdapter(mOrdersList,thisFragment);
+
                 mOrdersListFragmentRecycler.setAdapter(mOrderDetailsAdapter);
+
                 registerClickEvents();
+
                 processData.dismiss();
+
                 processData.cancel();
+
                 Toast.makeText(thisActivity, "Error Downloading Distance", Toast.LENGTH_SHORT).show();
             }
         }, url);
         if(mNetworkAvailability.isNetworkAvailable())
+
             CargoCity.getmInstance().getRequestQueue().add(request);
         else
             Toast.makeText(thisActivity,"Network Unavailable",Toast.LENGTH_SHORT).show();
