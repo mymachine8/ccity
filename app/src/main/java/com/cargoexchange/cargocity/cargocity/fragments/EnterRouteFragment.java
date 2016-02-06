@@ -2,6 +2,7 @@ package com.cargoexchange.cargocity.cargocity.fragments;
 
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.support.v4.app.FragmentActivity;
 import android.app.ProgressDialog;
@@ -13,6 +14,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -111,6 +114,9 @@ public class EnterRouteFragment extends Fragment
                                     String data = response.getString("data");
                                     Gson gson = new GsonBuilder().create();
                                     Route route = gson.fromJson(data, Route.class);
+                                    InputMethodManager inputMethodManager = (InputMethodManager)thisActivity
+                                            .getSystemService(Activity.INPUT_METHOD_SERVICE);
+                                    inputMethodManager.hideSoftInputFromWindow(thisActivity.getCurrentFocus().getWindowToken(), 0);
                                     onSuccessOrdersList(route);
                                 } else {
                                     String error_message = response.getString("message");
