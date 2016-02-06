@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
+    <!--<color name="colorPrimary">#3F51B5</color>-->
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="violet">#433876</color>
+    <color name="colorPrimary">#433876</color>
+    <color name="red">#DD4f53</color>
+    <color name="green_call">#4BAE50</color>
+    <color name="green_status">#00BEA4</color>
+    <color name="blue">#03A9F4</color>
+    <color name="hyperLinkColor">@android:color/white</color>
 </resources>

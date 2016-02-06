@@ -83,97 +83,19 @@
                 android:theme="@style/Button.Branded"
                 android:layout_marginTop="5dp" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:typeface="serif"
+                android:layout_height="match_parent"
+                android:autoLink="web"
+                android:textColorLink="@color/hyperLinkColor"
+                android:text="@string/companyurl"
+                android:layout_gravity="center_horizontal"
+                android:layout_alignParentBottom="true"
+                android:gravity="bottom"
+                android:layout_marginTop="5dp"
+                android:id="@+id/textView" />
+
         </LinearLayout>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:autoLink="web"
-            android:textColor="@android:color/white"
-            android:text="@string/companyurl"
-            android:layout_gravity="center_horizontal"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:id="@+id/textView" />
     </RelativeLayout>
 </ScrollView>
-
-    <!--<RelativeLayout
-        android:layout_centerHorizontal="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:clickable="false">
-        <ImageView
-            android:id="@+id/companylogo"
-            android:layout_width="@dimen/logo_size"
-            android:layout_height="@dimen/logo_size"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="60dp"
-            android:src="@drawable/logo"
-            />
-        <EditText
-            android:id="@+id/input_username"
-            android:layout_width="@dimen/login_input_box"
-            android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_username"
-            android:textColor="@android:color/white"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/activity_login_marginTop"
-            android:hint="User Name"
-            android:textColorHint="@android:color/white"
-            >
-        </EditText>
-
-        <EditText
-            android:id="@+id/input_password"
-            android:layout_width="@dimen/login_input_box"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/white"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@id/input_username"
-            android:drawableLeft="@drawable/ic_password"
-            android:hint="Password"
-            android:password="true"
-            android:textColorHint="@android:color/white"
-            android:layout_marginTop="20dp"
-            >
-        </EditText>
-
-
-
-
-        <TextView
-            android:layout_alignEnd="@id/input_password"
-            android:layout_alignRight="@id/input_password"
-            android:layout_below="@id/input_password"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:textColor="@android:color/white"
-            android:text="Forgot Password"
-            android:layout_margin="5dp"/>
-
-
-
-        <Button
-            android:id="@+id/btn_login"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@id/input_password"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:text="LOGIN"
-            android:theme="@style/Button.Branded"
-            android:layout_marginTop="35dp"
-            />
-
-    </RelativeLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:autoLink="web"
-        android:text="@string/companyurl"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        />
-</RelativeLayout>-->

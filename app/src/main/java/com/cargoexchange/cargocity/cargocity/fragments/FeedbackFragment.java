@@ -286,9 +286,12 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener
     }
 
     private void checkPermissionAndCallSignature(){
-        int accessWritePermissionCheck = ContextCompat.checkSelfPermission(mActivityContext, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        int accessReadPermissionCheck=ContextCompat.checkSelfPermission(mActivityContext, Manifest.permission.READ_EXTERNAL_STORAGE);
-        if(accessWritePermissionCheck!= PackageManager.PERMISSION_GRANTED && accessReadPermissionCheck!=PackageManager.PERMISSION_GRANTED)
+        int accessWritePermissionCheck = ContextCompat.checkSelfPermission(mActivityContext,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int accessReadPermissionCheck=ContextCompat.checkSelfPermission(mActivityContext,
+                Manifest.permission.READ_EXTERNAL_STORAGE);
+        if(accessWritePermissionCheck!= PackageManager.PERMISSION_GRANTED &&
+                accessReadPermissionCheck!=PackageManager.PERMISSION_GRANTED)
         {
                     requestPermissions(
                             new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,

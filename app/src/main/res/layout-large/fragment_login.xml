@@ -83,18 +83,19 @@
                 android:theme="@style/Button.Branded"
                 android:layout_marginTop="15dp" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:typeface="serif"
+                android:layout_height="match_parent"
+                android:autoLink="web"
+                android:textColorLink="@color/hyperLinkColor"
+                android:text="@string/companyurl"
+                android:layout_gravity="center_horizontal"
+                android:layout_alignParentBottom="true"
+                android:gravity="bottom"
+                android:layout_marginTop="5dp"
+                android:id="@+id/textView" />
+
         </LinearLayout>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:autoLink="web"
-            android:textColor="@android:color/white"
-            android:text="@string/companyurl"
-            android:textSize="25sp"
-            android:layout_gravity="center_horizontal"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dp"
-            android:id="@+id/textView" />
     </RelativeLayout>
 </ScrollView>
