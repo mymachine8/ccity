@@ -9,8 +9,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.cargoexchange.cargocity.cargocity.CargoCity;
 import com.cargoexchange.cargocity.cargocity.R;
 import com.cargoexchange.cargocity.cargocity.models.Route;
+import com.squareup.leakcanary.RefWatcher;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -75,4 +77,10 @@ public class RouteDetailsFragment extends Fragment {
             ordersCountTextView.setText(Integer.toString(mRoute.getOrderList().size()));
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        RefWatcher refWatcher = CargoCity.getRefWatcher(getActivity());
+        refWatcher.watch(this);
+    }
 }

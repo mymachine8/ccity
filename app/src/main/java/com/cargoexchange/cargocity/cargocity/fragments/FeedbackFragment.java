@@ -65,6 +65,7 @@ import com.cargoexchange.cargocity.cargocity.utils.SaveSignPad;
 import com.google.gson.Gson;
 import com.scanlibrary.ScanActivity;
 import com.scanlibrary.ScanConstants;
+import com.squareup.leakcanary.RefWatcher;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -475,5 +476,12 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener
                         startCameraActivity(SCAN_REQUEST_CODE);
                         break;
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        RefWatcher refWatcher = CargoCity.getRefWatcher(getActivity());
+        refWatcher.watch(this);
     }
 }

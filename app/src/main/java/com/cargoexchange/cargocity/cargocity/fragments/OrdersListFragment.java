@@ -41,6 +41,8 @@ import com.cargoexchange.cargocity.cargocity.utils.AnimationHelper;
 import com.cargoexchange.cargocity.cargocity.utils.GenerateUrl;
 import com.cargoexchange.cargocity.cargocity.utils.NetworkAvailability;
 import com.cargoexchange.cargocity.cargocity.utils.ParseDistanceMatrix;
+import com.squareup.leakcanary.RefWatcher;
+
 import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.List;
@@ -491,6 +493,13 @@ public class OrdersListFragment extends Fragment
             CargoCity.getmInstance().getRequestQueue().add(request);
         else
             Toast.makeText(thisActivity,"Network Unavailable",Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        RefWatcher refWatcher = CargoCity.getRefWatcher(getActivity());
+        refWatcher.watch(this);
     }
 }
 

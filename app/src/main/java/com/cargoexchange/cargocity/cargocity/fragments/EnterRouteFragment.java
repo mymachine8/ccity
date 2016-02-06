@@ -2,14 +2,10 @@ package com.cargoexchange.cargocity.cargocity.fragments;
 
 
 import android.Manifest;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.location.Location;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -124,9 +120,9 @@ public class EnterRouteFragment extends Fragment
                                 }
                             } catch (JSONException e) {
                                 Log.e("PARSE_ERROR", e.getMessage().toString());
-                            }catch(JsonParseException e) {
+                            } catch (JsonParseException e) {
                                 Log.e("PARSE_ERROR", e.getMessage().toString());
-                            }catch(Exception e) {
+                            } catch (Exception e) {
                                 Log.e("GENERAL", e.getMessage().toString());
                             }
 
@@ -138,11 +134,11 @@ public class EnterRouteFragment extends Fragment
                             mRouteSubmitBtn.setEnabled(true);
                             NetworkResponse response = error.networkResponse;
                             if (response != null && response.data != null) {
-                                       String json = new String(response.data);
-                                        json = ParseJSON.trimMessage(json, "message");
-                                        if (json != null) {
-                                            displayToastMessage(json);
-                                        }
+                                String json = new String(response.data);
+                                json = ParseJSON.trimMessage(json, "message");
+                                if (json != null) {
+                                    displayToastMessage(json);
+                                }
                             }
                         }
                     }, uri);
