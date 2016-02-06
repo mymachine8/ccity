@@ -131,4 +131,10 @@ public class CameraCustom extends AppCompatActivity
         mediaFile = new File(FILE_NAME);
         return mediaFile;
     }
+
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+    }
 }

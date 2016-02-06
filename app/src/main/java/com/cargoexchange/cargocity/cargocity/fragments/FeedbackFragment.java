@@ -44,11 +44,9 @@ import com.cargoexchange.cargocity.cargocity.R;
 import com.cargoexchange.cargocity.cargocity.SignatureActivity;
 
 import com.cargoexchange.cargocity.cargocity.constants.Constants;
-import com.cargoexchange.cargocity.cargocity.constants.FragmentTag;
 import com.cargoexchange.cargocity.cargocity.constants.OrderStatus;
 import com.cargoexchange.cargocity.cargocity.constants.RouteSession;
 import com.cargoexchange.cargocity.cargocity.models.Feedback;
-import com.cargoexchange.cargocity.cargocity.utils.GenerateRequest;
 import com.cargoexchange.cargocity.cargocity.utils.ImageHelper;
 import com.cargoexchange.cargocity.cargocity.utils.ParseJSON;
 import com.cargoexchange.cargocity.cargocity.utils.SaveSignPad;

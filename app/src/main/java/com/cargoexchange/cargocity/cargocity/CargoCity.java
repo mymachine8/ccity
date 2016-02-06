@@ -13,8 +13,6 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.cargoexchange.cargocity.cargocity.constants.CargoSharedPreferences;
-import com.squareup.leakcanary.LeakCanary;
-import com.squareup.leakcanary.RefWatcher;
 
 import org.json.JSONObject;
 
@@ -25,18 +23,18 @@ public class CargoCity extends Application
 {
     private static CargoCity mInstance;
     private RequestQueue mRequestQueue;
-    private RefWatcher refWatcher;
+    //private RefWatcher refWatcher;
 
-    public static RefWatcher getRefWatcher(Context context) {
+   /* public static RefWatcher getRefWatcher(Context context) {
         CargoCity application = (CargoCity) context.getApplicationContext();
         return application.refWatcher;
-    }
+    }*/
 
     @Override
     public void onCreate()
     {
         super.onCreate();
-        refWatcher = LeakCanary.install(this);
+        //refWatcher = LeakCanary.install(this);
         mRequestQueue= Volley.newRequestQueue(this);
         mInstance=this;
 

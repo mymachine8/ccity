@@ -88,6 +88,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         mCamera.release();
         mCamera=null;
     }
+
     /*@Override
     protected void onDraw(Canvas canvas)
     {
