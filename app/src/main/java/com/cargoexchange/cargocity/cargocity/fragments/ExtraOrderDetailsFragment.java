@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -113,6 +114,7 @@ public class ExtraOrderDetailsFragment extends Fragment implements OnMapReadyCal
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_extra_order_details, container, false);
+        thisActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         thisActivity=(OrdersActivity)getActivity();
         position = getArguments().getInt("position");
         mRouteSesion = RouteSession.getInstance();

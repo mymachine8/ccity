@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.WindowManager;
 
 import com.cargoexchange.cargocity.cargocity.constants.Constants;
 import com.cargoexchange.cargocity.cargocity.fragments.EnterRouteFragment;
@@ -21,6 +22,7 @@ public class OrdersActivity extends AppCompatActivity {
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_orders);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         grantLocationPermissions();
         //TODO: Have to look into battery status (temportary comment)
         //IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);

@@ -30,9 +30,7 @@
             android:id="@+id/btn_route"
             android:text="GO"
             android:textColor="@android:color/white"
-            android:textSize="25sp"
-            android:textScaleX="2"
-            android:scaleY="2"
+            android:textSize="@dimen/button_text_size"
             android:layout_marginTop="40dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import com.cargoexchange.cargocity.cargocity.R;
@@ -41,6 +42,7 @@ public class RouteDetailsFragment extends Fragment {
         mRoute = (Route) getArguments().getSerializable(
                 ROUTE_KEY);
         View view = inflater.inflate(R.layout.fragment_route_details, container, false);
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         bindViewVariables(view);
         return view;
     }
