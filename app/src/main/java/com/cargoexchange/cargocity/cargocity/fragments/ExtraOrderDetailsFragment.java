@@ -91,7 +91,8 @@ public class ExtraOrderDetailsFragment extends Fragment implements OnMapReadyCal
         // Required empty public constructor
     }
 
-    public static ExtraOrderDetailsFragment newInstance(String param1, String param2) {
+    public static ExtraOrderDetailsFragment newInstance(String param1, String param2)
+    {
         ExtraOrderDetailsFragment fragment = new ExtraOrderDetailsFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
