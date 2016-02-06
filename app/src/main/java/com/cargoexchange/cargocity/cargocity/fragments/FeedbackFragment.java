@@ -3,25 +3,17 @@ package com.cargoexchange.cargocity.cargocity.fragments;
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.Toolbar;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,12 +39,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonRequest;
 import com.cargoexchange.cargocity.cargocity.CargoCity;
-import com.cargoexchange.cargocity.cargocity.DeliveryFeedbackActivity;
-import com.cargoexchange.cargocity.cargocity.MapActivity;
 import com.cargoexchange.cargocity.cargocity.OrdersActivity;
 import com.cargoexchange.cargocity.cargocity.R;
 import com.cargoexchange.cargocity.cargocity.SignatureActivity;
-import com.cargoexchange.cargocity.cargocity.constants.CargoSharedPreferences;
+
 import com.cargoexchange.cargocity.cargocity.constants.Constants;
 import com.cargoexchange.cargocity.cargocity.constants.FragmentTag;
 import com.cargoexchange.cargocity.cargocity.constants.OrderStatus;
@@ -65,15 +55,12 @@ import com.cargoexchange.cargocity.cargocity.utils.SaveSignPad;
 import com.google.gson.Gson;
 import com.scanlibrary.ScanActivity;
 import com.scanlibrary.ScanConstants;
-import com.squareup.leakcanary.RefWatcher;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -476,12 +463,5 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener
                         startCameraActivity(SCAN_REQUEST_CODE);
                         break;
         }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        RefWatcher refWatcher = CargoCity.getRefWatcher(getActivity());
-        refWatcher.watch(this);
     }
 }

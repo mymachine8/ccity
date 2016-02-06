@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,7 +33,6 @@ import com.cargoexchange.cargocity.cargocity.constants.Constants;
 import com.cargoexchange.cargocity.cargocity.utils.GenerateRequest;
 import com.cargoexchange.cargocity.cargocity.utils.NetworkAvailability;
 import com.cargoexchange.cargocity.cargocity.utils.ParseJSON;
-import com.squareup.leakcanary.RefWatcher;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -208,13 +206,6 @@ public class LoginFragment extends Fragment
     private void displayToastMessage(String message) {
         Toast.makeText(thisActivity, message, Toast.LENGTH_LONG).show();
         Log.e("LOGIN", message);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        RefWatcher refWatcher = CargoCity.getRefWatcher(getActivity());
-        refWatcher.watch(this);
     }
 }
 

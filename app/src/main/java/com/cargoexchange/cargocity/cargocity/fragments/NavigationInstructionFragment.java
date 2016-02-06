@@ -8,13 +8,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.cargoexchange.cargocity.cargocity.CargoCity;
 import com.cargoexchange.cargocity.cargocity.R;
 import com.cargoexchange.cargocity.cargocity.adapters.InstructionListAdapter;
 import com.cargoexchange.cargocity.cargocity.models.NavigationInstructionModel;
 import com.cargoexchange.cargocity.cargocity.utils.ParseDirections;
-import com.squareup.leakcanary.RefWatcher;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -57,12 +54,6 @@ public class NavigationInstructionFragment extends Fragment
         super.onDestroyView();
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        RefWatcher refWatcher = CargoCity.getRefWatcher(getActivity());
-        refWatcher.watch(this);
-    }
 }
 
 

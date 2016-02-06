@@ -12,13 +12,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-
-import com.cargoexchange.cargocity.cargocity.CargoCity;
 import com.cargoexchange.cargocity.cargocity.R;
-import com.cargoexchange.cargocity.cargocity.constants.FragmentTag;
 import com.cargoexchange.cargocity.cargocity.utils.SaveSignPad;
 import com.cargoexchange.cargocity.cargocity.utils.SignPadView;
-import com.squareup.leakcanary.RefWatcher;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -79,12 +75,5 @@ public class SignatureFragment extends Fragment
                 break;*/
         }
         return true;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        RefWatcher refWatcher = CargoCity.getRefWatcher(getActivity());
-        refWatcher.watch(this);
     }
 }

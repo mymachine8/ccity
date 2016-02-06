@@ -41,7 +41,6 @@ import com.cargoexchange.cargocity.cargocity.utils.AnimationHelper;
 import com.cargoexchange.cargocity.cargocity.utils.GenerateUrl;
 import com.cargoexchange.cargocity.cargocity.utils.NetworkAvailability;
 import com.cargoexchange.cargocity.cargocity.utils.ParseDistanceMatrix;
-import com.squareup.leakcanary.RefWatcher;
 
 import org.json.JSONObject;
 import java.util.HashMap;
@@ -86,6 +85,8 @@ public class OrdersListFragment extends Fragment
     private FragmentActivity thisActivity;
 
     private OrdersListFragment context;
+
+    private boolean GPS_ENABLED_IN_APP=false;
 
     public OrdersListFragment() {
         // Required empty public constructor
@@ -193,6 +194,7 @@ public class OrdersListFragment extends Fragment
         {
             if(mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
             {
+                GPS_ENABLED_IN_APP=true;
                 setData();
             }
             else
@@ -281,7 +283,7 @@ public class OrdersListFragment extends Fragment
 
         if(location!=null)
         {
-            if (mLastKnownLocation != null) {
+            if (mLastKnownLocation != null && !GPS_ENABLED_IN_APP) {
                 if (location.getTime() - mLastKnownLocation.getTime() > Constants.TWO_MINUTES)
                 {
                     mLastKnownLocation = location;
@@ -293,6 +295,7 @@ public class OrdersListFragment extends Fragment
                     setOldData();
                 }
             } else {
+                GPS_ENABLED_IN_APP=false;
                 mLastKnownLocation = location;
                 download(location);
             }
@@ -301,7 +304,7 @@ public class OrdersListFragment extends Fragment
         {
             setOldData();
         }
-        int haslocationfinePermission = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION);
+        int haslocationfinePermission = ContextCompat.checkSelfPermission(getActivity(),Manifest.permission.ACCESS_FINE_LOCATION);
 
         if (haslocationfinePermission == PackageManager.PERMISSION_GRANTED)
         {
@@ -493,13 +496,6 @@ public class OrdersListFragment extends Fragment
             CargoCity.getmInstance().getRequestQueue().add(request);
         else
             Toast.makeText(thisActivity,"Network Unavailable",Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        RefWatcher refWatcher = CargoCity.getRefWatcher(getActivity());
-        refWatcher.watch(this);
     }
 }
 
