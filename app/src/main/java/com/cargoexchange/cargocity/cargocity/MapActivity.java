@@ -27,6 +27,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.cargoexchange.cargocity.cargocity.constants.Constants;
 import com.cargoexchange.cargocity.cargocity.constants.RouteSession;
 import com.cargoexchange.cargocity.cargocity.fragments.NavigationInstructionFragment;
+import com.cargoexchange.cargocity.cargocity.models.Address;
 import com.cargoexchange.cargocity.cargocity.services.LocationService;
 import com.cargoexchange.cargocity.cargocity.utils.IsLocationLatest;
 import com.cargoexchange.cargocity.cargocity.utils.ParseAddress;
@@ -97,33 +98,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         int pos=(int)getIntent().getExtras().get("position");
         mParseAddress = new ParseAddress();
         mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        //int position = mRouteSession.getPosition();
-        int position=pos;
-        String addressLine1 = mParseAddress.getProcessedaddress(mRouteSession
-                .getmOrderList()
-                .get(position)
-                .getAddress()
-                .getLine1());
-        String addressLine2 = mParseAddress.getProcessedaddress(mRouteSession
-                .getmOrderList()
-                .get(position)
-                .getAddress()
-                .getLine2());
-        String addressCity = mParseAddress.getProcessedaddress(mRouteSession
-                .getmOrderList()
-                .get(position)
-                .getAddress()
-                .getCity());
-        String addressState = mParseAddress.getProcessedaddress(mRouteSession.
-                getmOrderList()
-                .get(position)
-                .getAddress()
-                .getState());
-        mDestination =    addressLine1 + ","
-                        + addressLine2 + ","
-                        + addressCity + ","
-                        + addressState;
+        mDestination = getParsedAddress(mRouteSession.getmOrderList().get(pos).getAddress());
         checkpermission();
+    }
+
+    public String getParsedAddress(Address address){
+        String addressStr = mParseAddress.getProcessedaddress(address.getLine1())
+                + "," + mParseAddress.getProcessedaddress(address.getLine2())
+                + "," + mParseAddress.getProcessedaddress(address.getCity())
+                + "," + mParseAddress.getProcessedaddress(address.getState());
+
+        return addressStr;
     }
 
     public void checkpermission()
@@ -134,7 +119,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
         else
         {
-            if(mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
+            if(mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
             {
                 Location location = mLocationManager.getLastKnownLocation(Constants.LOCATION_PROVIDER);
                 if (location != null)
@@ -373,16 +358,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private void trackVehicle() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return;
         }
-       /* mPrevLocation = mLocationManager.getLastKnownLocation(mLocationManager.GPS_PROVIDER);
+        mPrevLocation = mLocationManager.getLastKnownLocation(mLocationManager.GPS_PROVIDER);
         mLocationManager.requestLocationUpdates(mLocationManager.GPS_PROVIDER, 3000, 0, new LocationListener()
         {
             @Override
@@ -420,6 +398,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             {
 
             }
-        });*/
+        });
     }
 }
