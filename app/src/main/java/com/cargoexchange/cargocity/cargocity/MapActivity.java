@@ -113,9 +113,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     public void checkpermission()
     {
-        if (ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+        if (ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED)
         {
-            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION},Constants.PERMISSION_ACCESS_LOCATION);
+            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION},Constants.PERMISSION_ACCESS_LOCATION);
         }
         else
         {
@@ -147,7 +151,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     {
         if(requestCode==Constants.LOCATION_SETTINGS_ACTION)
         {
-            if(mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            if(mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) &&
+                    mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
                 checkpermission();
             }
             else {
@@ -169,7 +174,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             mapDataProgress.setMessage("Loading...");
             mapDataProgress.setTitle("Map");
             mapDataProgress.show();
-            JsonObjectRequest request = CargoCity.getmInstance().getGeneralRequest(new Response.Listener<JSONObject>() {
+            JsonObjectRequest request = CargoCity.getmInstance().getGeneralRequest(
+                    new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
                     Log.d("test", response.toString());
@@ -357,7 +363,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     private void trackVehicle() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         mPrevLocation = mLocationManager.getLastKnownLocation(mLocationManager.GPS_PROVIDER);
