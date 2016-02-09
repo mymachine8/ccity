@@ -439,21 +439,8 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
                     + "&traffic_model=" + Constants.MAP_TRAFFICMODEL_PESSIMISTIC
                     + "&mode=" + Constants.MAP_TRANSTMODE;
 
-            JsonObjectRequest request = CargoCity.getmInstance().getGeneralRequest(new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    Log.d("new", response.toString());
-                    //Use the routes to draw polyline on map
-                    routes=null;
-                    routes = new ParseDirections(response).getRoutes();
-                    //TODO:pass this bundle to extract the navigation instructions
-                    //sendToNavigationFragmentBundle = new Bundle();
-                    //sendToNavigationFragmentBundle.putString("mapData", response.toString());
-                    mholder.mSmallMap.getMapAsync(OrderDetailsAdapter.this);
-
-
-                }
-            }, new Response.ErrorListener() {
+            MyResponseListener myResponseListener = new MyResponseListener(mholder);
+            JsonObjectRequest request = CargoCity.getmInstance().getGeneralRequest(myResponseListener, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     //Toast.makeText(thisActivity, "Error!Please try again", Toast.LENGTH_LONG).show();
@@ -461,6 +448,25 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
                 }
             }, url);
             CargoCity.getmInstance().getRequestQueue().add(request);
+        }
+    }
+
+    private class MyResponseListener implements Response.Listener<JSONObject> {
+        private ViewHolder holder;
+        public MyResponseListener(ViewHolder holder) {
+            this.holder = holder;
+        }
+        @Override
+        public void onResponse(JSONObject response) {
+            Log.d("new", response.toString());
+            //Use the routes to draw polyline on map
+            routes=null;
+            routes = new ParseDirections(response).getRoutes();
+            //TODO:pass this bundle to extract the navigation instructions
+            //sendToNavigationFragmentBundle = new Bundle();
+            //sendToNavigationFragmentBundle.putString("mapData", response.toString());
+            holder.mSmallMap.getMapAsync(OrderDetailsAdapter.this);
+
         }
     }
     public void getDestination(RouteSession mRouteSession,int position)
