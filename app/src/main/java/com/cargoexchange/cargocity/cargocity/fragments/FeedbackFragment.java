@@ -277,6 +277,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener
                 {
                     //TODO:Save the response in JSON file and send to orders page
                     saveTheResponseToFileForUploadingLater(feedbackJson);
+                    mRouteSession.getFeedbackUploadToServerFailedList().add(mOrderNo);
                     afterSubmitCallback();
 
                 }
