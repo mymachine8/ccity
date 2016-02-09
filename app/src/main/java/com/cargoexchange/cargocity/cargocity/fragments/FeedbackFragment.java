@@ -111,6 +111,8 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener
     private Button mSubmitMissedTagButton;
     public SaveSignPad signPadInstance = null;
     private boolean isOrderDelivered = false;
+    private RouteSession mRouteSession;
+    private int pos;
     private String ratingText[] = new String []{"Very Poor","Poor", "Good", "Very Good", "Excellent"};
 
     @Override
@@ -130,6 +132,9 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener
 
         mActivityContext = getActivity();
         mResource=this.getResources();
+        mRouteSession=RouteSession.getInstance();
+        pos=mRouteSession.getPosition();
+        mOrderNo=mRouteSession.getmOrderList().get(pos).getOrderId();
         mActivityContext.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         bindViewVariables(view);
         bindListeners();
@@ -212,9 +217,9 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener
     }
 
     public void afterSubmitCallback(){
-        RouteSession mRouteSession=RouteSession.getInstance();
-        int pos=mRouteSession.getPosition();
-        mOrderNo=mRouteSession.getmOrderList().get(pos).getOrderId();
+        //RouteSession mRouteSession=RouteSession.getInstance();
+        //int pos=mRouteSession.getPosition();
+        //mOrderNo=mRouteSession.getmOrderList().get(pos).getOrderId();
         if(isOrderDelivered) {
             mRouteSession.getmOrderList().get(pos).setDeliveryStatus(OrderStatus.DELIVERED);
         }else {
@@ -290,14 +295,15 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener
         {
             rootFile.mkdir();
         }
-        File file = new File(rootFile,"failed"+ ".ser");
+        File file = new File(rootFile,mOrderNo+ ".ser");
         String filename=file.getAbsolutePath();
         try {
             ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(file));
             outputStream.writeObject(feedbackJSON.toString());
             outputStream.flush();
             outputStream.close();
-            Deserializer obj=new Deserializer();
+
+            Deserializer obj = new Deserializer();
             obj.deserialize(filename);
         }
         catch (FileNotFoundException e){e.printStackTrace();}

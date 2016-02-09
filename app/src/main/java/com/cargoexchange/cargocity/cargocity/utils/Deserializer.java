@@ -16,8 +16,7 @@ public class Deserializer
 {
     public void deserialize(String file) {
         try {
-            ObjectInputStream in = new ObjectInputStream(new FileInputStream
-                    (Environment.getExternalStorageDirectory() + "/FeedBack" + "/failed.ser"));
+            ObjectInputStream in = new ObjectInputStream(new FileInputStream(file));
             int count = 0;
             while (true) {
                 count++;
