@@ -75,6 +75,8 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
 
     private String mDestination;
 
+    private MylocationListener locationListener;
+
     public OrderDetailsAdapter(List<Order> orderDetails, Fragment fragment) {
         mFragmentInstance = fragment;
         this.orderDetails = orderDetails;
@@ -87,7 +89,8 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         this.mItemClickListener = careClickListener;
     }
 
-    public OrderDetailsAdapter() {
+    public OrderDetailsAdapter()
+    {
 
     }
 
@@ -219,32 +222,13 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
+        locationListener = new MylocationListener(holder);
         Location location = mLocationManager.getLastKnownLocation(Constants.LOCATION_PROVIDER);
         if(location!=null)
             fetchMapData(holder,location);
-        else
-            mLocationManager.requestSingleUpdate(Constants.LOCATION_PROVIDER, new LocationListener()
-            {
-                @Override
-                public void onLocationChanged(Location location) {
-                    fetchMapData(holder, location);
-                }
-
-                @Override
-                public void onStatusChanged(String provider, int status, Bundle extras) {
-
-                }
-
-                @Override
-                public void onProviderEnabled(String provider) {
-
-                }
-
-                @Override
-                public void onProviderDisabled(String provider) {
-
-                }
-            }, null);
+        else {
+            mLocationManager.requestSingleUpdate(Constants.LOCATION_PROVIDER,locationListener,null);
+        }
         //getLocation();
 
         holder.itemView.setOnClickListener(holder);
@@ -254,7 +238,7 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
             holder.mStatusImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ((OrdersListFragment) mFragmentInstance).onClickOrderStatus(v,position);
+                    ((OrdersListFragment) mFragmentInstance).onClickFullScreenMap(v, position);
                 }
             });
         }
@@ -286,6 +270,34 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
                 ((OrdersListFragment) mFragmentInstance).onClickCallExecutive(v, position);
             }
         });
+    }
+
+    private class MylocationListener implements LocationListener{
+        ViewHolder holder;
+        public MylocationListener(ViewHolder holder){
+            this.holder = holder;
+        }
+    @Override
+        public void onLocationChanged(Location location)
+        {
+            fetchMapData(holder, location);
+
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
     }
 
     @Override

@@ -43,13 +43,13 @@ import com.cargoexchange.cargocity.cargocity.utils.NetworkAvailability;
 import com.cargoexchange.cargocity.cargocity.utils.ParseDistanceMatrix;
 
 import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 
-public class OrdersListFragment extends Fragment
-{
+public class OrdersListFragment extends Fragment {
     private static String ORDERS_LIST_KEY = "orders_list_key";
 
     private RecyclerView mOrdersListFragmentRecycler;
@@ -74,11 +74,11 @@ public class OrdersListFragment extends Fragment
 
     List<String> mDurationList;
 
-    private final int CARD_EXPANDED=1;
+    private final int CARD_EXPANDED = 1;
 
-    private final int CARD_COMPACT=0;
+    private final int CARD_COMPACT = 0;
 
-    private int cardStatus=0;
+    private int cardStatus = 0;
 
     private Fragment thisFragment;
 
@@ -86,7 +86,9 @@ public class OrdersListFragment extends Fragment
 
     private OrdersListFragment context;
 
-    private boolean GPS_ENABLED_IN_APP=false;
+    private boolean GPS_ENABLED_IN_APP = false;
+    private mLocationListener locationListener;
+    private boolean mLocationUpdated = false;
 
     public OrdersListFragment() {
         // Required empty public constructor
@@ -113,10 +115,9 @@ public class OrdersListFragment extends Fragment
 
         thisFragment = this;
 
-        context=this;
+        context = this;
 
-        if (mOrdersList == null || mOrdersList.size() == 0)
-        {
+        if (mOrdersList == null || mOrdersList.size() == 0) {
             mRoute = (Route) getArguments().getSerializable(ORDERS_LIST_KEY);
 
             mOrdersList = mRoute.getOrderList();
@@ -151,7 +152,7 @@ public class OrdersListFragment extends Fragment
 
         //mOrderDetailsCard=(CardView)view.findViewById(R.id.orderdetailscardview);
 
-        processData=new ProgressDialog(getActivity());
+        processData = new ProgressDialog(getActivity());
 
         processData.setMessage("Loading data");
 
@@ -165,40 +166,29 @@ public class OrdersListFragment extends Fragment
 
         int hasLocationfinePermission = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION);
 
-        int hasLocationCoarsePermission=ContextCompat.checkSelfPermission(getActivity(),Manifest.permission.ACCESS_COARSE_LOCATION);
+        int hasLocationCoarsePermission = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION);
 
-        if (hasLocationfinePermission == PackageManager.PERMISSION_GRANTED && hasLocationCoarsePermission==PackageManager.PERMISSION_GRANTED)
-        {
-            if(mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+        if (hasLocationfinePermission == PackageManager.PERMISSION_GRANTED && hasLocationCoarsePermission == PackageManager.PERMISSION_GRANTED) {
+            if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 
                 setData();
-            }
-            else
-            {
+            } else {
                 showEnableGPSDialog();
             }
-        }
-        else
-        {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION}, Constants.PERMISSION_ACCESS_LOCATION);
+        } else {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, Constants.PERMISSION_ACCESS_LOCATION);
         }
         return view;
     }
 
 
-
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        if(requestCode==Constants.LOCATION_SETTINGS_ACTION)
-        {
-            if(mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
-            {
-                GPS_ENABLED_IN_APP=true;
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == Constants.LOCATION_SETTINGS_ACTION) {
+            if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                GPS_ENABLED_IN_APP = true;
                 setData();
-            }
-            else
-            {
+            } else {
                 Toast.makeText(thisActivity, "Please turn on Location services", Toast.LENGTH_SHORT).show();
                 setOldData();
             }
@@ -207,33 +197,23 @@ public class OrdersListFragment extends Fragment
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults)
-    {
-        switch (requestCode)
-        {
-            case Constants.PERMISSION_ACCESS_LOCATION:
-            {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                {
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case Constants.PERMISSION_ACCESS_LOCATION: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     int hasLocationfinePermission = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION);
 
-                    int hasLocationCoarsePermission=ContextCompat.checkSelfPermission(getActivity(),Manifest.permission.ACCESS_COARSE_LOCATION);
+                    int hasLocationCoarsePermission = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION);
 
-                    if (hasLocationfinePermission == PackageManager.PERMISSION_GRANTED && hasLocationCoarsePermission==PackageManager.PERMISSION_GRANTED)
-                    {
-                        if(mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
-                        {
+                    if (hasLocationfinePermission == PackageManager.PERMISSION_GRANTED && hasLocationCoarsePermission == PackageManager.PERMISSION_GRANTED) {
+                        if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
                             setData();
-                        }
-                        else
-                        {
+                        } else {
                             showEnableGPSDialog();
                         }
                     }
-                }
-                else
-                {
-                    Log.d("outgoing","hello");
+                } else {
+                    Log.d("outgoing", "hello");
 
                     System.runFinalization();
 
@@ -252,14 +232,18 @@ public class OrdersListFragment extends Fragment
     }
 
 
-
-    public class mLocationListener implements LocationListener
-    {
+    public class mLocationListener implements LocationListener {
 
         @Override
-        public void onLocationChanged(Location location)
-        {
+        public void onLocationChanged(Location location) {
             download(location);
+            if (!mLocationUpdated) {
+                if (ActivityCompat.checkSelfPermission(thisActivity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    mLocationManager.removeUpdates(locationListener);
+                    mLocationManager.requestLocationUpdates(Constants.LOCATION_PROVIDER,Constants.TWO_MINUTES, 0,locationListener );
+                }
+                mLocationUpdated = true;
+            }
         }
 
         @Override
@@ -279,23 +263,25 @@ public class OrdersListFragment extends Fragment
     }
     public void setData()
     {
-        Location location=mLocationManager.getLastKnownLocation(Constants.NETWORK_LOCATION_PROVIDER);
-
+        //Location location=mLocationManager.getLastKnownLocation(Constants.NETWORK_LOCATION_PROVIDER);
+        Location location=mLocationManager.getLastKnownLocation(Constants.LOCATION_PROVIDER);
+        /*if(mLocationManager.getLastKnownLocation(Constants.LOCATION_PROVIDER)){
+            location = mLocationManager.getLastKnownLocation(Constants.LOCATION_PROVIDER);
+        }
+*/
         if(location!=null)
         {
-            if (mLastKnownLocation != null && !GPS_ENABLED_IN_APP) {
+            if (mLastKnownLocation != null)
+            {
                 if (location.getTime() - mLastKnownLocation.getTime() > Constants.TWO_MINUTES)
                 {
                     mLastKnownLocation = location;
                     download(location);
                 }
-                else
-                {
-                    //Retrieve the back stack data
-                    setOldData();
-                }
-            } else {
-                GPS_ENABLED_IN_APP=false;
+            }
+            else
+            {
+                //GPS_ENABLED_IN_APP=false;
                 mLastKnownLocation = location;
                 download(location);
             }
@@ -304,11 +290,18 @@ public class OrdersListFragment extends Fragment
         {
             setOldData();
         }
-        int haslocationfinePermission = ContextCompat.checkSelfPermission(getActivity(),Manifest.permission.ACCESS_FINE_LOCATION);
+        int haslocationfinePermission = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION);
 
+        locationListener = new mLocationListener();
         if (haslocationfinePermission == PackageManager.PERMISSION_GRANTED)
         {
-            mLocationManager.requestSingleUpdate(Constants.LOCATION_PROVIDER, new mLocationListener(), null);
+            if(mLocationUpdated) {
+                //unset listener
+
+            }
+            else {
+                mLocationManager.requestLocationUpdates(Constants.LOCATION_PROVIDER, 1000, 0,locationListener );
+            }
         }
         else
         {
@@ -423,7 +416,17 @@ public class OrdersListFragment extends Fragment
 
     public void onClickCallExecutive(View v,int position){
 
-        Intent intent = new Intent(Intent.ACTION_DIAL,Uri.parse("tel:"+mRouteSession.getmOrderList().get(position).getPhones().get(0).getCountryCode()+mRouteSession.getmOrderList().get(position).getPhones().get(0).getNumber()));
+        Intent intent = new Intent(Intent.ACTION_DIAL,Uri.parse("tel:"+mRouteSession.getmOrderList()
+                .get(position)
+                .getPhones()
+                .get(0)
+                .getCountryCode()
+                +mRouteSession
+                .getmOrderList()
+                .get(position)
+                .getPhones()
+                .get(0)
+                .getNumber()));
 
         startActivity(intent);
     }
