@@ -9,11 +9,13 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.util.JsonWriter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,6 +50,7 @@ import com.cargoexchange.cargocity.cargocity.constants.OrderStatus;
 import com.cargoexchange.cargocity.cargocity.constants.RouteSession;
 import com.cargoexchange.cargocity.cargocity.models.Feedback;
 import com.cargoexchange.cargocity.cargocity.utils.ImageHelper;
+import com.cargoexchange.cargocity.cargocity.utils.NetworkAvailability;
 import com.cargoexchange.cargocity.cargocity.utils.ParseJSON;
 import com.cargoexchange.cargocity.cargocity.utils.SaveSignPad;
 import com.google.gson.Gson;
@@ -58,7 +61,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -255,10 +263,51 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener
                         Constants.SOCKET_TIMEOUT_MS,
                         DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                         DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-                CargoCity.getmInstance().getRequestQueue().add(request);
+                if(isNetworkAvailable())
+                {
+                    CargoCity.getmInstance().getRequestQueue().add(request);
+                }
+                else
+                {
+                    //TODO:Save the response in JSON file and send to orders page
+                    saveTheResponseToFileForUploadingLater(feedbackJson);
+
+                }
         }catch (JSONException ex){
             Log.e("PARSE_ERROR",ex.getMessage().toString());
         }
+    }
+
+    private boolean saveTheResponseToFileForUploadingLater(JSONObject feedbackJSON)
+    {
+        File rootFile = new File(Environment.getExternalStorageDirectory(), "FeedBack");
+        if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+            return false;
+        }
+        if (!rootFile.exists())
+        {
+            rootFile.mkdir();
+        }
+        File file = new File(rootFile,"failed"+ ".txt");
+        try {
+            ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(file));
+            outputStream.writeObject(feedbackJSON.toString());
+            outputStream.flush();
+            outputStream.close();
+        }
+        catch (FileNotFoundException e){e.printStackTrace();}
+        catch (IOException e){e.printStackTrace();}
+        return true;
+    }
+
+    private boolean isNetworkAvailable()
+    {
+        NetworkAvailability mNetworkAvailability=new NetworkAvailability(mActivityContext);
+        if(!mNetworkAvailability.isNetworkAvailable()) {
+            return false;
+        }
+        return true;
+
     }
 
     private void onSuccessResponse(JSONObject response) {
