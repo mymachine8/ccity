@@ -89,7 +89,8 @@ public class OrdersListFragment extends Fragment {
     private boolean GPS_ENABLED_IN_APP = false;
     private mLocationListener locationListener;
     private boolean mLocationUpdated = false;
-
+    private View mPrevView = null;
+    private int mPrevPosition = 0;
     public OrdersListFragment() {
         // Required empty public constructor
     }
@@ -271,20 +272,9 @@ public class OrdersListFragment extends Fragment {
 */
         if(location!=null)
         {
-            if (mLastKnownLocation != null)
-            {
-                if (location.getTime() - mLastKnownLocation.getTime() > Constants.TWO_MINUTES)
-                {
-                    mLastKnownLocation = location;
-                    download(location);
-                }
-            }
-            else
-            {
                 //GPS_ENABLED_IN_APP=false;
                 mLastKnownLocation = location;
                 download(location);
-            }
         }
         else
         {
@@ -295,11 +285,7 @@ public class OrdersListFragment extends Fragment {
         locationListener = new mLocationListener();
         if (haslocationfinePermission == PackageManager.PERMISSION_GRANTED)
         {
-            if(mLocationUpdated) {
-                //unset listener
-
-            }
-            else {
+            if(!mLocationUpdated) {
                 mLocationManager.requestLocationUpdates(Constants.LOCATION_PROVIDER, 1000, 0,locationListener );
             }
         }
@@ -312,9 +298,10 @@ public class OrdersListFragment extends Fragment {
 
     public void setOldData()
     {
-        mOrderDetailsAdapter = new OrderDetailsAdapter(mOrdersList, thisFragment);
+      //  mOrderDetailsAdapter = new OrderDetailsAdapter(mOrdersList, thisFragment);
 
-        mOrdersListFragmentRecycler.setAdapter(mOrderDetailsAdapter);
+     //   mOrdersListFragmentRecycler.setAdapter(mOrderDetailsAdapter);
+             mOrderDetailsAdapter.updateData(mOrdersList);
 
         registerClickEvents();
     }
@@ -397,8 +384,12 @@ public class OrdersListFragment extends Fragment {
         mOrderDetailsAdapter.setOnItemClickListener(new OrderDetailsAdapter.OrderItemClickListener() {
             @Override
             public void onItemClick(int position, View v) {
-
                 onCardClickAction(v, position);
+                if(mPrevView != null && mPrevView!=v && mRouteSession.getmOrderList().get(mPrevPosition).getCardStatus() == CARD_EXPANDED){
+                    onCardClickAction(mPrevView, mPrevPosition);
+                }
+                mPrevView = v;
+                mPrevPosition = position;
             }
         });
     }
@@ -416,7 +407,7 @@ public class OrdersListFragment extends Fragment {
 
     public void onClickCallExecutive(View v,int position){
 
-        Intent intent = new Intent(Intent.ACTION_DIAL,Uri.parse("tel:"+mRouteSession.getmOrderList()
+        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+mRouteSession.getmOrderList()
                 .get(position)
                 .getPhones()
                 .get(0)
@@ -471,7 +462,9 @@ public class OrdersListFragment extends Fragment {
 
                 mRouteSession.setmDurationList(mDurationList);
 
-                mOrdersListFragmentRecycler.setAdapter(mOrderDetailsAdapter);
+
+                //mOrdersListFragmentRecycler.setAdapter(mOrderDetailsAdapter);
+                mOrderDetailsAdapter.updateData(mRouteSession.getmOrderList());
 
             }
         }, new Response.ErrorListener() {
@@ -483,7 +476,8 @@ public class OrdersListFragment extends Fragment {
 
                 mOrderDetailsAdapter = new OrderDetailsAdapter(mOrdersList,thisFragment);
 
-                mOrdersListFragmentRecycler.setAdapter(mOrderDetailsAdapter);
+              //  mOrdersListFragmentRecycler.setAdapter(mOrderDetailsAdapter);
+                mOrderDetailsAdapter.updateData(mOrdersList);
 
                 registerClickEvents();
 
