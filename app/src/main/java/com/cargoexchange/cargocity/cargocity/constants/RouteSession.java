@@ -2,6 +2,7 @@ package com.cargoexchange.cargocity.cargocity.constants;
 
 import com.cargoexchange.cargocity.cargocity.models.Order;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 public class RouteSession
@@ -15,6 +16,7 @@ public class RouteSession
     private String routeId;
     private  static RouteSession instance=null;
     private int position = 0;
+    private List feedbackUploadToServerFailedList=new ArrayList();
     //Prevents instantiation while object creation
     private void SingletonOrders()
     {
@@ -101,5 +103,13 @@ public class RouteSession
 
     public void setmMatrixDownloadStatus(int mMatrixDownloadStatus) {
         this.mMatrixDownloadStatus = mMatrixDownloadStatus;
+    }
+
+    public List getFeedbackUploadToServerFailedList() {
+        return feedbackUploadToServerFailedList;
+    }
+
+    public void setFeedbackUploadToServerFailedList(List feedbackUploadToServerFailedList) {
+        this.feedbackUploadToServerFailedList = feedbackUploadToServerFailedList;
     }
 }
