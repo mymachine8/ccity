@@ -30,6 +30,7 @@ import com.cargoexchange.cargocity.cargocity.fragments.NavigationInstructionFrag
 import com.cargoexchange.cargocity.cargocity.models.Address;
 import com.cargoexchange.cargocity.cargocity.services.LocationService;
 import com.cargoexchange.cargocity.cargocity.utils.IsLocationLatest;
+import com.cargoexchange.cargocity.cargocity.utils.NetworkAvailability;
 import com.cargoexchange.cargocity.cargocity.utils.ParseAddress;
 import com.cargoexchange.cargocity.cargocity.utils.ParseDirections;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -357,9 +358,20 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             action_navigationMenuItem = menu.findItem(R.id.action_navigation_instruction);
             action_endMenuItem.setVisible(true);
             action_navigationMenuItem.setVisible(true);
-            trackVehicle();
+            if(isNetworkAvailable()) {
+                trackVehicle();
+            }
         }
         return true;
+    }
+
+    private boolean isNetworkAvailable()
+    {
+        NetworkAvailability networkAvailability=new NetworkAvailability(MapActivity.this);
+        if(networkAvailability.isNetworkAvailable())
+            return true;
+        else
+            return false;
     }
 
     private void trackVehicle() {
