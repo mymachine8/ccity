@@ -49,6 +49,7 @@ import com.cargoexchange.cargocity.cargocity.constants.Constants;
 import com.cargoexchange.cargocity.cargocity.constants.OrderStatus;
 import com.cargoexchange.cargocity.cargocity.constants.RouteSession;
 import com.cargoexchange.cargocity.cargocity.models.Feedback;
+import com.cargoexchange.cargocity.cargocity.utils.Deserializer;
 import com.cargoexchange.cargocity.cargocity.utils.ImageHelper;
 import com.cargoexchange.cargocity.cargocity.utils.NetworkAvailability;
 import com.cargoexchange.cargocity.cargocity.utils.ParseJSON;
@@ -271,6 +272,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener
                 {
                     //TODO:Save the response in JSON file and send to orders page
                     saveTheResponseToFileForUploadingLater(feedbackJson);
+                    afterSubmitCallback();
 
                 }
         }catch (JSONException ex){
@@ -288,12 +290,15 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener
         {
             rootFile.mkdir();
         }
-        File file = new File(rootFile,"failed"+ ".txt");
+        File file = new File(rootFile,"failed"+ ".ser");
+        String filename=file.getAbsolutePath();
         try {
             ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(file));
             outputStream.writeObject(feedbackJSON.toString());
             outputStream.flush();
             outputStream.close();
+            Deserializer obj=new Deserializer();
+            obj.deserialize(filename);
         }
         catch (FileNotFoundException e){e.printStackTrace();}
         catch (IOException e){e.printStackTrace();}
