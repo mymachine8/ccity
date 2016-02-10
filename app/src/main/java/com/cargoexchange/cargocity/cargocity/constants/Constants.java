@@ -23,5 +23,5 @@ public class Constants
     public static final String NETWORK_LOCATION_PROVIDER=LocationManager.NETWORK_PROVIDER;
     public static final int TWO_MINUTES = 1000 * 60 * 2;
     public static final int LOCATION_SETTINGS_ACTION=2;
-    public static final int SOCKET_TIMEOUT_MS = 5000;
+    public static final int SOCKET_TIMEOUT_MS = 10000;
 }
