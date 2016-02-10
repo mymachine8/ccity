@@ -76,7 +76,8 @@ public class AnimationHelper
         mRouteSession=RouteSession.getInstance();
         parentCard = (CardView)view.findViewById(R.id.orderdetailscardview);
         childCard = (CardView)view.findViewById(R.id.extraorderdetailscardview);
-        if(EXECUTION_COUNT==0) {
+        if(EXECUTION_COUNT==0)
+        {
             parentInitialHeight = parentCard.getHeight();
             childInitialHeight = (parentInitialHeight*3)+20;
             EXECUTION_COUNT++;

@@ -176,6 +176,7 @@ public class EnterRouteFragment extends Fragment
         //TODO:Stop this service on the logout event
         mApplicationSession = RouteSession.getInstance();
         mApplicationSession.setRouteId(routeId);
+        mApplicationSession.setVehicleNo(route.getVehicleNumber());
         Fragment routeDetailsFragment = RouteDetailsFragment.newInstance(route);
         thisActivity.getSupportFragmentManager().beginTransaction().replace(R.id.orders_container, routeDetailsFragment).commit();
     }

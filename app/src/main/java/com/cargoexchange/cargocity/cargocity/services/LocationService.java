@@ -41,6 +41,7 @@ public class LocationService extends IntentService
     private Pubnub mPubnub;
     private FileWriter writer;
     public int count;
+    private RouteSession mRouteSession;
 
     public LocationService(String name)
     {
@@ -50,6 +51,7 @@ public class LocationService extends IntentService
     {
         super("com.cargoexchange.cargocity.cargocity.LocationService");
         mPubnub = new Pubnub("pub-c-1a772f6d-629d-415b-bedc-1f5addf4fcbc", "sub-c-e07d3d66-be1c-11e5-bcee-0619f8945a4f");
+        mRouteSession=RouteSession.getInstance();
         //count=0;
         //initfile();
     }
@@ -80,19 +82,30 @@ public class LocationService extends IntentService
             public void onLocationChanged(Location location) {
 
                 JSONObject data = new JSONObject();
-                String routeId = RouteSession.getInstance().getRouteId();
+                //String routeId = RouteSession.getInstance().getRouteId();
                 try {
+                    Intent batteryIntent = registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+                    int level = batteryIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
+                    int scale = batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE,0);
+                    int status=batteryIntent.getIntExtra(BatteryManager.EXTRA_STATUS,-1);
                     data.put("latitude", location.getLatitude());
                     data.put("longitude", location.getLongitude());
                     data.put("speed", location.getSpeed());
                     data.put("timestamp",location.getTime());
-                    Log.d("Publish+",location.getLatitude()+","+location.getTime());
+                    data.put("route_id",mRouteSession.getRouteId());
+                    data.put("vehicle_no", mRouteSession.getVehicleNo());
+                    data.put("battery", level + "/" + scale);
+                    if(status==BatteryManager.BATTERY_STATUS_CHARGING)
+                        data.put("battery_charging","Charging");
+                    else if(status==BatteryManager.BATTERY_STATUS_NOT_CHARGING)
+                        data.put("battery_charging","Not Charging");
+                    Log.d("Publish+", location.getLatitude() + "," + location.getTime());
                             //updateToDeliveryTextFile("delivery_tracking.txt", data.toString());
                     count++;
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-               mPubnub.publish("del_tracking", data, new Callback() {
+               mPubnub.publish("vehicle_tracking", data, new Callback() {
                });
 
             }

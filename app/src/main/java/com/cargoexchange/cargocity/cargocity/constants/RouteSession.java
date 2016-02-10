@@ -14,6 +14,7 @@ public class RouteSession
     private List<String> mDurationList;
     private int mMatrixDownloadStatus;
     private String routeId;
+    private String vehicleNo;
     private  static RouteSession instance=null;
     private int position = 0;
     private List<String> delayedUploadOrderNoList=new ArrayList();
@@ -120,5 +121,13 @@ public class RouteSession
 
     public void setDelayedUploadFileNameList(List delayedUploadFileNameList) {
         this.delayedUploadFileNameList = delayedUploadFileNameList;
+    }
+
+    public String getVehicleNo() {
+        return vehicleNo;
+    }
+
+    public void setVehicleNo(String vehicleNo) {
+        this.vehicleNo = vehicleNo;
     }
 }
