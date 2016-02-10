@@ -16,7 +16,8 @@ public class RouteSession
     private String routeId;
     private  static RouteSession instance=null;
     private int position = 0;
-    private List feedbackUploadToServerFailedList=new ArrayList();
+    private List<String> delayedUploadOrderNoList=new ArrayList();
+    private List<String> delayedUploadFileNameList=new ArrayList();
     //Prevents instantiation while object creation
     private void SingletonOrders()
     {
@@ -105,11 +106,19 @@ public class RouteSession
         this.mMatrixDownloadStatus = mMatrixDownloadStatus;
     }
 
-    public List getFeedbackUploadToServerFailedList() {
-        return feedbackUploadToServerFailedList;
+    public List getDelayedUploadOrderNoList() {
+        return delayedUploadOrderNoList;
     }
 
-    public void setFeedbackUploadToServerFailedList(List feedbackUploadToServerFailedList) {
-        this.feedbackUploadToServerFailedList = feedbackUploadToServerFailedList;
+    public void setDelayedUploadOrderNoList(List delayedUploadOrderNoList) {
+        this.delayedUploadOrderNoList = delayedUploadOrderNoList;
+    }
+
+    public List getDelayedUploadFileNameList() {
+        return delayedUploadFileNameList;
+    }
+
+    public void setDelayedUploadFileNameList(List delayedUploadFileNameList) {
+        this.delayedUploadFileNameList = delayedUploadFileNameList;
     }
 }

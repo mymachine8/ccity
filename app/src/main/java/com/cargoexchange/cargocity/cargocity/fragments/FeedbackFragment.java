@@ -277,7 +277,6 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener
                 {
                     //TODO:Save the response in JSON file and send to orders page
                     saveTheResponseToFileForUploadingLater(feedbackJson);
-                    mRouteSession.getFeedbackUploadToServerFailedList().add(mOrderNo);
                     afterSubmitCallback();
 
                 }
@@ -303,6 +302,9 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener
             outputStream.writeObject(feedbackJSON.toString());
             outputStream.flush();
             outputStream.close();
+            mRouteSession.getDelayedUploadOrderNoList().add(mOrderNo);
+            mRouteSession.getDelayedUploadFileNameList().add(file.getAbsoluteFile());
+
         }
         catch (FileNotFoundException e){e.printStackTrace();}
         catch (IOException e){e.printStackTrace();}

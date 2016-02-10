@@ -14,20 +14,22 @@ import java.io.ObjectInputStream;
  */
 public class Deserializer
 {
-    public void deserialize(String file) {
+    private Object feedbackObject;
+    public Object deserialize(String fileName)
+    {
         try {
-            ObjectInputStream in = new ObjectInputStream(new FileInputStream(file));
+            ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName));
             int count = 0;
-            while (true) {
+            while (true)
+            {
                 count++;
                 try
                 {
-                    Object obj = in.readObject();
-                    Log.d("Object",obj.toString());
+                    feedbackObject = in.readObject();
                 }
                 catch (ClassNotFoundException e)
                 {
-                    System.out.println("can't read obj #" + count + ": " + e);
+                    Log.d("Error-Deserializer","Cant read object");
                 }
             }
         } catch (FileNotFoundException e) {
@@ -37,5 +39,6 @@ public class Deserializer
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return feedbackObject;
     }
 }

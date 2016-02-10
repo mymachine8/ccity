@@ -3,10 +3,8 @@ package com.cargoexchange.cargocity.cargocity.services;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.net.NetworkInfo;
-import android.util.Log;
 
-import com.cargoexchange.cargocity.cargocity.utils.DelayedFileUploader;
+import com.cargoexchange.cargocity.cargocity.utils.DelayedFeedbackUploader;
 import com.cargoexchange.cargocity.cargocity.utils.NetworkAvailability;
 
 /**
@@ -21,7 +19,7 @@ public class NetworkChangeReciever extends BroadcastReceiver
         if(networkAvailability.isNetworkAvailable())
         {
             //TODO:Try uploading files to server
-            DelayedFileUploader object=new DelayedFileUploader();
+            new DelayedFeedbackUploader();
         }
 
     }
