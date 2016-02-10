@@ -312,35 +312,36 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 break;
 
             case R.id.action_navigation_instruction:
-                if(isDirectionListOpen) {
-                    isDirectionListOpen = false;
-                    NavigationInstructionFragment navFragment = (NavigationInstructionFragment)
-                                    getSupportFragmentManager()
-                                    .findFragmentByTag(FRAGMENT_DIRECTIONS);
-                    FragmentTransaction ft = getSupportFragmentManager()
-                                    .beginTransaction();
-                    ft.detach(navFragment);
-                    ft.attach(mapFragment);
-                    ft.commit();
-                }
-                else {
-                    isDirectionListOpen = true;
-                    if(mNavigationFragment == null){
-                        mNavigationFragment = new NavigationInstructionFragment();
-                        mNavigationFragment.setArguments(sendToNavigationFragmentBundle);
-                        getSupportFragmentManager()
-                                .beginTransaction()
-                                .add(R.id.fragment_container, mNavigationFragment, FRAGMENT_DIRECTIONS)
-                                .commit();
-                    }
-                    else {
+                if(isNetworkAvailable()) {
+                    if (isDirectionListOpen) {
+                        isDirectionListOpen = false;
+
                         NavigationInstructionFragment navFragment = (NavigationInstructionFragment)
-                                 getSupportFragmentManager()
-                                .findFragmentByTag(FRAGMENT_DIRECTIONS);
-                        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                        ft.detach(mapFragment);
-                        ft.attach(navFragment);
+                                getSupportFragmentManager()
+                                        .findFragmentByTag(FRAGMENT_DIRECTIONS);
+                        FragmentTransaction ft = getSupportFragmentManager()
+                                .beginTransaction();
+                        ft.detach(navFragment);
+                        ft.attach(mapFragment);
                         ft.commit();
+                    } else {
+                        isDirectionListOpen = true;
+                        if (mNavigationFragment == null) {
+                            mNavigationFragment = new NavigationInstructionFragment();
+                            mNavigationFragment.setArguments(sendToNavigationFragmentBundle);
+                            getSupportFragmentManager()
+                                    .beginTransaction()
+                                    .add(R.id.fragment_container, mNavigationFragment, FRAGMENT_DIRECTIONS)
+                                    .commit();
+                        } else {
+                            NavigationInstructionFragment navFragment = (NavigationInstructionFragment)
+                                    getSupportFragmentManager()
+                                            .findFragmentByTag(FRAGMENT_DIRECTIONS);
+                            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                            ft.detach(mapFragment);
+                            ft.attach(navFragment);
+                            ft.commit();
+                        }
                     }
                 }
 
