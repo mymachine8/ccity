@@ -303,9 +303,6 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener
             outputStream.writeObject(feedbackJSON.toString());
             outputStream.flush();
             outputStream.close();
-
-            Deserializer obj = new Deserializer();
-            obj.deserialize(filename);
         }
         catch (FileNotFoundException e){e.printStackTrace();}
         catch (IOException e){e.printStackTrace();}
