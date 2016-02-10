@@ -66,8 +66,6 @@ public class OrdersListFragment extends Fragment {
 
     private RouteSession mRouteSession;
 
-    private ProgressDialog processData;
-
     private Location mLastKnownLocation;
 
     List<String> mDistanceList;
@@ -152,12 +150,6 @@ public class OrdersListFragment extends Fragment {
         mOrdersListFragmentRecycler.setLayoutManager(mOrdersListLayoutManager);
 
         //mOrderDetailsCard=(CardView)view.findViewById(R.id.orderdetailscardview);
-
-        processData = new ProgressDialog(getActivity());
-
-        processData.setMessage("Loading data");
-
-        processData.setTitle("Orders");
 
         mOrderDetailsAdapter = new OrderDetailsAdapter(mOrdersList, thisFragment);
 
@@ -436,19 +428,11 @@ public class OrdersListFragment extends Fragment {
     {
         NetworkAvailability mNetworkAvailability=new NetworkAvailability(thisActivity);
 
-        processData.show();
-
         String url=new GenerateUrl(location).getMurl();
 
         JsonObjectRequest request= CargoCity.getmInstance().getGeneralRequest(new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-
-                Log.d("response", response.toString());
-
-                processData.dismiss();
-
-                processData.cancel();
 
                 mRouteSession.setmMatrixDownloadStatus(1);
 
@@ -480,10 +464,6 @@ public class OrdersListFragment extends Fragment {
                 mOrderDetailsAdapter.updateData(mOrdersList);
 
                 registerClickEvents();
-
-                processData.dismiss();
-
-                processData.cancel();
 
                 Toast.makeText(thisActivity, "Error Downloading Distance", Toast.LENGTH_SHORT).show();
             }
