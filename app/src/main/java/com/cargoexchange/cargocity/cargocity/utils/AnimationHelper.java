@@ -64,13 +64,15 @@ public class AnimationHelper
     ArrayList<LatLng> points;
     LatLng start;
     PolylineOptions lineOptions;
-    public AnimationHelper(View view,int cardStatus,OrdersListFragment context,Context Activitycontext,int position)
+    private boolean isAnimate;
+    public AnimationHelper(View view,int cardStatus,OrdersListFragment context,Context Activitycontext,int position,boolean isAnimate)
     {
         this.view=view;
         this.cardStatus=cardStatus;
         this.context=context;
         this.Activitycontext=Activitycontext;
         this.position=position;
+        this.isAnimate=isAnimate;
         mRouteSession=RouteSession.getInstance();
         parentCard = (CardView)view.findViewById(R.id.orderdetailscardview);
         childCard = (CardView)view.findViewById(R.id.extraorderdetailscardview);
@@ -80,10 +82,23 @@ public class AnimationHelper
             EXECUTION_COUNT++;
         }
         childCard.setVisibility(View.GONE);
+
         if(cardStatus==CARD_COMPACT)
+        {
             unFoldWithAnimation(view);
-        else if(cardStatus==CARD_EXPANDED)
-            foldWithAnimation(view);
+            /*if(isAnimate)
+            {unFoldWithAnimation(view);}
+            else{unFoldWithoutAnimation(view);}*/
+        }
+        else
+        {
+            if(cardStatus==CARD_EXPANDED)
+            {
+                if(isAnimate)
+                {foldWithAnimation(view);}
+                else{foldWithoutAnimation(view);}
+            }
+        }
     }
     public void foldWithAnimation(final View view)
     {
@@ -245,6 +260,31 @@ public class AnimationHelper
 
                 }
             });
+        }
+    }
+
+    public void foldWithoutAnimation(final View view)
+    {
+        if(cardStatus!=CARD_COMPACT)
+        {
+            childCard.setVisibility(View.GONE);
+            childCard.requestLayout();
+            parentCard.setVisibility(View.VISIBLE);
+            parentCard.setAlpha(1);
+            parentCard.requestLayout();
+            mRouteSession.getmOrderList().get(position).setCardStatus(CARD_COMPACT);
+        }
+    }
+    public void unFoldWithoutAnimation(final View view)
+    {
+        if(cardStatus!=CARD_EXPANDED)
+        {
+            parentCard.setVisibility(View.GONE);
+            parentCard.requestLayout();
+            childCard.setVisibility(View.VISIBLE);
+            childCard.setAlpha(1);
+            childCard.requestLayout();
+            mRouteSession.getmOrderList().get(position).setCardStatus(CARD_EXPANDED);
         }
     }
 }

@@ -320,7 +320,7 @@ public class OrdersListFragment extends Fragment {
 
         enableGPS.show();
     }
-    public void onCardClickAction(View view,int position)
+    public void onCardClickAction(View view,int position,boolean isAnimate)
     {
         if(mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
         {
@@ -340,22 +340,21 @@ public class OrdersListFragment extends Fragment {
 
                 if(cardStatus==CARD_EXPANDED)
                 {
+
                     //slideDown(view);
                     Log.d("response","compact card");
-                    new AnimationHelper(view,cardStatus,context,thisActivity,position);
-
+                    new AnimationHelper(view,cardStatus,context,thisActivity,position,isAnimate);
                     mRouteSession.getmOrderList().get(position).setCardStatus(CARD_EXPANDED);
-
 
                 }
                 else
                 {
+
                     //slideUp(view);
                     Log.d("response","compact expanded");
-
-                    new AnimationHelper(view,cardStatus,context,thisActivity,position);
-
+                    new AnimationHelper(view,cardStatus,context,thisActivity,position,isAnimate);
                     mRouteSession.getmOrderList().get(position).setCardStatus(CARD_COMPACT);
+
                 }
                 //TODO:use a singleton class to keep track of the orders completed and according disable intents to next activity
             }
@@ -371,14 +370,14 @@ public class OrdersListFragment extends Fragment {
     }
 
 
-    public void registerClickEvents(){
-
+    public void registerClickEvents()
+    {
         mOrderDetailsAdapter.setOnItemClickListener(new OrderDetailsAdapter.OrderItemClickListener() {
             @Override
             public void onItemClick(int position, View v) {
-                onCardClickAction(v, position);
+                onCardClickAction(v, position,true);
                 if(mPrevView != null && mPrevView!=v && mRouteSession.getmOrderList().get(mPrevPosition).getCardStatus() == CARD_EXPANDED){
-                    onCardClickAction(mPrevView, mPrevPosition);
+                    onCardClickAction(mPrevView, mPrevPosition,false);
                 }
                 mPrevView = v;
                 mPrevPosition = position;

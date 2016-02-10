@@ -59,21 +59,19 @@ import java.util.List;
 /**
  * Created by root on 19/1/16.
  */
-public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapter.ViewHolder> implements OnMapReadyCallback {
+public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapter.ViewHolder>
+{
     private List<Order> orderDetails = new ArrayList<>();
     private RouteSession mRouteSession;
     private static OrderItemClickListener mItemClickListener;
     private Fragment mFragmentInstance;
     private Context thisContext;
-
-    private List<List<HashMap<String, String>>> routes; //paths (Lat long list)
     final MarkerOptions markerA = new MarkerOptions();
     final MarkerOptions markerB = new MarkerOptions();
     ArrayList<LatLng> points;
     LatLng start;
     PolylineOptions lineOptions;
     private LocationManager mLocationManager;
-
     private String mDestination;
 
     private MylocationListener locationListener;
@@ -113,7 +111,27 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onViewDetachedFromWindow(ViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+    }
+
+    @Override
+    public void onViewAttachedToWindow(ViewHolder holder) {
+        super.onViewAttachedToWindow(holder);
+    }
+
+    @Override
+    public void onViewRecycled(ViewHolder holder) {
+        super.onViewRecycled(holder);
+    }
+
+    @Override
+    public void onBindViewHolder(final ViewHolder holder, final int position)
+    {
+        holder.mSmallMap.onCreate(null);
+        holder.mSmallMap.onResume();
+        holder.mSmallMap.setTag(holder);
+
         String productsCSV=new String();
         mRouteSession = RouteSession.getInstance();
         Order order = orderDetails.get(position);
@@ -178,10 +196,10 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
             // TODO: Consider calling
             return;
         }
-        locationListener = new MylocationListener(holder);
+        locationListener = new MylocationListener(holder,position,this);
         Location location = mLocationManager.getLastKnownLocation(Constants.LOCATION_PROVIDER);
         if(location!=null)
-            fetchMapData(holder,location);
+            fetchMapData(holder,location,position,this);
         else {
             mLocationManager.requestSingleUpdate(Constants.LOCATION_PROVIDER,locationListener,null);
         }
@@ -227,16 +245,21 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
             }
         });
     }
-
-    private class MylocationListener implements LocationListener{
+    private class MylocationListener implements LocationListener
+    {
         ViewHolder holder;
-        public MylocationListener(ViewHolder holder){
+        int position;
+        OrderDetailsAdapter thisInstance;
+        public MylocationListener(ViewHolder holder,int position,OrderDetailsAdapter thisInstance)
+        {
             this.holder = holder;
+            this.position=position;
+            this.thisInstance=thisInstance;
         }
     @Override
         public void onLocationChanged(Location location)
         {
-            fetchMapData(holder, location);
+            fetchMapData(holder,location,position,thisInstance);
 
         }
 
@@ -265,57 +288,8 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         return orderDetails.get(position);
     }
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        googleMap.clear();
-
-        //MapsInitializer.initialize(null);
-        for (int i = 0; i < routes.size(); i++) {
-            points = new ArrayList<LatLng>();
-            lineOptions = new PolylineOptions();
-            lineOptions.color(Color.BLUE);
-
-            // Fetching i-th route
-            List<HashMap<String, String>> path = routes.get(i);
-
-            // Fetching all the points in i-th route
-            for (int j = 0; j < path.size(); j++) {
-                HashMap<String, String> point = path.get(j);
-
-                double lat = Double.parseDouble(point.get("lat"));
-                double lng = Double.parseDouble(point.get("lng"));
-                LatLng position = new LatLng(lat, lng);
-
-                if (j == 0) {
-                    start = position;
-                    markerA.position(position);
-                    markerA.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_truck));
-                }
-                if (j == (path.size() - 1)) {
-                    markerB.position(position);
-                    markerB.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-
-                }
-                points.add(position);
-            }
-            //googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(start, 14));
-            googleMap.addMarker(markerA);
-            lineOptions.addAll(points);
-            googleMap.addMarker(markerB);
-        }
-        // Drawing polyline in the Google Map for the i-th route
-        googleMap.addPolyline(lineOptions);
-        //googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(start ,12.0f));
-        CameraPosition currentPlace = new CameraPosition.Builder()
-                .target(start)
-                .bearing(-120)
-                .tilt(85.5f)
-                .zoom(12.0f)
-                .build();
-        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace));
-    }
-
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,OnMapReadyCallback
+    {
         TextView mOrderno;
 
         TextView mName;
@@ -363,6 +337,8 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         ImageButton mExtraStatusImage;
 
         MapView mSmallMap;
+        private List<List<HashMap<String, String>>> routes;
+
 
         public ViewHolder(View itemView) {
 
@@ -409,16 +385,70 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
             mExtraStatusImage=(ImageButton)itemView.findViewById(R.id.Extraorderstatusimage);
 
             mSmallMap = (MapView) itemView.findViewById(R.id.mapfragment);
-
-            mSmallMap.onCreate(null);
-
-            mSmallMap.onResume();
+            if(mSmallMap!=null) {
+                mSmallMap.onCreate(null);
+                mSmallMap.onResume();
+            }
 
         }
 
         @Override
         public void onClick(View v) {
             mItemClickListener.onItemClick(getAdapterPosition(), v);
+        }
+
+        @Override
+        public void onMapReady(GoogleMap googleMap)
+        {
+
+            googleMap.clear();
+
+            //MapsInitializer.initialize(null);
+            for (int i = 0; i < routes.size(); i++)
+            {
+                points = new ArrayList<LatLng>();
+                lineOptions = new PolylineOptions();
+                lineOptions.color(Color.BLUE);
+
+                // Fetching i-th route
+                List<HashMap<String, String>> path = routes.get(i);
+
+                // Fetching all the points in i-th route
+                for (int j = 0; j < path.size(); j++) {
+                    HashMap<String, String> point = path.get(j);
+
+                    double lat = Double.parseDouble(point.get("lat"));
+                    double lng = Double.parseDouble(point.get("lng"));
+                    LatLng position = new LatLng(lat, lng);
+
+                    if (j == 0) {
+                        start = position;
+                        markerA.position(position);
+                        markerA.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_truck));
+                    }
+                    if (j == (path.size() - 1)) {
+                        markerB.position(position);
+                        markerB.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+
+                    }
+                    points.add(position);
+                }
+                //googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(start, 14));
+                googleMap.addMarker(markerA);
+                lineOptions.addAll(points);
+                googleMap.addMarker(markerB);
+            }
+            // Drawing polyline in the Google Map for the i-th route
+            googleMap.addPolyline(lineOptions);
+            //googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(start ,12.0f));
+            CameraPosition currentPlace = new CameraPosition.Builder()
+                    .target(start)
+                    .bearing(-120)
+                    .tilt(85.5f)
+                    .zoom(12.0f)
+                    .build();
+            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace));
+
         }
     }
 
@@ -427,7 +457,7 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
     }
 
 
-    public void fetchMapData(final ViewHolder mholder,Location location)
+    public void fetchMapData(final ViewHolder mholder,Location location,int position,OrderDetailsAdapter thisInstance)
     {
 
         if (location != null) {
@@ -439,7 +469,7 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
                     + "&traffic_model=" + Constants.MAP_TRAFFICMODEL_PESSIMISTIC
                     + "&mode=" + Constants.MAP_TRANSTMODE;
 
-            MyResponseListener myResponseListener = new MyResponseListener(mholder);
+            MyResponseListener myResponseListener = new MyResponseListener(mholder,position,thisInstance);
             JsonObjectRequest request = CargoCity.getmInstance().getGeneralRequest(myResponseListener, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
@@ -453,19 +483,23 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
 
     private class MyResponseListener implements Response.Listener<JSONObject> {
         private ViewHolder holder;
-        public MyResponseListener(ViewHolder holder) {
+        private int position;
+        private OrderDetailsAdapter thisInstance;
+        public MyResponseListener(ViewHolder holder,int position,OrderDetailsAdapter thisInstance) {
             this.holder = holder;
+            this.position=position;
+            this.thisInstance=thisInstance;
         }
         @Override
         public void onResponse(JSONObject response) {
             Log.d("new", response.toString());
             //Use the routes to draw polyline on map
-            routes=null;
-            routes = new ParseDirections(response).getRoutes();
+            holder.routes=null;
+            holder.routes = new ParseDirections(response).getRoutes();
             //TODO:pass this bundle to extract the navigation instructions
-            //sendToNavigationFragmentBundle = new Bundle();
-            //sendToNavigationFragmentBundle.putString("mapData", response.toString());
-            holder.mSmallMap.getMapAsync(OrderDetailsAdapter.this);
+
+            if(holder==holder.mSmallMap.getTag())
+                holder.mSmallMap.getMapAsync(holder);
 
         }
     }
