@@ -44,6 +44,8 @@ import com.cargoexchange.cargocity.cargocity.utils.AnimationHelper;
 import com.cargoexchange.cargocity.cargocity.utils.GenerateUrl;
 import com.cargoexchange.cargocity.cargocity.utils.NetworkAvailability;
 import com.cargoexchange.cargocity.cargocity.utils.ParseDistanceMatrix;
+import com.cargoexchange.cargocity.cargocity.utils.SmoothLayoutManager;
+import com.example.root.foldablelayout.FoldableLayout;
 
 import org.json.JSONObject;
 
@@ -52,41 +54,25 @@ import java.util.List;
 import java.util.Map;
 
 
-public class OrdersListFragment extends Fragment {
+public class OrdersListFragment extends Fragment
+{
     private static String ORDERS_LIST_KEY = "orders_list_key";
-
     private RecyclerView mOrdersListFragmentRecycler;
-
-    private RecyclerView.LayoutManager mOrdersListLayoutManager;
-
+    private SmoothLayoutManager mOrdersListLayoutManager;
     private LocationManager mLocationManager;
-
     private List<Order> mOrdersList;
-
     private Route mRoute;
-
     private OrderDetailsAdapter mOrderDetailsAdapter;
-
     private RouteSession mRouteSession;
-
     private Location mLastKnownLocation;
-
     List<String> mDistanceList;
-
     List<String> mDurationList;
-
     private final int CARD_EXPANDED = 1;
-
     private final int CARD_COMPACT = 0;
-
     private int cardStatus = 0;
-
     private Fragment thisFragment;
-
     private FragmentActivity thisActivity;
-
     private OrdersListFragment context;
-
     private boolean GPS_ENABLED_IN_APP = false;
     private mLocationListener locationListener;
     private boolean mLocationUpdated = false;
@@ -113,25 +99,17 @@ public class OrdersListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState)
     {
         mRouteSession = RouteSession.getInstance();
-
         mOrdersList = mRouteSession.getmOrderList();
-
         thisFragment = this;
-
         context = this;
-
         if (mOrdersList == null || mOrdersList.size() == 0) {
             mRoute = (Route) getArguments().getSerializable(ORDERS_LIST_KEY);
-
             mOrdersList = mRoute.getOrderList();
-
             Map<String, String> orderStatusList = new HashMap<String, String>();
-
             for (Order order : mOrdersList) {
                 orderStatusList.put(order.getOrderId(), OrderStatus.IN_TRANSIT);
             }
             mRouteSession.setmOrderStatusList(orderStatusList);
-
             mRouteSession.setmOrderList(mOrdersList);
         }
         super.onCreate(savedInstanceState);
@@ -142,24 +120,17 @@ public class OrdersListFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_orders_list, container, false);
-
         thisActivity = getActivity();
-
         mLocationManager = (LocationManager) thisActivity.getSystemService(Context.LOCATION_SERVICE);
-
         mOrdersListFragmentRecycler = (RecyclerView) view.findViewById(R.id.recylerview);
-
-        mOrdersListLayoutManager = new LinearLayoutManager(thisActivity, LinearLayoutManager.VERTICAL, false);
-
+        mOrdersListLayoutManager = new SmoothLayoutManager(thisActivity, LinearLayoutManager.VERTICAL, false);
         mOrdersListFragmentRecycler.setLayoutManager(mOrdersListLayoutManager);
-
         //mOrderDetailsCard=(CardView)view.findViewById(R.id.orderdetailscardview);
-
-        mOrderDetailsAdapter = new OrderDetailsAdapter(mOrdersList, thisFragment);
-
+        mOrderDetailsAdapter = new OrderDetailsAdapter(mOrdersList, thisFragment,mOrdersListLayoutManager,mOrdersListFragmentRecycler);
         mOrdersListFragmentRecycler.setAdapter(mOrderDetailsAdapter);
 
-        registerClickEvents();
+
+        //registerClickEvents();
 
         int hasLocationfinePermission = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION);
 
@@ -228,7 +199,6 @@ public class OrdersListFragment extends Fragment {
         }
     }
 
-
     public class mLocationListener implements LocationListener {
 
         @Override
@@ -237,7 +207,7 @@ public class OrdersListFragment extends Fragment {
             if (!mLocationUpdated) {
                 if (ActivityCompat.checkSelfPermission(thisActivity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     mLocationManager.removeUpdates(locationListener);
-                    mLocationManager.requestLocationUpdates(Constants.LOCATION_PROVIDER,Constants.TWO_MINUTES, 0,locationListener );
+                    mLocationManager.requestLocationUpdates(Constants.LOCATION_PROVIDER,Constants.TWO_MINUTES/4, 0,locationListener );
                 }
                 mLocationUpdated = true;
             }
@@ -291,7 +261,6 @@ public class OrdersListFragment extends Fragment {
         }
     }
 
-
     public void setOldData()
     {
       //  mOrderDetailsAdapter = new OrderDetailsAdapter(mOrdersList, thisFragment);
@@ -299,7 +268,7 @@ public class OrdersListFragment extends Fragment {
      //   mOrdersListFragmentRecycler.setAdapter(mOrderDetailsAdapter);
              mOrderDetailsAdapter.updateData(mOrdersList);
 
-        registerClickEvents();
+        //registerClickEvents();
     }
 
     public void showEnableGPSDialog()
@@ -376,12 +345,14 @@ public class OrdersListFragment extends Fragment {
 
     public void registerClickEvents()
     {
+        Log.d("scroll debug","control came here");
         mOrderDetailsAdapter.setOnItemClickListener(new OrderDetailsAdapter.OrderItemClickListener() {
             @Override
             public void onItemClick(int position, View v) {
-                onCardClickAction(v, position,true);
+                   mOrdersListLayoutManager.scrollToPosition(0);
+                   //onCardClickAction(v, position,true);
                 if(mPrevView != null && mPrevView!=v && mRouteSession.getmOrderList().get(mPrevPosition).getCardStatus() == CARD_EXPANDED){
-                    onCardClickAction(mPrevView,mPrevPosition,false);
+                    //onCardClickAction(mPrevView,mPrevPosition,false);
                 }
                 mPrevView = v;
                 mPrevPosition = position;
@@ -461,14 +432,14 @@ public class OrdersListFragment extends Fragment {
 
                 mRouteSession.setmMatrixDownloadStatus(0);
 
-                mOrderDetailsAdapter = new OrderDetailsAdapter(mOrdersList,thisFragment);
+                mOrderDetailsAdapter = new OrderDetailsAdapter(mOrdersList,thisFragment,mOrdersListLayoutManager,mOrdersListFragmentRecycler);
 
               //  mOrdersListFragmentRecycler.setAdapter(mOrderDetailsAdapter);
                 mOrderDetailsAdapter.updateData(mOrdersList);
 
-                registerClickEvents();
+                //registerClickEvents();
 
-                Toast.makeText(thisActivity, "Error Downloading Distance", Toast.LENGTH_SHORT).show();
+                Toast.makeText(thisActivity, "ErrorDownloading Distance", Toast.LENGTH_SHORT).show();
             }
         }, url);
         if(mNetworkAvailability.isNetworkAvailable())

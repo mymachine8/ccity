@@ -1,31 +1,23 @@
 package com.cargoexchange.cargocity.cargocity.adapters;
-
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.content.res.ColorStateList;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -38,21 +30,18 @@ import com.cargoexchange.cargocity.cargocity.fragments.OrdersListFragment;
 import com.cargoexchange.cargocity.cargocity.models.Order;
 import com.cargoexchange.cargocity.cargocity.utils.ParseAddress;
 import com.cargoexchange.cargocity.cargocity.utils.ParseDirections;
+import com.cargoexchange.cargocity.cargocity.utils.SmoothLayoutManager;
 import com.example.root.foldablelayout.FoldableLayout;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
-
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -75,6 +64,9 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
     PolylineOptions lineOptions;
     private LocationManager mLocationManager;
     private String mDestination;
+    private SmoothLayoutManager mOrdersLayoutManager;
+    private RecyclerView mOrdersRecyclerView;
+    private boolean isUpdating;
 
     private MylocationListener locationListener;
 
@@ -85,9 +77,11 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
     private int mPrevPosition = 0;
     private ViewHolder mPrevHolder=null;
 
-    public OrderDetailsAdapter(List<Order> orderDetails, Fragment fragment) {
+    public OrderDetailsAdapter(List<Order> orderDetails, Fragment fragment,SmoothLayoutManager mOrdersLayoutManager,RecyclerView mOrdersRecyclerView) {
         mFragmentInstance = fragment;
         thisContext = fragment.getContext();
+        this.mOrdersLayoutManager=mOrdersLayoutManager;
+        this.mOrdersRecyclerView=mOrdersRecyclerView;
         this.orderDetails.clear();
 
         this.orderDetails.addAll(orderDetails);
@@ -101,9 +95,11 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
     }
 
     public void updateData(List<Order> orderDetails) {
+        isUpdating=true;
         this.orderDetails.clear();
         this.orderDetails.addAll(orderDetails);
         notifyDataSetChanged();
+        isUpdating=false;
     }
 
     public OrderDetailsAdapter()
@@ -162,6 +158,7 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         holder.mExtraPhone.setText(order.getPhones().get(0).getNumber());
         holder.mExtraEmail.setText(order.getMailId());
         holder.mExtraOrderno.setText(order.getOrderId());
+
         for(int i=0;i<order.getItems().size();i++)
         {
             productsCSV=productsCSV+(order.getItems().get(i))+",";
@@ -169,14 +166,18 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         productsCSV=productsCSV.substring(0,productsCSV.length()-1);
         holder.mExtraProducts.setText(productsCSV);
 
+
         if(order.getDeliveryStatus().equalsIgnoreCase(OrderStatus.DELIVERED))
         {
-                holder.mStatusImage.setBackground(ContextCompat.getDrawable(thisContext,R.drawable.circular_button_truck_delivered));
+                holder.mStatusImage.setBackground(ContextCompat.getDrawable(thisContext,
+                        R.drawable.circular_button_truck_delivered));
                 holder.mStatusImage.setClickable(false);
         }
+
         else if(order.getDeliveryStatus().equalsIgnoreCase(OrderStatus.DELIVERY_FAILED))
         {
-                holder.mStatusImage.setBackground(ContextCompat.getDrawable(thisContext, R.drawable.circular_button_truck_returned));
+                holder.mStatusImage.setBackground(ContextCompat.getDrawable(thisContext,
+                        R.drawable.circular_button_truck_returned));
                 holder.mStatusImage.setClickable(false);
         }
 
@@ -193,11 +194,13 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
             {
                 holder.mStatusImage.setClickable(false);
                     if(order.getDeliveryStatus().equalsIgnoreCase(OrderStatus.DELIVERED)) {
-                        holder.mStatusImage.setBackground(ContextCompat.getDrawable(thisContext, R.drawable.circular_button_truck_delivered));
+                        holder.mStatusImage.setBackground(ContextCompat.getDrawable(thisContext,
+                                R.drawable.circular_button_truck_delivered));
                     }
                     else
                     {
-                            holder.mStatusImage.setBackground(ContextCompat.getDrawable(thisContext, R.drawable.circular_button_truck_returned));
+                            holder.mStatusImage.setBackground(ContextCompat.getDrawable(thisContext,
+                                    R.drawable.circular_button_truck_returned));
                     }
             }
 
@@ -277,11 +280,10 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
             this.position=position;
             this.thisInstance=thisInstance;
         }
-    @Override
+        @Override
         public void onLocationChanged(Location location)
         {
             fetchMapData(holder,location,position,thisInstance);
-
         }
 
         @Override
@@ -291,12 +293,9 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
 
         @Override
         public void onProviderEnabled(String provider) {
-
         }
-
         @Override
         public void onProviderDisabled(String provider) {
-
         }
     }
 
@@ -309,154 +308,61 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         return orderDetails.get(position);
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,OnMapReadyCallback
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
+            OnMapReadyCallback
     {
         TextView mOrderno;
-
         TextView mName;
-
         TextView mAddressLine1, mAddressLine2;
-
         TextView mAddressLocality;
-
         TextView mAddressLandmark;
-
         TextView mCity;
-
         TextView mItems1, mItems2;
-
         ImageView mCallImage;
-
         TextView mDistance;
-
         TextView mTime;
-
         TextView mExtraName;
-
         TextView mExtraOrderno;
-
         TextView mExtraExpectedTime;
-
         TextView mExtraProducts;
-
         TextView mExtraPhone;
-
         TextView mExtraEmail;
-
         TextView mExtraAddress;
-
         TextView mExtraDistance;
-
         TextView mExtraTime;
-
         ImageButton mCallCustomer;
-
         ImageButton mExtraCallCustomer;
-
         ImageButton mStatusImage;
-
         ImageButton mExtraStatusImage;
-
         MapView mSmallMap;
         private List<List<HashMap<String, String>>> routes;
-
-        //TODO:Constructor for flip layout
-        public ViewHolder(View itemView) {
-
-            super(itemView);
-
-            mName = (TextView) itemView.findViewById(R.id.nameedittext);
-
-            mAddressLine1 = (TextView) itemView.findViewById(R.id.Line1addressedittext);
-
-            mAddressLine2 = (TextView) itemView.findViewById(R.id.Line2addressedittext);
-
-            mItems1 = (TextView) itemView.findViewById(R.id.itemedittext1);
-
-            mItems2 = (TextView) itemView.findViewById(R.id.itemedittext2);
-
-            mDistance = (TextView) itemView.findViewById(R.id.distancetextview);
-
-            mTime = (TextView) itemView.findViewById(R.id.timetextview);
-
-            mStatusImage = (ImageButton) itemView.findViewById(R.id.orderstatusimage);
-
-            mExtraName = (TextView) itemView.findViewById(R.id.nametextview);
-
-            mExtraExpectedTime = (TextView) itemView.findViewById(R.id.expectedtimetextview);
-
-            mExtraPhone = (TextView) itemView.findViewById(R.id.phonetextview);
-
-            mExtraEmail = (TextView) itemView.findViewById(R.id.emailtextview);
-
-            mExtraDistance = (TextView) itemView.findViewById(R.id.Extradistancetextview);
-
-            mExtraTime = (TextView) itemView.findViewById(R.id.Extratimetextview);
-
-            mCallCustomer = (ImageButton) itemView.findViewById(R.id.CallActionFloatingActionButton);
-
-            mExtraCallCustomer=(ImageButton)itemView.findViewById(R.id.ExtraCallActionFloatingActionButton);
-
-            mExtraAddress=(TextView)itemView.findViewById(R.id.Extraaddresstextview);
-
-            mExtraProducts=(TextView)itemView.findViewById(R.id.Extraproductstextview);
-
-            mExtraOrderno=(TextView)itemView.findViewById(R.id.Extraordernotextview);
-
-            mExtraStatusImage=(ImageButton)itemView.findViewById(R.id.Extraorderstatusimage);
-
-            mSmallMap = (MapView) itemView.findViewById(R.id.mapfragment);
-            if(mSmallMap!=null) {
-                mSmallMap.onCreate(null);
-                mSmallMap.onResume();
-            }
-
-        }
 
         //TODO:Constructor for foldable layout implementation
         private FoldableLayout mFoldableLayout;
         public ViewHolder(FoldableLayout foldablelayout) {
             super(foldablelayout);
             mFoldableLayout=foldablelayout;
-            foldablelayout.setupViews(R.layout.list_item_cover, R.layout.list_item_detail,200,itemView.getContext());
+            foldablelayout.setupViews(R.layout.list_item_cover, R.layout.list_item_detail,200,
+                    itemView.getContext());
             mName = (TextView) foldablelayout.findViewById(R.id.nameedittext);
-
             mAddressLine1 = (TextView) foldablelayout.findViewById(R.id.Line1addressedittext);
-
             mAddressLine2 = (TextView) foldablelayout.findViewById(R.id.Line2addressedittext);
-
             mItems1 = (TextView) foldablelayout.findViewById(R.id.itemedittext1);
-
             mItems2 = (TextView) foldablelayout.findViewById(R.id.itemedittext2);
-
             mDistance = (TextView) foldablelayout.findViewById(R.id.distancetextview);
-
             mTime = (TextView) foldablelayout.findViewById(R.id.timetextview);
-
             mStatusImage = (ImageButton) foldablelayout.findViewById(R.id.orderstatusimage);
-
             mExtraName = (TextView) foldablelayout.findViewById(R.id.nametextview);
-
             mExtraExpectedTime = (TextView) foldablelayout.findViewById(R.id.expectedtimetextview);
-
             mExtraPhone = (TextView) foldablelayout.findViewById(R.id.phonetextview);
-
             mExtraEmail = (TextView) foldablelayout.findViewById(R.id.emailtextview);
-
             mExtraDistance = (TextView) foldablelayout.findViewById(R.id.Extradistancetextview);
-
             mExtraTime = (TextView) foldablelayout.findViewById(R.id.Extratimetextview);
-
             mCallCustomer = (ImageButton) foldablelayout.findViewById(R.id.CallActionFloatingActionButton);
-
             mExtraCallCustomer=(ImageButton)foldablelayout.findViewById(R.id.ExtraCallActionFloatingActionButton);
-
             mExtraAddress=(TextView)foldablelayout.findViewById(R.id.Extraaddresstextview);
-
             mExtraProducts=(TextView)foldablelayout.findViewById(R.id.Extraproductstextview);
-
             mExtraOrderno=(TextView)foldablelayout.findViewById(R.id.Extraordernotextview);
-
             mExtraStatusImage=(ImageButton)foldablelayout.findViewById(R.id.Extraorderstatusimage);
 
             mSmallMap = (MapView) foldablelayout.findViewById(R.id.mapfragment);
@@ -531,7 +437,8 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
     }
 
 
-    public void fetchMapData(final ViewHolder mholder,Location location,int position,OrderDetailsAdapter thisInstance)
+    public void fetchMapData(final ViewHolder mholder,Location location,int position,
+                             OrderDetailsAdapter thisInstance)
     {
 
         if (location != null) {
@@ -544,7 +451,8 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
                     + "&mode=" + Constants.MAP_TRANSTMODE;
 
             MyResponseListener myResponseListener = new MyResponseListener(mholder,position,thisInstance);
-            JsonObjectRequest request = CargoCity.getmInstance().getGeneralRequest(myResponseListener, new Response.ErrorListener() {
+            JsonObjectRequest request = CargoCity.getmInstance().getGeneralRequest(myResponseListener,
+                    new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     //Toast.makeText(thisActivity, "Error!Please try again", Toast.LENGTH_LONG).show();
@@ -559,7 +467,8 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         private ViewHolder holder;
         private int position;
         private OrderDetailsAdapter thisInstance;
-        public MyResponseListener(ViewHolder holder,int position,OrderDetailsAdapter thisInstance) {
+        public MyResponseListener(ViewHolder holder,int position,OrderDetailsAdapter thisInstance)
+        {
             this.holder = holder;
             this.position=position;
             this.thisInstance=thisInstance;
@@ -579,53 +488,32 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
     }
     public void getDestination(RouteSession mRouteSession,int position)
     {
-
         String addressLine1 = new ParseAddress().getProcessedaddress(mRouteSession
-
                 .getmOrderList()
-
                 .get(position)
-
                 .getAddress()
-
                 .getLine1());
-
         String addressLine2 = new ParseAddress().getProcessedaddress(mRouteSession
-
                 .getmOrderList()
-
                 .get(position)
-
                 .getAddress()
-
                 .getLine2());
-
         String addressCity = new ParseAddress().getProcessedaddress(mRouteSession
-
                 .getmOrderList()
-
                 .get(position)
-
                 .getAddress()
-
                 .getCity());
-
         String addressState = new ParseAddress().getProcessedaddress(mRouteSession
-
                 .getmOrderList()
-
                 .get(position)
-
                 .getAddress()
-
                 .getState());
-
         mDestination =  addressLine1 + ","
                 + addressLine2 + ","
                 + addressCity + ","
                 + addressState;
-
     }
+
 
     private void foldingclick(final ViewHolder holder,final int position)
     {
@@ -648,7 +536,16 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         holder.mFoldableLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (holder.mFoldableLayout.isFolded()) {
+                if (holder.mFoldableLayout.isFolded())
+                {
+                    if(mPrevHolder!=null)
+                    {
+                        if(mPrevHolder.mFoldableLayout.isAnimating()||isUpdating)
+                        {
+                            return;   ///this means another card is already animating
+                        }
+                        holder.mFoldableLayout.unfoldWithAnimation();
+                    }
                     holder.mFoldableLayout.unfoldWithAnimation();
                 } else {
                     holder.mFoldableLayout.foldWithAnimation();
@@ -662,7 +559,8 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         holder.mFoldableLayout.setFoldListener(new FoldableLayout.FoldListener() {
             @Override
             public void onUnFoldStart() {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                {
                     holder.mFoldableLayout.setElevation(5);
                 }
             }
@@ -671,6 +569,7 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
             public void onUnFoldEnd() {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     holder.mFoldableLayout.setElevation(0);
+                    mOrdersLayoutManager.smoothScrollToPosition(mOrdersRecyclerView,null,holder.getAdapterPosition());
                 }
                 mFoldStates.put(holder.getAdapterPosition(), false);
             }
@@ -691,7 +590,6 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
             }
         });
     }
-
 }
 
 

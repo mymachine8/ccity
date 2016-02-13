@@ -34,7 +34,7 @@ import android.widget.RelativeLayout;
 public class FoldableLayout extends RelativeLayout
 {
 
-    private static final int ANIMATION_DURATION = 800;
+    private static final int ANIMATION_DURATION = 500;
 
     protected RelativeLayout mContentLayout;
     protected ImageView mImageViewBelow;
@@ -148,7 +148,9 @@ public class FoldableLayout extends RelativeLayout
     }
     public boolean isFolded() {
         return mIsFolded;
-    }      //checks if the cards are folded or not
+    }     //checks if the cards are folded or not
+
+    public boolean isAnimating(){return  mIsAnimating;}
 
     /**
      * Init the two views which will compose the foldable sides. To ensure nice animations,
