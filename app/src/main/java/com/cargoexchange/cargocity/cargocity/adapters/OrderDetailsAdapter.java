@@ -536,31 +536,29 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         holder.mFoldableLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (holder.mFoldableLayout.isFolded())
-                {
-                    if(mPrevHolder!=null)
-                    {
-                        if(mPrevHolder.mFoldableLayout.isAnimating()||isUpdating)
-                        {
-                            return;   ///this means another card is already animating
+                if(mRouteSession.getmOrderList().get(holder.getAdapterPosition()).getDeliveryStatus().equalsIgnoreCase(OrderStatus.IN_TRANSIT)) {
+                    if (holder.mFoldableLayout.isFolded()) {
+                        if (mPrevHolder != null) {
+                            if (mPrevHolder.mFoldableLayout.isAnimating() || isUpdating) {
+                                return;   ///this means another card is already animating
+                            }
+                            holder.mFoldableLayout.unfoldWithAnimation();
                         }
                         holder.mFoldableLayout.unfoldWithAnimation();
+                    } else {
+                        holder.mFoldableLayout.foldWithAnimation();
                     }
-                    holder.mFoldableLayout.unfoldWithAnimation();
-                } else {
-                    holder.mFoldableLayout.foldWithAnimation();
+                    if (mPrevHolder != null && mPrevHolder != holder)
+                        mPrevHolder.mFoldableLayout.foldWithoutAnimation();
+                    mPrevHolder = holder;
                 }
-                if(mPrevHolder!=null && mPrevHolder!=holder)
-                    mPrevHolder.mFoldableLayout.foldWithoutAnimation();
-                mPrevHolder=holder;
             }
         });
 
         holder.mFoldableLayout.setFoldListener(new FoldableLayout.FoldListener() {
             @Override
             public void onUnFoldStart() {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     holder.mFoldableLayout.setElevation(5);
                 }
             }
@@ -569,7 +567,7 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
             public void onUnFoldEnd() {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     holder.mFoldableLayout.setElevation(0);
-                    mOrdersLayoutManager.smoothScrollToPosition(mOrdersRecyclerView,null,holder.getAdapterPosition());
+                    mOrdersLayoutManager.smoothScrollToPosition(mOrdersRecyclerView, null, holder.getAdapterPosition());
                 }
                 mFoldStates.put(holder.getAdapterPosition(), false);
             }

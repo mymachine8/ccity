@@ -259,7 +259,8 @@ public class OrdersListFragment extends Fragment
         {
             setOldData();
         }
-        int haslocationfinePermission = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION);
+        int haslocationfinePermission = ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION);
 
         locationListener = new mLocationListener();
         if (haslocationfinePermission == PackageManager.PERMISSION_GRANTED)
@@ -270,7 +271,8 @@ public class OrdersListFragment extends Fragment
         }
         else
         {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, Constants.PERMISSION_ACCESS_LOCATION);
+            ActivityCompat.requestPermissions(getActivity(), new String[]{
+                    Manifest.permission.ACCESS_FINE_LOCATION}, Constants.PERMISSION_ACCESS_LOCATION);
         }
     }
 
@@ -445,7 +447,7 @@ public class OrdersListFragment extends Fragment
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("response", "error");
+                Log.d("response","error");
 
                 mRouteSession.setmMatrixDownloadStatus(0);
 
