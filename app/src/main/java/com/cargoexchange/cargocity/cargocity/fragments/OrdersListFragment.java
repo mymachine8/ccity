@@ -126,17 +126,21 @@ public class OrdersListFragment extends Fragment
         mOrdersListLayoutManager = new SmoothLayoutManager(thisActivity, LinearLayoutManager.VERTICAL, false);
         mOrdersListFragmentRecycler.setLayoutManager(mOrdersListLayoutManager);
         //mOrderDetailsCard=(CardView)view.findViewById(R.id.orderdetailscardview);
-        mOrderDetailsAdapter = new OrderDetailsAdapter(mOrdersList, thisFragment,mOrdersListLayoutManager,mOrdersListFragmentRecycler);
+        mOrderDetailsAdapter = new OrderDetailsAdapter(mOrdersList, thisFragment,
+                mOrdersListLayoutManager,mOrdersListFragmentRecycler);
         mOrdersListFragmentRecycler.setAdapter(mOrderDetailsAdapter);
 
 
         //registerClickEvents();
 
-        int hasLocationfinePermission = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION);
+        int hasLocationfinePermission = ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION);
 
-        int hasLocationCoarsePermission = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION);
+        int hasLocationCoarsePermission = ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_COARSE_LOCATION);
 
-        if (hasLocationfinePermission == PackageManager.PERMISSION_GRANTED && hasLocationCoarsePermission == PackageManager.PERMISSION_GRANTED) {
+        if (hasLocationfinePermission == PackageManager.PERMISSION_GRANTED &&
+                hasLocationCoarsePermission == PackageManager.PERMISSION_GRANTED) {
             if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 
                 setData();
@@ -144,7 +148,9 @@ public class OrdersListFragment extends Fragment
                 showEnableGPSDialog();
             }
         } else {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, Constants.PERMISSION_ACCESS_LOCATION);
+            ActivityCompat.requestPermissions(getActivity(), new String[]{
+                    Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                    Constants.PERMISSION_ACCESS_LOCATION);
         }
         return view;
     }
@@ -153,7 +159,8 @@ public class OrdersListFragment extends Fragment
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Constants.LOCATION_SETTINGS_ACTION) {
-            if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+                    && mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
                 GPS_ENABLED_IN_APP = true;
                 setData();
             } else {
@@ -169,12 +176,16 @@ public class OrdersListFragment extends Fragment
         switch (requestCode) {
             case Constants.PERMISSION_ACCESS_LOCATION: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    int hasLocationfinePermission = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION);
+                    int hasLocationfinePermission = ContextCompat.checkSelfPermission(getActivity(),
+                            Manifest.permission.ACCESS_FINE_LOCATION);
 
-                    int hasLocationCoarsePermission = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION);
+                    int hasLocationCoarsePermission = ContextCompat.checkSelfPermission(getActivity(),
+                            Manifest.permission.ACCESS_COARSE_LOCATION);
 
-                    if (hasLocationfinePermission == PackageManager.PERMISSION_GRANTED && hasLocationCoarsePermission == PackageManager.PERMISSION_GRANTED) {
-                        if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                    if (hasLocationfinePermission == PackageManager.PERMISSION_GRANTED
+                            && hasLocationCoarsePermission == PackageManager.PERMISSION_GRANTED) {
+                        if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+                                && mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
                             setData();
                         } else {
                             showEnableGPSDialog();
@@ -205,9 +216,11 @@ public class OrdersListFragment extends Fragment
         public void onLocationChanged(Location location) {
             download(location);
             if (!mLocationUpdated) {
-                if (ActivityCompat.checkSelfPermission(thisActivity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.checkSelfPermission(thisActivity,
+                        Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     mLocationManager.removeUpdates(locationListener);
-                    mLocationManager.requestLocationUpdates(Constants.LOCATION_PROVIDER,Constants.TWO_MINUTES/4, 0,locationListener );
+                    mLocationManager.requestLocationUpdates(Constants.LOCATION_PROVIDER,Constants.TWO_MINUTES,
+                            0,locationListener );
                 }
                 mLocationUpdated = true;
             }
@@ -329,11 +342,14 @@ public class OrdersListFragment extends Fragment
                     mRouteSession.getmOrderList().get(position).setCardStatus(CARD_COMPACT);
 
                 }
-                //TODO:use a singleton class to keep track of the orders completed and according disable intents to next activity
+                //TODO:use a singleton class to keep track of the orders completed and according
+                // TODO:disable intents to next activity
             }
             else
             {
-                Toast.makeText(thisActivity, mRouteSession.getmOrderList().get(position).getDeliveryStatus(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(thisActivity,
+                        mRouteSession.getmOrderList().get(position).getDeliveryStatus(),
+                        Toast.LENGTH_SHORT).show();
             }
         }
         else
@@ -351,7 +367,8 @@ public class OrdersListFragment extends Fragment
             public void onItemClick(int position, View v) {
                    mOrdersListLayoutManager.scrollToPosition(0);
                    //onCardClickAction(v, position,true);
-                if(mPrevView != null && mPrevView!=v && mRouteSession.getmOrderList().get(mPrevPosition).getCardStatus() == CARD_EXPANDED){
+                if(mPrevView != null && mPrevView!=v &&
+                        mRouteSession.getmOrderList().get(mPrevPosition).getCardStatus() == CARD_EXPANDED){
                     //onCardClickAction(mPrevView,mPrevPosition,false);
                 }
                 mPrevView = v;
@@ -432,7 +449,8 @@ public class OrdersListFragment extends Fragment
 
                 mRouteSession.setmMatrixDownloadStatus(0);
 
-                mOrderDetailsAdapter = new OrderDetailsAdapter(mOrdersList,thisFragment,mOrdersListLayoutManager,mOrdersListFragmentRecycler);
+                mOrderDetailsAdapter = new OrderDetailsAdapter(mOrdersList,thisFragment,
+                        mOrdersListLayoutManager,mOrdersListFragmentRecycler);
 
               //  mOrdersListFragmentRecycler.setAdapter(mOrderDetailsAdapter);
                 mOrderDetailsAdapter.updateData(mOrdersList);
