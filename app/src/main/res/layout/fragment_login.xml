@@ -42,6 +42,7 @@
 
             <EditText
                 android:id="@+id/input_username"
+                android:text="cargo-helper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/ic_username"
@@ -57,6 +58,7 @@
             </EditText>
 
             <EditText
+                android:text="user"
                 android:id="@+id/input_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

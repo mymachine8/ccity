@@ -38,6 +38,7 @@ import com.cargoexchange.cargocity.cargocity.fragments.OrdersListFragment;
 import com.cargoexchange.cargocity.cargocity.models.Order;
 import com.cargoexchange.cargocity.cargocity.utils.ParseAddress;
 import com.cargoexchange.cargocity.cargocity.utils.ParseDirections;
+import com.example.root.foldablelayout.FoldableLayout;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
@@ -55,6 +56,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by root on 19/1/16.
@@ -75,6 +77,13 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
     private String mDestination;
 
     private MylocationListener locationListener;
+
+
+    //TODO:Variable for folding layout
+    private Map<Integer, Boolean> mFoldStates = new HashMap<>();
+    private View mPrevView = null;
+    private int mPrevPosition = 0;
+    private ViewHolder mPrevHolder=null;
 
     public OrderDetailsAdapter(List<Order> orderDetails, Fragment fragment) {
         mFragmentInstance = fragment;
@@ -104,16 +113,24 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        final LayoutInflater layoutInflator = LayoutInflater.from(parent.getContext());
+
+        //TODO:Flipping Layout Logic
+        /*final LayoutInflater layoutInflator = LayoutInflater.from(parent.getContext());
         final View v = layoutInflator.inflate(R.layout.row_orderdetails, parent, false);
         final ViewHolder vh = new ViewHolder(v);
-        return vh;
+        return vh;*/
+
+
+        //TODO:Folding layout logic
+        return new ViewHolder(new FoldableLayout(parent.getContext()));
     }
 
     @Override
     public void onViewDetachedFromWindow(ViewHolder holder) {
         super.onViewDetachedFromWindow(holder);
     }
+
+
 
     @Override
     public void onViewAttachedToWindow(ViewHolder holder) {
@@ -244,7 +261,11 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
                 ((OrdersListFragment) mFragmentInstance).onClickCallExecutive(v, position);
             }
         });
+
+        //TODO:Layout Folding Click Logic
+        foldingclick(holder, position);
     }
+
     private class MylocationListener implements LocationListener
     {
         ViewHolder holder;
@@ -339,7 +360,7 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         MapView mSmallMap;
         private List<List<HashMap<String, String>>> routes;
 
-
+        //TODO:Constructor for flip layout
         public ViewHolder(View itemView) {
 
             super(itemView);
@@ -390,6 +411,59 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
                 mSmallMap.onResume();
             }
 
+        }
+
+        //TODO:Constructor for foldable layout implementation
+        private FoldableLayout mFoldableLayout;
+        public ViewHolder(FoldableLayout foldablelayout) {
+            super(foldablelayout);
+            mFoldableLayout=foldablelayout;
+            foldablelayout.setupViews(R.layout.list_item_cover, R.layout.list_item_detail,200,itemView.getContext());
+            mName = (TextView) foldablelayout.findViewById(R.id.nameedittext);
+
+            mAddressLine1 = (TextView) foldablelayout.findViewById(R.id.Line1addressedittext);
+
+            mAddressLine2 = (TextView) foldablelayout.findViewById(R.id.Line2addressedittext);
+
+            mItems1 = (TextView) foldablelayout.findViewById(R.id.itemedittext1);
+
+            mItems2 = (TextView) foldablelayout.findViewById(R.id.itemedittext2);
+
+            mDistance = (TextView) foldablelayout.findViewById(R.id.distancetextview);
+
+            mTime = (TextView) foldablelayout.findViewById(R.id.timetextview);
+
+            mStatusImage = (ImageButton) foldablelayout.findViewById(R.id.orderstatusimage);
+
+            mExtraName = (TextView) foldablelayout.findViewById(R.id.nametextview);
+
+            mExtraExpectedTime = (TextView) foldablelayout.findViewById(R.id.expectedtimetextview);
+
+            mExtraPhone = (TextView) foldablelayout.findViewById(R.id.phonetextview);
+
+            mExtraEmail = (TextView) foldablelayout.findViewById(R.id.emailtextview);
+
+            mExtraDistance = (TextView) foldablelayout.findViewById(R.id.Extradistancetextview);
+
+            mExtraTime = (TextView) foldablelayout.findViewById(R.id.Extratimetextview);
+
+            mCallCustomer = (ImageButton) foldablelayout.findViewById(R.id.CallActionFloatingActionButton);
+
+            mExtraCallCustomer=(ImageButton)foldablelayout.findViewById(R.id.ExtraCallActionFloatingActionButton);
+
+            mExtraAddress=(TextView)foldablelayout.findViewById(R.id.Extraaddresstextview);
+
+            mExtraProducts=(TextView)foldablelayout.findViewById(R.id.Extraproductstextview);
+
+            mExtraOrderno=(TextView)foldablelayout.findViewById(R.id.Extraordernotextview);
+
+            mExtraStatusImage=(ImageButton)foldablelayout.findViewById(R.id.Extraorderstatusimage);
+
+            mSmallMap = (MapView) foldablelayout.findViewById(R.id.mapfragment);
+            if(mSmallMap!=null) {
+                mSmallMap.onCreate(null);
+                mSmallMap.onResume();
+            }
         }
 
         @Override
@@ -552,6 +626,72 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
                 + addressState;
 
     }
+
+    private void foldingclick(final ViewHolder holder,final int position)
+    {
+
+        if (mFoldStates.containsKey(position))
+        {
+            if (mFoldStates.get(position) == Boolean.TRUE) {
+                if (!holder.mFoldableLayout.isFolded()) {
+                    holder.mFoldableLayout.foldWithoutAnimation();
+                }
+            } else if (mFoldStates.get(position) == Boolean.FALSE) {
+                if (holder.mFoldableLayout.isFolded()) {
+                    holder.mFoldableLayout.unfoldWithoutAnimation();
+                }
+            }
+        } else {
+            holder.mFoldableLayout.foldWithoutAnimation();
+        }
+
+        holder.mFoldableLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (holder.mFoldableLayout.isFolded()) {
+                    holder.mFoldableLayout.unfoldWithAnimation();
+                } else {
+                    holder.mFoldableLayout.foldWithAnimation();
+                }
+                if(mPrevHolder!=null && mPrevHolder!=holder)
+                    mPrevHolder.mFoldableLayout.foldWithoutAnimation();
+                mPrevHolder=holder;
+            }
+        });
+
+        holder.mFoldableLayout.setFoldListener(new FoldableLayout.FoldListener() {
+            @Override
+            public void onUnFoldStart() {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    holder.mFoldableLayout.setElevation(5);
+                }
+            }
+
+            @Override
+            public void onUnFoldEnd() {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    holder.mFoldableLayout.setElevation(0);
+                }
+                mFoldStates.put(holder.getAdapterPosition(), false);
+            }
+
+            @Override
+            public void onFoldStart() {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    holder.mFoldableLayout.setElevation(5);
+                }
+            }
+
+            @Override
+            public void onFoldEnd() {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    holder.mFoldableLayout.setElevation(0);
+                }
+                mFoldStates.put(holder.getAdapterPosition(), true);
+            }
+        });
+    }
+
 }
 
 

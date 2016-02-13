@@ -1,2 +1,2 @@
-include ':app', ':scanlibrary'
+include ':app', ':scanlibrary', ':foldablelayout'
 project(':scanlibrary').projectDir = new File('libs/scanlibrary')
