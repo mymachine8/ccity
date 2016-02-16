@@ -2,6 +2,8 @@ package com.cargoexchange.cargocity.cargocity.adapters;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
@@ -32,6 +34,7 @@ import com.cargoexchange.cargocity.cargocity.utils.ParseAddress;
 import com.cargoexchange.cargocity.cargocity.utils.ParseDirections;
 import com.cargoexchange.cargocity.cargocity.utils.SmoothLayoutManager;
 import com.example.root.foldablelayout.FoldableLayout;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -39,6 +42,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import org.json.JSONObject;
@@ -72,12 +77,14 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
 
 
     //TODO:Variable for folding layout
-    private Map<Integer, Boolean> mFoldStates = new HashMap<>();
+    private Map<Integer, Boolean> mFoldStates = new HashMap<>();   //This list is probably the culprit
     private View mPrevView = null;
     private int mPrevPosition = 0;
     private ViewHolder mPrevHolder=null;
 
-    public OrderDetailsAdapter(List<Order> orderDetails, Fragment fragment,SmoothLayoutManager mOrdersLayoutManager,RecyclerView mOrdersRecyclerView) {
+    public OrderDetailsAdapter(List<Order> orderDetails, Fragment fragment,
+                               SmoothLayoutManager mOrdersLayoutManager,
+                               RecyclerView mOrdersRecyclerView) {
         mFragmentInstance = fragment;
         thisContext = fragment.getContext();
         this.mOrdersLayoutManager=mOrdersLayoutManager;
@@ -358,8 +365,10 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
             mExtraEmail = (TextView) foldablelayout.findViewById(R.id.emailtextview);
             mExtraDistance = (TextView) foldablelayout.findViewById(R.id.Extradistancetextview);
             mExtraTime = (TextView) foldablelayout.findViewById(R.id.Extratimetextview);
-            mCallCustomer = (ImageButton) foldablelayout.findViewById(R.id.CallActionFloatingActionButton);
-            mExtraCallCustomer=(ImageButton)foldablelayout.findViewById(R.id.ExtraCallActionFloatingActionButton);
+            mCallCustomer = (ImageButton) foldablelayout.findViewById(R.id
+                    .CallActionFloatingActionButton);
+            mExtraCallCustomer=(ImageButton)foldablelayout.findViewById(R.id
+                    .ExtraCallActionFloatingActionButton);
             mExtraAddress=(TextView)foldablelayout.findViewById(R.id.Extraaddresstextview);
             mExtraProducts=(TextView)foldablelayout.findViewById(R.id.Extraproductstextview);
             mExtraOrderno=(TextView)foldablelayout.findViewById(R.id.Extraordernotextview);
@@ -378,11 +387,9 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         }
 
         @Override
-        public void onMapReady(GoogleMap googleMap)
+        public void onMapReady(final GoogleMap googleMap)
         {
-
             googleMap.clear();
-
             //MapsInitializer.initialize(null);
             for (int i = 0; i < routes.size(); i++)
             {
@@ -404,11 +411,15 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
                     if (j == 0) {
                         start = position;
                         markerA.position(position);
-                        markerA.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_truck));
+                        markerA.title("Cargo Location");
+                        markerA.icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(thisContext.getResources(), R.drawable.ic_truck2), 80,80, false)));
+                        //markerA.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_truck));
                     }
                     if (j == (path.size() - 1)) {
                         markerB.position(position);
-                        markerB.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                        markerB.title("Destination");
+                        markerB.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+                        //markerB.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
 
                     }
                     points.add(position);
@@ -420,17 +431,30 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
             }
             // Drawing polyline in the Google Map for the i-th route
             googleMap.addPolyline(lineOptions);
-            //googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(start ,12.0f));
+
+
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            builder.include(markerA.getPosition());
+            builder.include(markerB.getPosition());
+            final LatLngBounds bounds = builder.build();
             CameraPosition currentPlace = new CameraPosition.Builder()
                     .target(start)
                     .bearing(-120)
                     .tilt(85.5f)
-                    .zoom(12.0f)
+                    //.zoom(12.0f)
                     .build();
             googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace));
 
+            googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+                @Override
+                public void onMapLoaded() {
+                    CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds,80);
+                    googleMap.animateCamera(cu);
+                }
+            });
         }
     }
+
 
     public interface OrderItemClickListener {
         public void onItemClick(int position, View v);
@@ -450,12 +474,13 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
                     + "&traffic_model=" + Constants.MAP_TRAFFICMODEL_PESSIMISTIC
                     + "&mode=" + Constants.MAP_TRANSTMODE;
 
-            MyResponseListener myResponseListener = new MyResponseListener(mholder,position,thisInstance);
+            MyResponseListener myResponseListener = new MyResponseListener(mholder,position,
+                    thisInstance);
             JsonObjectRequest request = CargoCity.getmInstance().getGeneralRequest(myResponseListener,
                     new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    //Toast.makeText(thisActivity, "Error!Please try again", Toast.LENGTH_LONG).show();
+                //Toast.makeText(thisActivity, "Error!Please try again", Toast.LENGTH_LONG).show();
                     error.printStackTrace();
                 }
             }, url);
@@ -518,7 +543,9 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
     private void foldingclick(final ViewHolder holder,final int position)
     {
 
-        if (mFoldStates.containsKey(position))
+        //TODO:Try understanding the use of this code.Reason for removal of this is because it caused inconsistent states among the cards..
+
+      /*  if (mFoldStates.containsKey(position))
         {
             if (mFoldStates.get(position) == Boolean.TRUE) {
                 if (!holder.mFoldableLayout.isFolded()) {
@@ -531,12 +558,13 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
             }
         } else {
             holder.mFoldableLayout.foldWithoutAnimation();
-        }
+        }*/
 
         holder.mFoldableLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mRouteSession.getmOrderList().get(holder.getAdapterPosition()).getDeliveryStatus().equalsIgnoreCase(OrderStatus.IN_TRANSIT)) {
+                if (mRouteSession.getmOrderList().get(holder.getAdapterPosition()).
+                        getDeliveryStatus().equalsIgnoreCase(OrderStatus.IN_TRANSIT)) {
                     if (holder.mFoldableLayout.isFolded()) {
                         if (mPrevHolder != null) {
                             if (mPrevHolder.mFoldableLayout.isAnimating() || isUpdating) {
@@ -548,45 +576,51 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
                     } else {
                         holder.mFoldableLayout.foldWithAnimation();
                     }
-                    if (mPrevHolder != null && mPrevHolder != holder)
+                    if (mPrevHolder != null && mPrevHolder != holder) {
                         mPrevHolder.mFoldableLayout.foldWithoutAnimation();
-                    mPrevHolder = holder;
-                }
-            }
-        });
-
-        holder.mFoldableLayout.setFoldListener(new FoldableLayout.FoldListener() {
-            @Override
-            public void onUnFoldStart() {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    holder.mFoldableLayout.setElevation(5);
+                    }
+                        mPrevHolder = holder;
+                    }
                 }
             }
 
-            @Override
-            public void onUnFoldEnd() {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    holder.mFoldableLayout.setElevation(0);
-                    mOrdersLayoutManager.smoothScrollToPosition(mOrdersRecyclerView, null, holder.getAdapterPosition());
-                }
-                mFoldStates.put(holder.getAdapterPosition(), false);
-            }
+            );
 
-            @Override
-            public void onFoldStart() {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    holder.mFoldableLayout.setElevation(5);
-                }
-            }
+            holder.mFoldableLayout.setFoldListener(new FoldableLayout.FoldListener()
 
-            @Override
-            public void onFoldEnd() {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    holder.mFoldableLayout.setElevation(0);
+            {
+                @Override
+                public void onUnFoldStart() {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        holder.mFoldableLayout.setElevation(5);
+                    }
                 }
-                mFoldStates.put(holder.getAdapterPosition(), true);
-            }
-        });
+
+                @Override
+                public void onUnFoldEnd() {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        holder.mFoldableLayout.setElevation(0);
+                        mOrdersLayoutManager.smoothScrollToPosition(mOrdersRecyclerView, null,
+                                holder.getAdapterPosition());
+                    }
+                    mFoldStates.put(holder.getAdapterPosition(), false);
+                }
+
+                @Override
+                public void onFoldStart() {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        holder.mFoldableLayout.setElevation(5);
+                    }
+                }
+
+                @Override
+                public void onFoldEnd() {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        holder.mFoldableLayout.setElevation(0);
+                    }
+                    mFoldStates.put(holder.getAdapterPosition(), true);
+                }
+            });
     }
 }
 

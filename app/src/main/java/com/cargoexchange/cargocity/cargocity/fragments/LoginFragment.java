@@ -135,7 +135,6 @@ public class LoginFragment extends Fragment
         } else {
             mPasswordText.setError(null);
         }
-
         return valid;
     }
 

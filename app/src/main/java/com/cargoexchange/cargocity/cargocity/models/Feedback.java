@@ -3,7 +3,8 @@ package com.cargoexchange.cargocity.cargocity.models;
 import java.io.Serializable;
 import java.util.List;
 
-public class Feedback implements Serializable{
+public class Feedback implements Serializable
+{
     private boolean isOrderDelivered;
     private String orderId;
 

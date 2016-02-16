@@ -4,7 +4,10 @@ import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -34,12 +37,14 @@ import com.cargoexchange.cargocity.cargocity.utils.IsLocationLatest;
 import com.cargoexchange.cargocity.cargocity.utils.NetworkAvailability;
 import com.cargoexchange.cargocity.cargocity.utils.ParseAddress;
 import com.cargoexchange.cargocity.cargocity.utils.ParseDirections;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
@@ -91,7 +96,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private ParseAddress mParseAddress;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -103,7 +109,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mDestination = getParsedAddress(mRouteSession.getmOrderList().get(pos).getAddress());
         checkpermission();
     }
-
     public String getParsedAddress(Address address){
         String addressStr = mParseAddress.getProcessedaddress(address.getLine1())
                 + "," + mParseAddress.getProcessedaddress(address.getLine2())
@@ -228,7 +233,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap)
+    public void onMapReady(final GoogleMap googleMap)
     {
         if (TYPE == 0) {
             points = null;
@@ -254,12 +259,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     if (j == 0) {
                         start = position;
                         markerA.position(position);
-                        markerA.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_truck));
+                        markerA.icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_truck2), 100, 100, false)));
+                        //markerA.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
                     }
                     if (j == (path.size() - 1)) {
                         markerB.position(position);
-                        markerB.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-
+                        markerB.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
                     }
                     points.add(position);
                 }
@@ -272,7 +277,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             googleMap.addPolyline(lineOptions);
             TYPE = 1;
             mapDataProgress.cancel();
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(start, 14.0f));
+            //googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(start, 14.0f));
         } else {
             googleMap.clear();
             //googleMap.addMarker(markerA);
@@ -280,10 +285,21 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             googleMap.addMarker(markerB);
             LatLng current = new LatLng(mCurrent.getLatitude(), mCurrent.getLongitude());
             markerCurrent.position(current);
-            markerCurrent.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_truck));
+            markerCurrent.icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_truck2), 100, 100, false)));
             googleMap.addMarker(markerCurrent);
 
         }
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        builder.include(markerA.getPosition());
+        builder.include(markerB.getPosition());
+        final LatLngBounds bounds = builder.build();
+        googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+            @Override
+            public void onMapLoaded() {
+                CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds,50);
+                googleMap.animateCamera(cu);
+            }
+        });
 
     }
 
@@ -350,7 +366,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         }
                     }
                 }
-
                 break;
         }
         return false;

@@ -226,7 +226,7 @@ public class FoldableLayout extends RelativeLayout
             if (FoldableLayout.this.getLayoutParams() != null) {
                 FoldableLayout.this.getLayoutParams().height = mCoverHeight+35;        //Setting the height of the cover view to default height
             }
-            this.requestLayout();                                        //Rendering the layout
+            this.requestLayout();                                     //Rendering the layout
         }
     }
 
@@ -244,6 +244,7 @@ public class FoldableLayout extends RelativeLayout
             }
             requestLayout();                         //Rendering the layout
             mIsFolded = false;                      //Setting folded flag as false
+            mFoldListener.onUnFoldEnd();
         }
     }
 
@@ -464,7 +465,6 @@ public class FoldableLayout extends RelativeLayout
      * Interface to dispatch folding events.
      */
     public interface FoldListener {
-
         /**
          * Dispatch when un foldWithAnimation start.
          */

@@ -34,12 +34,14 @@ public class OrdersActivity extends AppCompatActivity {
         if(source!=null) { // When the intent is coming from feedback fragment
             if (source.equalsIgnoreCase("FeedbackFragment")) {
                 Fragment ordersListFragment = new OrdersListFragment();
-                getSupportFragmentManager().beginTransaction().add(R.id.orders_container, ordersListFragment).commit();
+                getSupportFragmentManager().beginTransaction().add(R.id.orders_container,
+                        ordersListFragment).commit();
             }
         }
         else {
             Fragment enterRouteFragment = new EnterRouteFragment();
-            getSupportFragmentManager().beginTransaction().add(R.id.orders_container, enterRouteFragment).commitAllowingStateLoss();
+            getSupportFragmentManager().beginTransaction().add(R.id.orders_container,
+                    enterRouteFragment).commitAllowingStateLoss();
         }
     }
 
@@ -50,9 +52,12 @@ public class OrdersActivity extends AppCompatActivity {
     }
 
     private void grantLocationPermissions(){
-        int accessFineLocationPermissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
-        int accessCoarseLocationPermissionCheck=ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
-        if(accessFineLocationPermissionCheck!= PackageManager.PERMISSION_GRANTED && accessCoarseLocationPermissionCheck!=PackageManager.PERMISSION_GRANTED)
+        int accessFineLocationPermissionCheck = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION);
+        int accessCoarseLocationPermissionCheck=ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION);
+        if(accessFineLocationPermissionCheck!= PackageManager.PERMISSION_GRANTED &&
+                accessCoarseLocationPermissionCheck!=PackageManager.PERMISSION_GRANTED)
         {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
